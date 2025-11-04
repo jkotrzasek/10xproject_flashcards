@@ -3,9 +3,9 @@ description:
 globs: 
 alwaysApply: true
 ---
-# AI Rules for {app-name}
+# AI Rules for AI Flashcard Generator
 
-{project-description}
+AI Flashcard Generator is a web application designed to streamline the process of creating educational flashcards. Using artificial intelligence, the application automatically generates flashcard sets based on text provided by the user, significantly reducing the time needed to prepare them. The product is aimed at students and self-learners who want to effectively use the spaced repetition learning method but are discouraged by the time-consuming process of manually creating materials.
 
 ## Tech Stack
 
