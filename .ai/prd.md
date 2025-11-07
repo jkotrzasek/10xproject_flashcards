@@ -22,7 +22,7 @@ Głównym problemem, który rozwiązuje nasza aplikacja, jest wysoki próg wejś
 
 ### 3.3. Generowanie fiszek przez AI
 - Użytkownik może wkleić tekst o długości od 1000 do 10000 znaków w dedykowane pole.
-- System generuje zestaw fiszek w formacie przód/tył (pytanie/odpowiedź, termin/definicja itp.). Długość pojedynczej fiszki nie przekracza 200 znaków.
+- System generuje zestaw fiszek w formacie przód/tył (pytanie/odpowiedź, termin/definicja itp.). Długość pojedynczej fiszki nie przekracza 200 znaków przód, 500 znaków tył.
 - Po wygenerowaniu użytkownik przegląda fiszki, akceptując lub odrzucając każdą z nich. Odrzucone fiszki są trwale usuwane.
 - Wszystkie zaakceptowane fiszki są masowo przypisywane do jednego, wybranego przez użytkownika decku.
 - Obowiązuje limit 10 operacji generowania fiszek przez AI na użytkownika dziennie.
