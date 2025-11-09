@@ -4,6 +4,7 @@
 -- special considerations:
 --   - composite foreign key (user_id, deck_id) ensures flashcards can only be assigned to user's own decks
 --   - deck_id nullable allows "unassigned" flashcards
+--   - generation_id foreign key with ON DELETE SET NULL: flashcards survive generation cleanup
 --   - automatic last_repetition management via trigger
 --   - supports spaced repetition learning system
 
@@ -20,6 +21,11 @@ create table flashcards (
     -- optional reference to deck (nullable for unassigned flashcards)
     -- validated by composite fk below to ensure flashcard can only be assigned to user's own deck
     deck_id bigint,
+    
+    -- optional reference to generation session that created this flashcard
+    -- nullable: manually created flashcards have no generation_id
+    -- on delete set null: when generation is deleted (e.g., 30-day cleanup), flashcard remains but loses the reference
+    generation_id bigint references generations(session_id) on delete set null,
     
     -- source tracking: origin of the flashcard (ai_full, ai_edited, manual)
     -- required for metrics and analytics
@@ -80,6 +86,11 @@ create index idx_flashcards_learning
 -- improves performance of join operations and cascade deletes
 -- partial index: only for assigned flashcards
 create index idx_flashcards_user_deck on flashcards(user_id, deck_id) where deck_id is not null;
+
+-- partial index for looking up flashcards by generation session
+-- only indexes rows where generation_id is not null (excludes manually created flashcards)
+-- supports queries like: select * from flashcards where generation_id = ?
+create index idx_flashcards_generation_id on flashcards(generation_id) where generation_id is not null;
 
 -- trigger function: automatically updates updated_at timestamp on row modification
 create or replace function update_flashcards_updated_at()
@@ -155,5 +166,3 @@ create policy flashcards_update_policy on flashcards
 create policy flashcards_delete_policy on flashcards
     for delete
     using (user_id = auth.uid());
-
-su
