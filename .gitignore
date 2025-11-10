@@ -22,3 +22,7 @@ pnpm-debug.log*
 
 # jetbrains setting folder
 .idea/
+
+# supabase
+#disable rls policies
+supabase/migrations/20251109120600_disable_rls_policies.sql

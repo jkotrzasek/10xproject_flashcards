@@ -95,6 +95,7 @@ CREATE TABLE flashcards (
 - `id` - bigint, klucz główny, auto-increment
 - `user_id` - uuid, NOT NULL, FK do auth.users(id), ON DELETE CASCADE
 - `deck_id` - bigint, NULL (fiszka może być nieprzypisana)
+- `generation_id` - bigint, NULL, FK do generations(session_id), ON DELETE SET NULL (ID sesji generowania, z której pochodzi fiszka)
 - `source` - flashcard_source ENUM, NOT NULL (ai_full, ai_edited, manual)
 - `front` - text, NOT NULL, maksymalnie 200 znaków (awers fiszki)
 - `back` - text, NOT NULL, maksymalnie 500 znaków (rewers fiszki)
