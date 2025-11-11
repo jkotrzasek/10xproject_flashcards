@@ -46,17 +46,6 @@ CREATE TYPE generation_status AS ENUM ('pending', 'success', 'error');
 
 Przechowuje decki (kategorie) fiszek należące do użytkowników.
 
-```sql
-CREATE TABLE decks (
-    id bigint GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
-    user_id uuid NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE,
-    name citext NOT NULL CHECK (char_length(name) <= 30 AND char_length(name) > 0),
-    created_at timestamptz NOT NULL DEFAULT now(),
-    updated_at timestamptz NOT NULL DEFAULT now(),
-    CONSTRAINT decks_user_name_unique UNIQUE (user_id, name)
-);
-```
-
 **Kolumny:**
 - `id` - bigint, klucz główny, auto-increment
 - `user_id` - uuid, NOT NULL, FK do auth.users(id), ON DELETE CASCADE
@@ -71,25 +60,6 @@ CREATE TABLE decks (
 ### 3.2. flashcards
 
 Przechowuje fiszki należące do użytkowników, opcjonalnie przypisane do decków.
-
-```sql
-CREATE TABLE flashcards (
-    id bigint GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
-    user_id uuid NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE,
-    deck_id bigint,
-    source flashcard_source NOT NULL,
-    front text NOT NULL CHECK (char_length(front) <= 200),
-    back text NOT NULL CHECK (char_length(back) <= 500),
-    space_repetition space_repetition_status NOT NULL DEFAULT 'not_checked',
-    last_repetition timestamptz,
-    created_at timestamptz NOT NULL DEFAULT now(),
-    updated_at timestamptz NOT NULL DEFAULT now(),
-    CONSTRAINT flashcards_deck_fk 
-        FOREIGN KEY (user_id, deck_id) 
-        REFERENCES decks(user_id, id) 
-        ON DELETE CASCADE
-);
-```
 
 **Kolumny:**
 - `id` - bigint, klucz główny, auto-increment
@@ -113,22 +83,6 @@ CREATE TABLE flashcards (
 
 Przechowuje historię sesji generowania fiszek przez AI.
 
-```sql
-CREATE TABLE generations (
-    session_id bigint GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
-    user_id uuid NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE,
-    input_text_hash text NOT NULL,
-    input_text_length integer NOT NULL,
-    model text NOT NULL,
-    status generation_status NOT NULL DEFAULT 'pending',
-    generated_total integer NOT NULL DEFAULT 0 CHECK (generated_total >= 0),
-    accepted_total integer NOT NULL DEFAULT 0 CHECK (accepted_total >= 0),
-    created_at timestamptz NOT NULL DEFAULT now(),
-    updated_at timestamptz NOT NULL DEFAULT now(),
-    CONSTRAINT accepted_lte_generated CHECK (accepted_total <= generated_total)
-);
-```
-
 **Kolumny:**
 - `session_id` - bigint, klucz główny, auto-increment
 - `user_id` - uuid, NOT NULL, FK do auth.users(id), ON DELETE CASCADE
@@ -148,16 +102,6 @@ CREATE TABLE generations (
 ### 3.4. generation_error
 
 Przechowuje informacje o błędach podczas generowania fiszek przez AI (relacja 1:1 z generations).
-
-```sql
-CREATE TABLE generation_error (
-    session_id bigint PRIMARY KEY REFERENCES generations(session_id) ON DELETE CASCADE,
-    user_id uuid NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE,
-    error_code text,
-    message text NOT NULL,
-    created_at timestamptz NOT NULL DEFAULT now()
-);
-```
 
 **Kolumny:**
 - `session_id` - bigint, klucz główny i FK do generations(session_id), ON DELETE CASCADE
