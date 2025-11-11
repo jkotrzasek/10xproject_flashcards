@@ -152,7 +152,8 @@ export type Database = {
           accepted_total: number
           created_at: string
           generated_total: number
-          input_text: string
+          input_text_hash: string
+          input_text_length: number
           model: string
           session_id: number
           status: Database["public"]["Enums"]["generation_status"]
@@ -163,7 +164,8 @@ export type Database = {
           accepted_total?: number
           created_at?: string
           generated_total?: number
-          input_text: string
+          input_text_hash: string
+          input_text_length: number
           model: string
           session_id?: never
           status?: Database["public"]["Enums"]["generation_status"]
@@ -174,7 +176,8 @@ export type Database = {
           accepted_total?: number
           created_at?: string
           generated_total?: number
-          input_text?: string
+          input_text_hash?: string
+          input_text_length?: number
           model?: string
           session_id?: never
           status?: Database["public"]["Enums"]["generation_status"]

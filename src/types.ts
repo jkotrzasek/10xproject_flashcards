@@ -129,7 +129,7 @@ export type GenerationMetadataDto = Omit<Generation, 'user_id'>;
  */
 export type GenerationHistoryItemDto = Pick<
   Generation,
-  'session_id' | 'created_at' | 'input_text' | 'generated_total'
+  'session_id' | 'created_at' | 'input_text_hash' | 'input_text_length' | 'generated_total'
 >;
 
 
@@ -193,7 +193,9 @@ export interface ReviewFlashcardCommand {
  * Request body for POST /api/generations
  * Validation: input_text 1000-10000 characters
  */
-export type CreateGenerationCommand = Pick<GenerationInsert, 'input_text'>;
+export interface CreateGenerationCommand {
+  input_text: string;
+}
 
 /**
  * Request body for PATCH /api/generations/:sessionId/accepted

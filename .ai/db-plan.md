@@ -117,7 +117,8 @@ Przechowuje historię sesji generowania fiszek przez AI.
 CREATE TABLE generations (
     session_id bigint GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
     user_id uuid NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE,
-    input_text text NOT NULL CHECK (char_length(input_text) >= 1000 AND char_length(input_text) <= 10000),
+    input_text_hash text NOT NULL,
+    input_text_length integer NOT NULL,
     model text NOT NULL,
     status generation_status NOT NULL DEFAULT 'pending',
     generated_total integer NOT NULL DEFAULT 0 CHECK (generated_total >= 0),
@@ -131,7 +132,8 @@ CREATE TABLE generations (
 **Kolumny:**
 - `session_id` - bigint, klucz główny, auto-increment
 - `user_id` - uuid, NOT NULL, FK do auth.users(id), ON DELETE CASCADE
-- `input_text` - text, NOT NULL, długość 1000-10000 znaków
+- `input_text_hash` - text, NOT NULL (hash SHA-256 tekstu wejściowego)
+- `input_text_length` - integer, NOT NULL
 - `model` - text, NOT NULL (nazwa modelu AI użytego do generowania)
 - `status` - generation_status ENUM, NOT NULL, domyślnie 'pending'
 - `generated_total` - integer, NOT NULL, domyślnie 0 (łączna liczba wygenerowanych fiszek)
@@ -140,7 +142,6 @@ CREATE TABLE generations (
 - `updated_at` - timestamptz, NOT NULL, domyślnie now()
 
 **Ograniczenia:**
-- CHECK na długość input_text (1000-10000 znaków)
 - CHECK accepted_total <= generated_total
 - CHECK na nieujemne wartości liczników
 

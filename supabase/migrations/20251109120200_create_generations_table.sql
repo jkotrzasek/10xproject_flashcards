@@ -17,9 +17,11 @@ create table generations (
     -- on delete cascade: deleting a user removes their generation history
     user_id uuid not null references auth.users(id) on delete cascade,
     
-    -- input text provided by user for generation
-    -- must be between 1000 and 10000 characters (business requirement)
-    input_text text not null check (char_length(input_text) >= 1000 and char_length(input_text) <= 10000),
+    -- hash of input text provided by user for generation
+    input_text_hash text not null,
+
+    -- length of original input text
+    input_text_length integer not null,
     
     -- name/identifier of ai model used for generation
     -- required for analytics and debugging
