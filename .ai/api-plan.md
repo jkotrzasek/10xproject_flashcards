@@ -164,7 +164,7 @@ The API manages the following core resources, mapped to database tables:
   - `limit` (optional): Maximum number of flashcards to return (default: 50)
 - **Success Response (200):**
 ```json
-{"data": [{"id": 1, "front": "What is the Pythagorean theorem?", "back": "a² + b² = c² where c is the hypotenuse", "space_repetition": "not_checked", "last_repetition": null}], "meta": {"total_due": 15, "returned": 15, "deck_total": 45}}
+{"data": [{"id": 1, "front": "What is the Pythagorean theorem?", "back": "a² + b² = c² where c is the hypotenuse"], "meta": {"total_due": 15, "returned": 15, "deck_total": 45}}
 ```
 - **Error Responses:**
   - `401 Unauthorized` - Missing or invalid authentication token
@@ -201,7 +201,7 @@ The API manages the following core resources, mapped to database tables:
 ```
 - **Success Response (200):**
 ```json
-{"data": {"session_id": 1, "status": "success", "generated_total": 12, "flashcards_proposals": [{"front": "What is photosynthesis?", "back": "Process by which plants convert light energy into chemical energy"}, {"front": "What is mitochondria?", "back": "The powerhouse of the cell"}], "created_at": "2025-11-10T12:00:00Z", "updated_at": "2025-11-10T12:01:23Z"}}
+{"data": {"session_id": 1, "status": "success", "generated_total": 12, "flashcards_proposals": [{"front": "What is photosynthesis?", "back": "Process by which plants convert light energy into chemical energy"}, {"front": "What is mitochondria?", "back": "The powerhouse of the cell"}]}
 ```
 - **Error Responses:**
   - `400 Bad Request` - Input text invalid
@@ -237,10 +237,7 @@ The API manages the following core resources, mapped to database tables:
 ```json
 {"accepted_total": 8}
 ```
-- **Success Response (200):**
-```json
-{"data": {"session_id": 1}}
-```
+- **Success Response (200):** No content
 - **Error Responses:**
   - `400 Bad Request` - Invalid accepted_total (negative or > generated_total)
   - `401 Unauthorized` - Missing or invalid authentication token
@@ -252,7 +249,7 @@ The API manages the following core resources, mapped to database tables:
 - **Description:** Get all generation errors across all users (admin only)
 - **Query Parameters:**
   - `user_id` (optional): Filter by specific user UUID
-- **Success Response (200):** List of errors
+- **Success Response (200):** List of errors without user ID
 - **Error Responses:**
   - `401 Unauthorized` - Missing or invalid authentication token
   - `403 Forbidden` - User is not an admin
