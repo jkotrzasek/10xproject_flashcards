@@ -125,7 +125,7 @@ export type GenerationMetadataDto = Omit<Generation, "user_id">;
  */
 export type GenerationHistoryItemDto = Pick<
   Generation,
-  "session_id" | "created_at" | "input_text_hash" | "input_text_length" | "generated_total" | "accepted_total"
+  "session_id" | "created_at" | "updated_at" | "input_text_hash" | "input_text_length" | "generated_total" | "accepted_total"
 >;
 
 /**
