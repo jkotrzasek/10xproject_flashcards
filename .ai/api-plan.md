@@ -184,11 +184,11 @@ The API manages the following core resources, mapped to database tables:
 
 ### 2.5. AI Generation Endpoints
 
-- **GET `/api/generations/limit`**
+- **GET `/api/generations/limits`**
 - **Description:** Check remaining AI generations for today
 - **Success Response (200):**
 ```json
-{"data": {"daily_limit": 10, "used_today": 7, "remaining": 3, "reset_at": "2025-11-11T00:00:00Z"}}
+{"data": {"daily_limit": 10, "used_today": 7, "remaining": 3}}
 ```
 - **Error Responses:**
   - `401 Unauthorized` - Missing or invalid authentication token
@@ -227,7 +227,7 @@ The API manages the following core resources, mapped to database tables:
 
 - **GET `/api/generations`**
 - **Description:** Get user's generation history (last 30 days)
-- **Success Response (200):** Users history - just ID, create date, text and generated total
+- **Success Response (200):** Users history - just ID, create date, text, accepeted total and generated total
 - **Error Responses:**
   - `401 Unauthorized` - Missing or invalid authentication token
 

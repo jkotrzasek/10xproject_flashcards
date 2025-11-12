@@ -1,5 +1,5 @@
-import type { APIRoute } from 'astro';
-import { createGenerationSchema } from '../../lib/validation/generation.schema';
+import type { APIRoute } from "astro";
+import { createGenerationSchema } from "../../../lib/validation/generation.schema";
 import {
   ensureDailyLimit,
   createPendingGeneration,
@@ -8,9 +8,10 @@ import {
   validateFlashcardProposals,
   generateFlashcards,
   GenerationErrorCodes,
-} from '../../lib/services/generation.service';
-import { DEFAULT_USER_ID } from '../../db/supabase.client';
-import type { ApiResponse, GenerationResultDto, ApiErrorResponse } from '../../types';
+  getGenerationHistory,
+} from "../../../lib/services/generation.service";
+import { DEFAULT_USER_ID } from "../../../db/supabase.client";
+import type { ApiResponse, GenerationResultDto, ApiErrorResponse, GenerationHistoryItemDto } from "../../../types";
 
 export const prerender = false;
 
@@ -23,7 +24,7 @@ const USER_ID = DEFAULT_USER_ID;
 /**
  * POST /api/generations
  * Generate flashcard proposals from input text using AI
- * 
+ *
  * @requires Authentication (uses USER_ID constant for MVP)
  * @body CreateGenerationCommand { input_text: string }
  * @returns ApiResponse<GenerationResultDto> on success (200)
@@ -41,11 +42,11 @@ export const POST: APIRoute = async ({ request, locals }) => {
       return new Response(
         JSON.stringify({
           error: {
-            message: 'Invalid JSON in request body',
-            code: 'INVALID_JSON',
+            message: "Invalid JSON in request body",
+            code: "INVALID_JSON",
           },
         } satisfies ApiErrorResponse),
-        { status: 400, headers: { 'Content-Type': 'application/json' } }
+        { status: 400, headers: { "Content-Type": "application/json" } }
       );
     }
 
@@ -57,10 +58,10 @@ export const POST: APIRoute = async ({ request, locals }) => {
         JSON.stringify({
           error: {
             message: firstError.message,
-            code: 'INVALID_INPUT',
+            code: "INVALID_INPUT",
           },
         } satisfies ApiErrorResponse),
-        { status: 400, headers: { 'Content-Type': 'application/json' } }
+        { status: 400, headers: { "Content-Type": "application/json" } }
       );
     }
 
@@ -74,11 +75,11 @@ export const POST: APIRoute = async ({ request, locals }) => {
         return new Response(
           JSON.stringify({
             error: {
-              message: 'Daily generation limit exceeded. Please try again tomorrow.',
-              code: 'DAILY_LIMIT_EXCEEDED',
+              message: "Daily generation limit exceeded. Please try again tomorrow.",
+              code: "DAILY_LIMIT_EXCEEDED",
             },
           } satisfies ApiErrorResponse),
-          { status: 429, headers: { 'Content-Type': 'application/json' } }
+          { status: 429, headers: { "Content-Type": "application/json" } }
         );
       }
       throw error;
@@ -89,15 +90,15 @@ export const POST: APIRoute = async ({ request, locals }) => {
     try {
       sessionId = await createPendingGeneration(supabase, USER_ID, input_text);
     } catch (error) {
-      console.error('Failed to create pending generation:', error);
+      console.error("Failed to create pending generation:", error);
       return new Response(
         JSON.stringify({
           error: {
-            message: 'Failed to initialize generation. Please try again.',
-            code: 'DATABASE_ERROR',
+            message: "Failed to initialize generation. Please try again.",
+            code: "DATABASE_ERROR",
           },
         } satisfies ApiErrorResponse),
-        { status: 500, headers: { 'Content-Type': 'application/json' } }
+        { status: 500, headers: { "Content-Type": "application/json" } }
       );
     }
 
@@ -108,21 +109,20 @@ export const POST: APIRoute = async ({ request, locals }) => {
 
       // Validate generated proposals
       if (!validateFlashcardProposals(flashcardProposals)) {
-        throw new Error('Generated flashcards contain invalid data');
+        throw new Error("Generated flashcards contain invalid data");
       }
-
     } catch (error) {
       // Determine error type and code
       let errorCode: string = GenerationErrorCodes.AI_GENERATION_ERROR;
-      let errorMessage = 'AI generation failed. Please try again later.';
+      let errorMessage = "AI generation failed. Please try again later.";
 
       if (error instanceof Error) {
-        if (error.message === 'AI_TIMEOUT') {
+        if (error.message === "AI_TIMEOUT") {
           errorCode = GenerationErrorCodes.AI_TIMEOUT;
-          errorMessage = 'AI generation timed out. Please try again with shorter text.';
-        } else if (error.message.includes('invalid data')) {
+          errorMessage = "AI generation timed out. Please try again with shorter text.";
+        } else if (error.message.includes("invalid data")) {
           errorCode = GenerationErrorCodes.AI_RESPONSE_INVALID;
-          errorMessage = 'AI generated invalid flashcards. Please try again.';
+          errorMessage = "AI generated invalid flashcards. Please try again.";
         }
       }
 
@@ -136,7 +136,7 @@ export const POST: APIRoute = async ({ request, locals }) => {
             code: errorCode,
           },
         } satisfies ApiErrorResponse),
-        { status: 500, headers: { 'Content-Type': 'application/json' } }
+        { status: 500, headers: { "Content-Type": "application/json" } }
       );
     }
 
@@ -144,8 +144,8 @@ export const POST: APIRoute = async ({ request, locals }) => {
     try {
       await finalizeGenerationSuccess(supabase, sessionId, flashcardProposals.length);
     } catch (error) {
-      console.error('Failed to finalize generation:', error);
-      // TODO: Fix in future versions - generation record will remain in 'pending' status
+      console.error("Failed to finalize generation:", error);
+      // TODO: Fix in future versions - generation record will remain in "pending" status
       // This creates orphaned pending records in database but MVP can tolerate this
       // Generation succeeded and flashcards were generated successfully, so we still return success
     }
@@ -154,7 +154,7 @@ export const POST: APIRoute = async ({ request, locals }) => {
     const response: ApiResponse<GenerationResultDto> = {
       data: {
         session_id: sessionId,
-        status: 'success',
+        status: "success",
         generated_total: flashcardProposals.length,
         flashcards_proposals: flashcardProposals,
       },
@@ -162,22 +162,74 @@ export const POST: APIRoute = async ({ request, locals }) => {
 
     return new Response(JSON.stringify(response), {
       status: 200,
-      headers: { 'Content-Type': 'application/json' },
+      headers: { "Content-Type": "application/json" },
     });
-
   } catch (error) {
     // Catch-all for unexpected errors
-    console.error('Unexpected error in POST /api/generations:', error);
-    
+    console.error("Unexpected error in POST /api/generations:", error);
+
     return new Response(
       JSON.stringify({
         error: {
-          message: 'An unexpected error occurred. Please try again.',
-          code: 'INTERNAL_ERROR',
+          message: "An unexpected error occurred. Please try again.",
+          code: "INTERNAL_ERROR",
         },
       } satisfies ApiErrorResponse),
-      { status: 500, headers: { 'Content-Type': 'application/json' } }
+      { status: 500, headers: { "Content-Type": "application/json" } }
     );
   }
 };
 
+/**
+ * GET /api/generations
+ * Get user"s generation history from last 30 days
+ *
+ * @requires Authentication (uses USER_ID constant for MVP)
+ * @returns ApiResponse<GenerationHistoryItemDto[]> on success (200)
+ * @returns ApiErrorResponse on error (500)
+ */
+export const GET: APIRoute = async ({ locals }) => {
+  const supabase = locals.supabase;
+
+  try {
+    // Fetch generation history
+    let history: GenerationHistoryItemDto[];
+    try {
+      history = await getGenerationHistory(supabase, USER_ID);
+    } catch (error) {
+      console.error("Error fetching generation history:", error);
+      return new Response(
+        JSON.stringify({
+          error: {
+            message: "Failed to fetch generation history. Please try again.",
+            code: "DATABASE_ERROR",
+          },
+        } satisfies ApiErrorResponse),
+        { status: 500, headers: { "Content-Type": "application/json" } }
+      );
+    }
+
+    // Return successful response (may be empty array)
+    const response: ApiResponse<GenerationHistoryItemDto[]> = {
+      data: history,
+    };
+
+    return new Response(JSON.stringify(response), {
+      status: 200,
+      headers: { "Content-Type": "application/json" },
+    });
+  } catch (error) {
+    // Catch-all for unexpected errors
+    console.error("Unexpected error in GET /api/generations:", error);
+
+    return new Response(
+      JSON.stringify({
+        error: {
+          message: "An unexpected error occurred. Please try again.",
+          code: "INTERNAL_ERROR",
+        },
+      } satisfies ApiErrorResponse),
+      { status: 500, headers: { "Content-Type": "application/json" } }
+    );
+  }
+};

@@ -21,7 +21,7 @@
 - Weryfikacje biznesowe: autoryzacja użytkownika z `context.locals.supabase`, egzekwowanie dziennego limitu generacji (z istniejącej logiki lub nowej metody w serwisie), wykrywanie duplikatów przez MD5 `input_text_hash`.
 
 ## 3. Szczegóły odpowiedzi
-- Sukces (200): `ApiResponse<GenerationResultDto>` z polami `session_id`, `status`, `generated_total`, `flashcards_proposals` (tablica `FlashcardProposalDto`).
+- Sukces (200): `ApiResponse<GenerationResultDto>` z polami `session_id`, `status`, `generated_total`, `accepted_total` `flashcards_proposals` (tablica `FlashcardProposalDto`).
 - Przykładowy JSON response (200):
 ```json
 {
