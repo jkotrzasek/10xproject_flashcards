@@ -11,16 +11,19 @@ Głównym problemem, który rozwiązuje nasza aplikacja, jest wysoki próg wejś
 ## 3. Wymagania funkcjonalne
 
 ### 3.1. System kont użytkowników
+
 - Użytkownicy mogą zakładać konto za pomocą adresu e-mail i hasła.
 - Użytkownicy mogą logować się i wylogowywać ze swojego konta.
 - System zapewnia bezpieczne przechowywanie danych uwierzytelniających.
 
 ### 3.2. Zarządzanie kategoriami (Deckami)
+
 - Użytkownicy mogą tworzyć nowe decki (kategorie) dla swoich fiszek.
 - Użytkownicy mogą edytować nazwy istniejących decków.
 - Użytkownicy mogą usuwać decki wraz z całą ich zawartością.
 
 ### 3.3. Generowanie fiszek przez AI
+
 - Użytkownik może wkleić tekst o długości od 1000 do 10000 znaków w dedykowane pole.
 - System generuje zestaw fiszek w formacie przód/tył (pytanie/odpowiedź, termin/definicja itp.). Długość pojedynczej fiszki nie przekracza 200 znaków przód, 500 znaków tył.
 - Po wygenerowaniu użytkownik przegląda fiszki, akceptując lub odrzucając każdą z nich. Odrzucone fiszki są trwale usuwane.
@@ -28,11 +31,13 @@ Głównym problemem, który rozwiązuje nasza aplikacja, jest wysoki próg wejś
 - Obowiązuje limit 10 operacji generowania fiszek przez AI na użytkownika dziennie.
 
 ### 3.4. Manualne zarządzanie fiszkami
+
 - Użytkownicy mogą ręcznie tworzyć nowe fiszki (przód/tył) w wybranym decku.
 - Użytkownicy mogą edytować treść istniejących fiszek.
 - Użytkownicy mogą usuwać pojedyncze fiszki.
 
 ### 3.5. System nauki
+
 - Użytkownik może rozpocząć sesję nauki dla dowolnego decku.
 - Interfejs nauki prezentuje najpierw przód fiszki, a po interakcji użytkownika (np. kliknięciu) odkrywa tył.
 - Użytkownik dokonuje samooceny, zaznaczając, czy znał odpowiedź ("wiedziałem" / "nie wiedziałem").
@@ -40,6 +45,7 @@ Głównym problemem, który rozwiązuje nasza aplikacja, jest wysoki próg wejś
 - Użytkownik ma możliwość zresetowania postępu nauki dla całego decku.
 
 ### 3.6. Interfejs i statystyki
+
 - Użytkownik widzi listę swoich decków.
 - Dla każdego decku widoczna jest całkowita liczba fiszek.
 - W panelu głównym wyświetlana jest łączna liczba fiszek powtórzonych w danym dniu.
@@ -47,6 +53,7 @@ Głównym problemem, który rozwiązuje nasza aplikacja, jest wysoki próg wejś
 ## 4. Granice produktu
 
 ### 4.1. Funkcjonalności w zakresie MVP
+
 - Rejestracja i logowanie użytkowników (e-mail/hasło).
 - Generowanie fiszek przez AI z wklejonego tekstu.
 - Pełne zarządzanie (CRUD) deckami i fiszkami.
@@ -55,6 +62,7 @@ Głównym problemem, który rozwiązuje nasza aplikacja, jest wysoki próg wejś
 - Podstawowe statystyki użytkowania.
 
 ### 4.2. Funkcjonalności poza zakresem MVP
+
 - Zaawansowane algorytmy powtórek (np. SuperMemo, Anki).
 - Import plików (PDF, DOCX itp.).
 - Współdzielenie i publiczne udostępnianie decków.
@@ -65,7 +73,9 @@ Głównym problemem, który rozwiązuje nasza aplikacja, jest wysoki próg wejś
 ## 5. Historyjki użytkowników
 
 ### Zarządzanie kontem
+
 ---
+
 - ID: US-001
 - Tytuł: Rejestracja nowego użytkownika
 - Opis: Jako nowy użytkownik, chcę móc założyć konto w aplikacji przy użyciu mojego adresu e-mail i hasła, aby móc zapisywać swoje fiszki.
@@ -77,6 +87,7 @@ Głównym problemem, który rozwiązuje nasza aplikacja, jest wysoki próg wejś
   - Po pomyślnej rejestracji jestem automatycznie zalogowany i przekierowany do panelu głównego.
 
 ---
+
 - ID: US-002
 - Tytuł: Logowanie do systemu
 - Opis: Jako zarejestrowany użytkownik, chcę móc zalogować się na swoje konto, aby uzyskać dostęp do moich decków i fiszek.
@@ -86,6 +97,7 @@ Głównym problemem, który rozwiązuje nasza aplikacja, jest wysoki próg wejś
   - W przypadku podania błędnych danych wyświetlany jest stosowny komunikat.
 
 ---
+
 - ID: US-003
 - Tytuł: Wylogowanie z systemu
 - Opis: Jako zalogowany użytkownik, chcę móc się wylogować, aby zabezpieczyć dostęp do mojego konta.
@@ -94,7 +106,9 @@ Głównym problemem, który rozwiązuje nasza aplikacja, jest wysoki próg wejś
   - Po kliknięciu przycisku moja sesja zostaje zakończona i jestem przekierowany na stronę logowania.
 
 ### Zarządzanie deckami
+
 ---
+
 - ID: US-004
 - Tytuł: Tworzenie nowego decku
 - Opis: Jako użytkownik, chcę móc stworzyć nowy deck (kategorię), aby organizować moje fiszki tematycznie.
@@ -104,6 +118,7 @@ Głównym problemem, który rozwiązuje nasza aplikacja, jest wysoki próg wejś
   - Nowo utworzony deck pojawia się na liście moich decków.
 
 ---
+
 - ID: US-005
 - Tytuł: Zmiana nazwy decku
 - Opis: Jako użytkownik, chcę mieć możliwość zmiany nazwy istniejącego decku, jeśli popełniłem błąd lub zmieniłem koncepcję.
@@ -112,6 +127,7 @@ Głównym problemem, który rozwiązuje nasza aplikacja, jest wysoki próg wejś
   - Po zapisaniu zmiany nowa nazwa jest widoczna na liście.
 
 ---
+
 - ID: US-006
 - Tytuł: Usuwanie decku
 - Opis: Jako użytkownik, chcę móc usunąć cały deck, gdy nie jest mi już potrzebny.
@@ -121,7 +137,9 @@ Głównym problemem, który rozwiązuje nasza aplikacja, jest wysoki próg wejś
   - Usunięcie decku powoduje nieodwracalne usunięcie wszystkich zawartych w nim fiszek.
 
 ### Generowanie i zarządzanie fiszkami
+
 ---
+
 - ID: US-007
 - Tytuł: Generowanie fiszek przez AI
 - Opis: Jako student, chcę wkleić notatki z wykładu, aby system automatycznie stworzył dla mnie zestaw fiszek, oszczędzając mój czas.
@@ -132,6 +150,7 @@ Głównym problemem, który rozwiązuje nasza aplikacja, jest wysoki próg wejś
   - Po dokonaniu selekcji mogę wybrać z listy rozwijanej jeden z moich decków i przypisać do niego wszystkie zaakceptowane fiszki.
 
 ---
+
 - ID: US-008
 - Tytuł: Obsługa limitu generacji AI
 - Opis: Jako użytkownik, chcę być poinformowany, gdy osiągnę dzienny limit generowania fiszek.
@@ -140,6 +159,7 @@ Głównym problemem, który rozwiązuje nasza aplikacja, jest wysoki próg wejś
   - Przycisk "Generuj" staje się nieaktywny do następnego dnia.
 
 ---
+
 - ID: US-009
 - Tytuł: Ręczne tworzenie fiszki
 - Opis: Jako osoba ucząca się języka, chcę móc szybko dodać pojedynczą fiszkę z nowym słówkiem bezpośrednio do wybranego decku.
@@ -149,6 +169,7 @@ Głównym problemem, który rozwiązuje nasza aplikacja, jest wysoki próg wejś
   - Po zapisaniu nowa fiszka jest dodawana do bieżącego decku.
 
 ---
+
 - ID: US-010
 - Tytuł: Edycja fiszki
 - Opis: Jako użytkownik, chcę móc edytować treść istniejącej fiszki, aby poprawić błędy lub ją uzupełnić.
@@ -158,6 +179,7 @@ Głównym problemem, który rozwiązuje nasza aplikacja, jest wysoki próg wejś
   - Zmiany są zapisywane i widoczne w decku oraz podczas nauki.
 
 ---
+
 - ID: US-011
 - Tytuł: Usuwanie fiszki
 - Opis: Jako użytkownik, chcę mieć możliwość usunięcia pojedynczej fiszki, która stała się nieaktualna.
@@ -166,7 +188,9 @@ Głównym problemem, który rozwiązuje nasza aplikacja, jest wysoki próg wejś
   - Po potwierdzeniu fiszka jest trwale usuwana z decku.
 
 ### System nauki
+
 ---
+
 - ID: US-012
 - Tytuł: Rozpoczynanie sesji nauki
 - Opis: Jako użytkownik, chcę wybrać deck i rozpocząć sesję nauki, aby powtórzyć materiał.
@@ -176,6 +200,7 @@ Głównym problemem, który rozwiązuje nasza aplikacja, jest wysoki próg wejś
   - System wybiera fiszki do powtórki na podstawie algorytmu powtórek.
 
 ---
+
 - ID: US-013
 - Tytuł: Ocenianie znajomości fiszki
 - Opis: Podczas nauki, chcę ocenić, czy znałem odpowiedź na fiszkę, aby system mógł zaplanować jej kolejną powtórkę.
@@ -185,6 +210,7 @@ Głównym problemem, który rozwiązuje nasza aplikacja, jest wysoki próg wejś
   - Moja ocena wpływa na interwał następnej powtórki danej fiszki.
 
 ---
+
 - ID: US-014
 - Tytuł: Resetowanie postępu w decku
 - Opis: Jako użytkownik, chcę mieć możliwość zresetowania całego postępu nauki w danym decku, aby zacząć naukę od początku.
@@ -194,6 +220,7 @@ Głównym problemem, który rozwiązuje nasza aplikacja, jest wysoki próg wejś
   - Po potwierdzeniu, historia powtórek dla wszystkich fiszek w tym decku jest czyszczona.
 
 ---
+
 - ID: US-015
 - Tytuł: Wyświetlanie statystyk
 - Opis: Jako użytkownik, chcę widzieć podstawowe statystyki mojej nauki, aby śledzić swoje postępy.

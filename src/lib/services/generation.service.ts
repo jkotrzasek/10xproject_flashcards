@@ -61,11 +61,13 @@ export const getDailyGenerationsCount = async (supabase: SupabaseClient, userId:
   return count ?? 0;
 };
 
-
 /**
  * Retrieve daily generation usage metadata for the given user.
  */
-export const getDailyGenerationLimitsMetadata = async (supabase: SupabaseClient, userId: string): Promise<GenerationLimitDto> => {
+export const getDailyGenerationLimitsMetadata = async (
+  supabase: SupabaseClient,
+  userId: string
+): Promise<GenerationLimitDto> => {
   const count = await getDailyGenerationsCount(supabase, userId);
 
   return {

@@ -13,6 +13,7 @@ user_id uuid NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE
 ```
 
 **Struktura auth.users (zarządzana przez Supabase):**
+
 - `id` - uuid, klucz główny
 - `email` - text, adres email użytkownika
 - `encrypted_password` - text, zahashowane hasło
@@ -21,6 +22,7 @@ user_id uuid NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE
 - oraz inne pola zarządzane przez Supabase Auth
 
 **W naszych migracjach:**
+
 - NIE tworzymy tabeli users
 - Używamy `auth.users(id)` jako referencji w Foreign Keys
 - Supabase zapewnia integralność referencyjną
@@ -47,6 +49,7 @@ CREATE TYPE generation_status AS ENUM ('pending', 'success', 'error');
 Przechowuje decki (kategorie) fiszek należące do użytkowników.
 
 **Kolumny:**
+
 - `id` - bigint, klucz główny, auto-increment
 - `user_id` - uuid, NOT NULL, FK do auth.users(id), ON DELETE CASCADE
 - `name` - citext, NOT NULL, maksymalnie 30 znaków, case-insensitive
@@ -54,6 +57,7 @@ Przechowuje decki (kategorie) fiszek należące do użytkowników.
 - `updated_at` - timestamptz, NOT NULL, domyślnie now()
 
 **Ograniczenia:**
+
 - UNIQUE(user_id, name) - unikalna nazwa decku w obrębie użytkownika (case-insensitive)
 - CHECK na długość nazwy (1-30 znaków)
 
@@ -62,6 +66,7 @@ Przechowuje decki (kategorie) fiszek należące do użytkowników.
 Przechowuje fiszki należące do użytkowników, opcjonalnie przypisane do decków.
 
 **Kolumny:**
+
 - `id` - bigint, klucz główny, auto-increment
 - `user_id` - uuid, NOT NULL, FK do auth.users(id), ON DELETE CASCADE
 - `deck_id` - bigint, NULL (fiszka może być nieprzypisana)
@@ -75,6 +80,7 @@ Przechowuje fiszki należące do użytkowników, opcjonalnie przypisane do deck�
 - `updated_at` - timestamptz, NOT NULL, domyślnie now()
 
 **Ograniczenia:**
+
 - Złożony FK (user_id, deck_id) → decks(user_id, id) z ON DELETE CASCADE
 - CHECK na długość front (0-200 znaków)
 - CHECK na długość back (0-500 znaków)
@@ -84,6 +90,7 @@ Przechowuje fiszki należące do użytkowników, opcjonalnie przypisane do deck�
 Przechowuje historię sesji generowania fiszek przez AI.
 
 **Kolumny:**
+
 - `session_id` - bigint, klucz główny, auto-increment
 - `user_id` - uuid, NOT NULL, FK do auth.users(id), ON DELETE CASCADE
 - `input_text_hash` - text, NOT NULL (hash SHA-256 tekstu wejściowego)
@@ -96,6 +103,7 @@ Przechowuje historię sesji generowania fiszek przez AI.
 - `updated_at` - timestamptz, NOT NULL, domyślnie now()
 
 **Ograniczenia:**
+
 - CHECK accepted_total <= generated_total
 - CHECK na nieujemne wartości liczników
 
@@ -104,6 +112,7 @@ Przechowuje historię sesji generowania fiszek przez AI.
 Przechowuje informacje o błędach podczas generowania fiszek przez AI (relacja 1:1 z generations).
 
 **Kolumny:**
+
 - `session_id` - bigint, klucz główny i FK do generations(session_id), ON DELETE CASCADE
 - `user_id` - uuid, NOT NULL, FK do auth.users(id), ON DELETE CASCADE
 - `error_code` - text, NULL (kod błędu z API)
@@ -111,38 +120,45 @@ Przechowuje informacje o błędach podczas generowania fiszek przez AI (relacja 
 - `created_at` - timestamptz, NOT NULL, domyślnie now()
 
 **Uwagi:**
+
 - Wpis tworzony tylko gdy generations.status = 'error'
 - Relacja 1:1 wymuszona przez PK na session_id
 
 ## 4. Relacje między tabelami
 
 ### 4.1. auth.users → decks
+
 - **Typ:** jeden-do-wielu (1:N)
 - **Opis:** Użytkownik może posiadać wiele decków
 - **ON DELETE:** CASCADE (usunięcie użytkownika usuwa jego decki)
 
 ### 4.2. auth.users → flashcards
+
 - **Typ:** jeden-do-wielu (1:N)
 - **Opis:** Użytkownik może posiadać wiele fiszek
 - **ON DELETE:** CASCADE (usunięcie użytkownika usuwa jego fiszki)
 
 ### 4.3. decks → flashcards
+
 - **Typ:** jeden-do-wielu (1:N)
 - **Opis:** Deck może zawierać wiele fiszek, fiszka może być nieprzypisana (deck_id NULL)
 - **FK:** Złożony klucz obcy (user_id, deck_id) → decks(user_id, id)
 - **ON DELETE:** CASCADE (usunięcie decku usuwa przypisane do niego fiszki)
 
 ### 4.4. auth.users → generations
+
 - **Typ:** jeden-do-wielu (1:N)
 - **Opis:** Użytkownik może mieć wiele sesji generowania
 - **ON DELETE:** CASCADE (usunięcie użytkownika usuwa jego historię generacji)
 
 ### 4.5. generations → generation_error
+
 - **Typ:** jeden-do-jednego (1:1)
 - **Opis:** Sesja generowania może mieć maksymalnie jeden rekord błędu
 - **ON DELETE:** CASCADE (usunięcie sesji usuwa powiązany błąd)
 
 ### 4.6. auth.users → generation_error
+
 - **Typ:** jeden-do-wielu (1:N)
 - **Opis:** Użytkownik może mieć wiele błędów generacji
 - **ON DELETE:** CASCADE (usunięcie użytkownika usuwa jego błędy generacji)
@@ -168,8 +184,8 @@ CREATE INDEX idx_flashcards_user_id ON flashcards(user_id);
 CREATE INDEX idx_flashcards_deck_id ON flashcards(deck_id) WHERE deck_id IS NOT NULL;
 
 -- Indeks dla znajdowania fiszek do nauki (filter na status i sortowanie po last_repetition)
-CREATE INDEX idx_flashcards_learning 
-    ON flashcards(user_id, deck_id, space_repetition, last_repetition) 
+CREATE INDEX idx_flashcards_learning
+    ON flashcards(user_id, deck_id, space_repetition, last_repetition)
     WHERE deck_id IS NOT NULL;
 
 -- Indeks złożony dla FK constraint (user_id, deck_id) - wspiera JOIN i CASCADE
@@ -239,17 +255,17 @@ CREATE OR REPLACE FUNCTION manage_flashcard_last_repetition()
 RETURNS TRIGGER AS $$
 BEGIN
     -- Jeśli space_repetition zmienia się na 'OK' lub 'NOK', ustaw last_repetition na now()
-    IF (NEW.space_repetition IN ('OK', 'NOK') AND 
+    IF (NEW.space_repetition IN ('OK', 'NOK') AND
         (OLD.space_repetition IS DISTINCT FROM NEW.space_repetition)) THEN
         NEW.last_repetition = now();
     END IF;
-    
+
     -- Jeśli space_repetition zmienia się na 'not_checked', wyzeruj last_repetition
-    IF (NEW.space_repetition = 'not_checked' AND 
+    IF (NEW.space_repetition = 'not_checked' AND
         (OLD.space_repetition IS DISTINCT FROM NEW.space_repetition)) THEN
         NEW.last_repetition = NULL;
     END IF;
-    
+
     RETURN NEW;
 END;
 $$ LANGUAGE plpgsql;
@@ -409,6 +425,7 @@ CREATE UNIQUE INDEX idx_decks_user_id_id ON decks(user_id, id);
 ### 10.1. Normalizacja
 
 Schema jest znormalizowany do 3NF:
+
 - Brak redundancji danych
 - Każdy atrybut nieprymitywny jest w pełni zależny od klucza głównego
 - Brak zależności przechodnich
@@ -486,4 +503,3 @@ Schema jest znormalizowany do 3NF:
 - front i back mogą być pustymi stringami (wymagane NOT NULL, ale char_length może być 0)
 - Umożliwia zapisywanie fiszek "w budowie" lub specyficznych przypadków użycia
 - Walidacja biznesowa może wymagać niepustych treści w aplikacji
-

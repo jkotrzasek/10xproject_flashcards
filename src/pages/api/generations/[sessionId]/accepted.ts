@@ -1,5 +1,8 @@
 import type { APIRoute } from "astro";
-import { generationSessionIdSchema, updateGenerationAcceptedSchema } from "../../../../lib/validation/generation.schema";
+import {
+  generationSessionIdSchema,
+  updateGenerationAcceptedSchema,
+} from "../../../../lib/validation/generation.schema";
 import { updateGenerationAcceptedTotal } from "../../../../lib/services/generation.service";
 import { DEFAULT_USER_ID } from "../../../../db/supabase.client";
 import type { ApiErrorResponse } from "../../../../types";
@@ -162,4 +165,3 @@ export const PATCH: APIRoute = async ({ params, request, locals }) => {
     );
   }
 };
-
