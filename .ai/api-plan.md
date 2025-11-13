@@ -189,20 +189,17 @@ The API manages the following core resources, mapped to database tables:
 
 ```json
 {
+  "deck_id": 1,
+  "source": "manual",
+  "generation_id": null
   "flashcards": [
     {
-      "deck_id": 1,
       "front": "What is mitosis?",
       "back": "Cell division resulting in two identical daughter cells",
-      "source": "manual",
-      "generation_id": null
     },
     {
-      "deck_id": null,
       "front": "What is meiosis?",
       "back": "Cell division producing gametes with half the chromosomes",
-      "source": "ai_full",
-      "generation_id": 123
     }
   ]
 }
@@ -446,7 +443,7 @@ The API manages the following core resources, mapped to database tables:
   - When `space_repetition` changes to `'not_checked'`: Set `last_repetition = NULL`
   - Algorithm for selecting due flashcards (implemented in application layer):
     - Priority 1: `space_repetition = 'not_checked' or 'NOK'`
-    - Priority 2: `space_repetition = 'OK'` AND `last_repetition < now() - 7 days`
+    - Priority 2: `space_repetition = 'OK'` AND `last_repetition < now() - 1 day`
   - Always select at least 10% of 'OK' flashcards if exists
 
 #### Cascade Deletion
