@@ -263,7 +263,7 @@ The API manages the following core resources, mapped to database tables:
 
 ### 2.4. Learning System Endpoints
 
-- **GET `/api/decks/:deckId/learn`**
+- **GET `/api/learn/:deckId`**
 - **Description:** Get flashcards due for review based on spaced repetition algorithm
 - **Query Parameters:**
   - `limit` (optional): Maximum number of flashcards to return (default: 50)
@@ -277,12 +277,21 @@ The API manages the following core resources, mapped to database tables:
   - `401 Unauthorized` - Missing or invalid authentication token
   - `404 Not Found` - Deck does not exist
 
-- **POST `/api/flashcards/:id/review`**
+- **PATCH `/api/learn/review`**
 - **Description:** Record user's self-assessment for a flashcard
 - **Request Body:**
 
 ```json
-{ "response": "OK" }
+{ "review":[
+    {  "flashcard_id": 4,
+    "response": "OK" 
+    },
+    {  
+      "flashcard_id": 5,
+      "response": "NOK" 
+    }
+  ]
+}
 ```
 
 - **Success Response (204):** No content
@@ -438,6 +447,7 @@ The API manages the following core resources, mapped to database tables:
   - Algorithm for selecting due flashcards (implemented in application layer):
     - Priority 1: `space_repetition = 'not_checked' or 'NOK'`
     - Priority 2: `space_repetition = 'OK'` AND `last_repetition < now() - 7 days`
+  - Always select at least 10% of 'OK' flashcards if exists
 
 #### Cascade Deletion
 

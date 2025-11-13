@@ -151,19 +151,27 @@ export type UpdateDeckCommand = Pick<DeckInsert, "name">;
 
 /**
  * Single flashcard item in POST /api/flashcards request
+ * Contains only content fields (front and back)
  * Validation: front max 200 chars, back max 500 chars
- * generation_id required for ai_full/ai_edited, null for manual
  */
-export type CreateFlashcardItemCommand = Pick<
-  FlashcardInsert,
-  "deck_id" | "front" | "back" | "source" | "generation_id"
->;
+export interface CreateFlashcardItemCommand {
+  front: string;
+  back: string;
+}
 
 /**
  * Request body for POST /api/flashcards
- * Validation: min 1 item in array
+ * All flashcards in array share the same deck_id, source, and generation_id
+ * Validation:
+ * - deck_id: number, null, or undefined (null and undefined both mean unassigned)
+ * - source: ai_full, ai_edited, or manual
+ * - generation_id: required for ai_full, optional for ai_edited, null for manual
+ * - flashcards: min 1 item in array
  */
 export interface CreateFlashcardsCommand {
+  deck_id?: number | null;
+  source: FlashcardSource;
+  generation_id: number | null;
   flashcards: CreateFlashcardItemCommand[]; // min 1 item
 }
 
@@ -175,11 +183,20 @@ export interface CreateFlashcardsCommand {
 export type UpdateFlashcardCommand = Partial<Pick<FlashcardInsert, "front" | "back" | "deck_id">>;
 
 /**
- * Request body for POST /api/flashcards/:id/review
+ * Single review item in PATCH /api/learn/review payload
  * response must be 'OK' or 'NOK'
  */
-export interface ReviewFlashcardCommand {
+export interface ReviewFlashcardItemCommand {
+  flashcard_id: number;
   response: Extract<SpaceRepetitionStatus, "OK" | "NOK">;
+}
+
+/**
+ * Request body for PATCH /api/learn/review
+ * Validation: min 1 item in review array
+ */
+export interface ReviewFlashcardsCommand {
+  review: ReviewFlashcardItemCommand[];
 }
 
 /**
