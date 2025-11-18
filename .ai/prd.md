@@ -48,7 +48,7 @@ Głównym problemem, który rozwiązuje nasza aplikacja, jest wysoki próg wejś
 
 - Użytkownik widzi listę swoich decków.
 - Dla każdego decku widoczna jest całkowita liczba fiszek.
-- W panelu głównym wyświetlana jest łączna liczba fiszek powtórzonych w danym dniu.
+
 
 ## 4. Granice produktu
 
@@ -225,7 +225,6 @@ Głównym problemem, który rozwiązuje nasza aplikacja, jest wysoki próg wejś
 - Tytuł: Wyświetlanie statystyk
 - Opis: Jako użytkownik, chcę widzieć podstawowe statystyki mojej nauki, aby śledzić swoje postępy.
 - Kryteria akceptacji:
-  - Na stronie głównej widoczna jest liczba fiszek, które powtórzyłem dzisiaj.
   - Na liście decków przy każdej nazwie widoczna jest całkowita liczba fiszek w danym decku.
 
 ## 6. Metryki sukcesu

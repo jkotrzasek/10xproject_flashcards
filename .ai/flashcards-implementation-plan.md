@@ -15,7 +15,7 @@ Moduł flashcards udostępni zestaw endpointów REST w Astro obsługujących Sup
 - Body: brak.
 
 **POST `/api/flashcards`**
-- Body: `CreateFlashcardsCommand` z polami `deck_id` (number lub null) i `flashcards` (tablica o min. długości 1); każdy element zawiera , `front` (trimowany string ≤200), `back` (trimowany string ≤500), `source` (`ai_full|ai_edited|manual`), `generation_id` (wymagany dla źródeł AI, null dla manual). Walidacja sprawdza spójność pól i usuwa puste wpisy po trimowaniu.
+- Body: `CreateFlashcardsCommand` z polami `deck_id` (number lub null),`source` (`ai_full|ai_edited|manual`), `generation_id` (wymagany dla źródeł AI, null dla manual) i `flashcards` (tablica o min. długości 1); każdy element zawiera , `front` (trimowany string ≤200), `back` (trimowany string ≤500). Walidacja sprawdza spójność pól i usuwa puste wpisy po trimowaniu.
 - Parametry zapytania: brak.
 - Nagłówki: `Content-Type: application/json`, `Accept: application/json`.
 
