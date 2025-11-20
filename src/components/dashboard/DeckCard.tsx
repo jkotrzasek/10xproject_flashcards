@@ -1,6 +1,6 @@
-import { Card, CardContent, CardFooter, CardHeader } from "./ui/card";
-import { Button } from "./ui/button";
-import type { DeckDto } from "../types";
+import { Card, CardContent, CardFooter, CardHeader } from "../ui/card";
+import { Button } from "../ui/button";
+import type { DeckDto } from "../../types";
 
 // ============================================================================
 // Types

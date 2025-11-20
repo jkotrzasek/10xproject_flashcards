@@ -1,5 +1,5 @@
 import { useState } from "react";
-import type { CreateDeckCommand, UpdateDeckCommand, ApiResponse, DeckCreatedDto } from "../../types";
+import type { CreateDeckCommand, UpdateDeckCommand, ApiResponse, DeckCreatedDto } from "../../../types";
 
 // ============================================================================
 // Types

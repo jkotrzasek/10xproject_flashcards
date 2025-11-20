@@ -1,13 +1,13 @@
 import { useReducer, useEffect } from "react";
 import { Toaster, toast } from "sonner";
 import type { DeckDto } from "../types";
-import { useDecksData } from "./hooks/useDecksData";
-import { useDeckMutations } from "./hooks/useDeckMutations";
-import { DeckListSection } from "./DeckListSection";
-import { VirtualDeckCard } from "./VirtualDeckCard";
-import { CreateDeckDialog } from "./CreateDeckDialog";
-import { UpdateDeckDialog } from "./UpdateDeckDialog";
-import { DeleteDeckConfirmDialog } from "./DeleteDeckConfirmDialog";
+import { useDecksData } from "./dashboard/hooks/useDecksData";
+import { useDeckMutations } from "./dashboard/hooks/useDeckMutations";
+import { DeckListSection } from "./dashboard/DeckListSection";
+import { VirtualDeckCard } from "./dashboard/VirtualDeckCard";
+import { CreateDeckDialog } from "./dashboard/CreateDeckDialog";
+import { UpdateDeckDialog } from "./dashboard/UpdateDeckDialog";
+import { DeleteDeckConfirmDialog } from "./dashboard/DeleteDeckConfirmDialog";
 import { Button } from "./ui/button";
 
 // ============================================================================

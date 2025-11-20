@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from "react";
-import type { DeckDto, FlashcardDto, ApiResponse } from "../../types";
+import type { DeckDto, FlashcardDto, ApiResponse } from "../../../types";
 
 // ============================================================================
 // Types

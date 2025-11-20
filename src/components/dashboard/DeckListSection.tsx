@@ -1,7 +1,7 @@
 import { DeckCard } from "./DeckCard";
-import { SkeletonList } from "./SkeletonList";
-import { CTAEmptyState } from "./CTAEmptyState";
-import type { DeckDto } from "../types";
+import { SkeletonList } from "../SkeletonList";
+import { CTAEmptyState } from "../CTAEmptyState";
+import type { DeckDto } from "../../types";
 
 // ============================================================================
 // Types
