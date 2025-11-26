@@ -78,7 +78,7 @@ Aplikacja kliencka oparta na Astro 5 (routing, SSR/SSG) z komponentami React 19 
   - `Toast`, `InlineError`.
 - UX/A11Y/Sec:
   - Edycja fiszki zmienia `source` z `ai_full` na `ai_edited` po zapisie (automatyczne w API).
-  - API: `GET /api/decks/:id`, `GET /api/flashcards?deck_id=:id`, `PATCH /api/flashcards/:id`, `DELETE /api/flashcards/:id`, `PATCH /api/decks/:id`, `DELETE /api/decks/:id`, `POST /api/decks/:id/reset-progress`.
+  - API: `GET /api/decks/:id`, `GET /api/flashcards?deck_id=:id`, `PATCH /api/flashcards/:id`, `DELETE /api/flashcards/:id`, `POST /api/decks/:id/reset-progress`.
 
 ### Widok: Dodawanie manualne
 - Ścieżka: `/manual`
@@ -144,7 +144,7 @@ Powiązane: US‑009, US‑010, US‑011.
 
 ### C. Zarządzanie deckiem
 1) Dashboard → wybór decku → `/decks/:id`.  
-2) Lista fiszek (edycja/usuń), zmiana nazwy decku, reset postępu, start nauki.  
+2) Lista fiszek (edycja/usuń), reset postępu, start nauki.  
 3) Akcje: `PATCH/DELETE /api/flashcards/:id`, `PATCH/DELETE /api/decks/:id`, `POST /api/decks/:id/reset-progress`.  
 4) Potwierdzenia w dialogach, toasty po sukcesie.
 

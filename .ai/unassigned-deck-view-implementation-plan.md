@@ -10,6 +10,7 @@ Widok korzysta z istniejących endpointów:
 - `PATCH /api/flashcards/:id` – przypisanie fiszki do decku (zmiana `deck_id`).
 
 Widok musi być spójny stylistycznie z `DashboardPage` i `GeneratorPage` (React + Tailwind + shadcn/ui, toasty z `sonner`), stosować plain text w treści fiszek (bez HTML/Markdown) oraz zadbać o dostępność (etykiety, focus, komunikaty błędów).
+Widok musi mieć strukturę taką samą jak `generator.astro` i `index.astro`, zachowując ten sam header z przyszłym menu nawigacyjnym
 
 ### 2. Routing widoku
 
@@ -21,7 +22,6 @@ Widok musi być spójny stylistycznie z `DashboardPage` i `GeneratorPage` (React
   - Ustawienie tytułu strony, np. `Nieprzypisane fiszki – AI Flashcards`.
   - Główna zawartość w `<main>` z odpowiednimi klasami Tailwind (`container mx-auto px-4 py-8`) dla spójności z resztą aplikacji.
 
-as
 ### 3. Struktura komponentów
 
 Główne komponenty widoku i ich hierarchia:
@@ -47,6 +47,7 @@ Główne komponenty widoku i ich hierarchia:
   - pojedynczy wiersz / karta fiszki,
   - pokazuje front/back, źródło (`source`), status powtórek i daty,
   - zawiera dropdown do przypisania decku (`DeckAssignDropdown`).
+  - spójny z propozycjami na ekranie `GeneratorPage.tsx`
 
 - **`DeckAssignDropdown`**
   - dropdown z listą dostępnych decków (źródło: `GET /api/decks`),
@@ -439,7 +440,7 @@ Komponenty stanu i hooki:
 
 - **Brak nieprzypisanych fiszek**
   - Jeżeli `items.length === 0` po załadowaniu:
-    - widok pokazuje `UnassignedEmptyState` (np. komunikat „Nie masz żadnych nieprzypisanych fiszek” + link do generatora `/generate`).
+    - widok pokazuje `UnassignedEmptyState` (np. komunikat „Nie masz żadnych nieprzypisanych fiszek” + link do dashboardu `/`).
 
 - **Mapowanie historii użytkownika US-010 (Edycja fiszki)**
   - US-010 wymaga możliwości edycji treści fiszki.
@@ -505,9 +506,9 @@ Komponenty stanu i hooki:
 
 - **Edge cases**
   - Użytkownik zmienia szybko deck kilka razy:
-    - w czasie trwania requestu dropdown jest disabled, kolejne zmiany są blokowane do czasu odpowiedzi.
+    - w czasie trwania requestu dropdown jest disabled, kolejne zmiany są blokowane do czasu odpowiedzi, jeśli uda się przepisać deck, to blokowanie aż do usunięcia elementu z listy.
   - Po przypisaniu ostatniej fiszki:
-    - widok przechodzi do pustego stanu (komunikat + link do generatora/decków).
+    - widok przechodzi do pustego stanu (komunikat + link do decków).
 
 ### 11. Kroki implementacji
 
@@ -572,5 +573,5 @@ Komponenty stanu i hooki:
       - poprawne przypisanie,
       - błędy (network / 404 / 500),
       - długie listy (działanie „Załaduj więcej”).
-
+    Ten punkt przeprowadza użytkownik, model po zakończeniu działania powinien o nim jedynie wspomnieć.
 
