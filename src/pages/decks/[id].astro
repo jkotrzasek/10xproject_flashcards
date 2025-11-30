@@ -1,0 +1,12 @@
+---
+import Layout from "../../layouts/Layout.astro";
+import DeckDetailsPage from "../../components/DeckDetailsPage";
+
+const { id } = Astro.params;
+const deckId = id ? parseInt(id, 10) : NaN;
+---
+
+<Layout title="Szczegóły decku - AI Flashcard Generator">
+  <DeckDetailsPage client:load deckId={deckId} />
+</Layout>
+
