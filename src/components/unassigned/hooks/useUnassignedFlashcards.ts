@@ -51,7 +51,7 @@ function getSourceLabel(source: FlashcardSource): string {
     case "ai_edited":
       return "AI (edytowana)";
     case "manual":
-      return "Manualna";
+      return "Manual";
     default:
       return "Nieznane";
   }

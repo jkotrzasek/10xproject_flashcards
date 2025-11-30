@@ -73,7 +73,7 @@ export function UnassignedFlashcardItem({
           <Label className="text-xs font-medium">
             Przód
           </Label>
-          <p className="text-sm whitespace-pre-wrap">{item.front}</p>
+          <p className="text-sm whitespace-pre-wrap break-words">{item.front}</p>
         </div>
 
         {/* Back field */}
@@ -81,7 +81,7 @@ export function UnassignedFlashcardItem({
           <Label className="text-xs font-medium">
             Tył
           </Label>
-          <p className="text-sm whitespace-pre-wrap">{item.back}</p>
+          <p className="text-sm whitespace-pre-wrap break-words">{item.back}</p>
         </div>
 
         {/* Deck Assign Dropdown */}
