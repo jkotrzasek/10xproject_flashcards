@@ -30,8 +30,6 @@ export function DeckHeader({
         <div className="flex flex-wrap items-center gap-3 text-sm text-muted-foreground">
           <span>Liczba fiszek: {deck.flashcardCount}</span>
           <span>•</span>
-          <span>Utworzono: {deck.createdAtLabel}</span>
-          <span>•</span>
           <span>Aktualizowano: {deck.updatedAtLabel}</span>
         </div>
       </div>

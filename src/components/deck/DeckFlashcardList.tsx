@@ -1,7 +1,7 @@
 import type { DeckFlashcardVM } from "../DeckDetailsPage";
 import { Button } from "../ui/button";
 import { DeckFlashcardItem } from "./DeckFlashcardItem";
-import { DeckFlashcardSkeleton } from "./DeckFlashcardSkeleton";
+import { FlashcardSkeleton } from "../FlashcardSkeleton";
 
 // ============================================================================
 // Types
@@ -34,7 +34,7 @@ export function DeckFlashcardList({
 }: DeckFlashcardListProps) {
   // Loading state - initial loading
   if (isInitialLoading) {
-    return <DeckFlashcardSkeleton count={6} />;
+    return <FlashcardSkeleton count={6} />;
   }
 
   // Empty state
@@ -75,7 +75,7 @@ export function DeckFlashcardList({
       )}
 
       {/* Loading More State */}
-      {isLoadingMore && <DeckFlashcardSkeleton count={2} />}
+      {isLoadingMore && <FlashcardSkeleton count={2} />}
     </div>
   );
 }
