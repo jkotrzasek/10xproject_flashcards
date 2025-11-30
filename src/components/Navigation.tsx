@@ -12,6 +12,7 @@ export default function Navigation({ currentPath }: NavigationProps) {
     { href: '/', label: 'Widok Decków' },
     { href: '/generator', label: 'Generator AI' },
     { href: '/manual', label: 'Dodawanie manualne' },
+    { href: '/auth/login', label: 'Zaloguj' },
   ];
 
   const isActive = (href: string) => currentPath === href;
