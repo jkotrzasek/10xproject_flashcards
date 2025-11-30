@@ -382,7 +382,7 @@
 ### 11. Kroki implementacji
 
 1. **Przygotowanie typów i helperów**:
-   - Dodać plik `src/lib/learn/learn.types.ts` z typami ViewModel (`LearnFlashcardViewModel`, `LearnSessionMetaViewModel`, `LearnSessionStats`, `ReviewBufferItem`, `LearnPhase`, `ReviewResponse`).
+   - Dodać plik `src/components/learn/typesLearn.ts` z typami ViewModel (`LearnFlashcardViewModel`, `LearnSessionMetaViewModel`, `LearnSessionStats`, `ReviewBufferItem`, `LearnPhase`, `ReviewResponse`).
    - (Opcjonalnie) dodać prosty helper do mapowania `FlashcardLearnDto` → `LearnFlashcardViewModel`.
 2. **Implementacja routingu Astro**:
    - Utworzyć plik `src/pages/learn/[deckId].astro`, który:

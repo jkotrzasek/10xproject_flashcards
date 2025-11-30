@@ -167,7 +167,7 @@ export default function DashboardPage() {
   };
 
   const handleLearnDeck = (deckId: number) => {
-    window.location.href = `/decks/${deckId}/learn`;
+    window.location.href = `/learn/${deckId}`;
   };
 
   const handleOpenUnassigned = () => {

@@ -1,0 +1,15 @@
+---
+import Layout from "../../layouts/Layout.astro";
+import LearnPage from "../../components/LearnPage";
+
+// Parse and validate deckId from URL params
+const { deckId: deckIdParam } = Astro.params;
+
+// Parse deckId to number
+const deckId = parseInt(deckIdParam || "", 10);
+---
+
+<Layout title="Tryb nauki – AI Flashcard Generator">
+  <LearnPage client:load deckId={deckId} />
+</Layout>
+
