@@ -15,7 +15,7 @@ import { useLearnApi } from "./useLearnApi";
 const FLUSH_THRESHOLD = 10;
 
 // Default limit for flashcards per session
-const DEFAULT_LIMIT = 50;
+const DEFAULT_LIMIT = 20;
 
 /**
  * Main hook managing the learning session lifecycle

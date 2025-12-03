@@ -8,6 +8,15 @@ import type {
   GenerationHistoryItemDto,
   GenerationLimitDto,
 } from "../../types";
+import { buildOpenRouterConfig } from "./openrouter.config";
+import { OpenRouterService, OpenRouterServiceError } from "./openrouter.service";
+import type { ChatMessage } from "./openrouter.service";
+import {
+  buildFlashcardResponseFormat,
+  SYSTEM_PROMPT,
+  buildUserPrompt,
+  sanitizeAndTruncateInput,
+} from "./openrouter.schemas";
 
 /**
  * Daily generation limit per user
@@ -15,10 +24,21 @@ import type {
 const DAILY_GENERATION_LIMIT = import.meta.env.DAILY_GENERATION_LIMIT;
 
 /**
- * AI model identifier
- * TODO: In future version, this can be replaced with model selection from openRouter
+ * Singleton instance of OpenRouterService
+ * Initialized lazily on first use
  */
-const AI_MODEL = "gpt-4o-mini";
+let openRouterServiceInstance: OpenRouterService | null = null;
+
+/**
+ * Get or create OpenRouterService singleton instance
+ */
+const getOpenRouterService = (): OpenRouterService => {
+  if (!openRouterServiceInstance) {
+    const config = buildOpenRouterConfig();
+    openRouterServiceInstance = new OpenRouterService(config);
+  }
+  return openRouterServiceInstance;
+};
 
 /**
  * Error codes for generation failures
@@ -127,11 +147,15 @@ export const createPendingGeneration = async (
   const inputHash = calculateHash(inputText);
   const inputLength = Buffer.byteLength(inputText, "utf8");
 
+  // Get model name from OpenRouter service
+  const openRouterService = getOpenRouterService();
+  const model = openRouterService.getDefaultModel();
+
   const generationData: GenerationInsert = {
     user_id: userId,
     input_text_hash: inputHash,
     input_text_length: inputLength,
-    model: AI_MODEL,
+    model,
     status: "pending",
     generated_total: 0,
     accepted_total: 0,
@@ -229,85 +253,114 @@ export const validateFlashcardProposals = (proposals: FlashcardProposalDto[]): b
 };
 
 /**
- * AI Generation timeout in milliseconds
+ * Calculate optimal number of flashcards based on input text length
+ * Formula: min(50, max(15, floor(length / 150)))
+ * - Short texts (1000-2000 chars): 15-20 flashcards
+ * - Medium texts (3000-5000 chars): 20-33 flashcards
+ * - Long texts (7000-10000 chars): 46-50 flashcards
+ *
+ * @param textLength - Length of input text in characters
+ * @returns Optimal number of flashcards to generate (15-50)
  */
-const AI_TIMEOUT_MS = 60000; // 60 seconds
+const calculateFlashcardCount = (textLength: number): number => {
+  return Math.min(50, Math.max(10, Math.floor(textLength / 150)));
+};
 
 /**
- * Padding text for mock flashcard back content (100 characters)
- */
-const MOCK_PADDING = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut.";
-
-/**
- * Generate flashcards from input text using AI
- * Currently returns mocked data for MVP development
- * Timeout is handled internally (60s)
+ * Generate flashcards from input text using OpenRouter AI
+ * Handles prompt building, API call, response parsing, and validation
  *
  * @param inputText - Source text to generate flashcards from
  * @returns Array of flashcard proposals
- * @throws Error if generation fails or times out
+ * @throws Error with specific error codes if generation fails
  */
 export const generateFlashcards = async (inputText: string): Promise<FlashcardProposalDto[]> => {
-  const timeoutController = new AbortController();
-  const timeoutId = setTimeout(() => timeoutController.abort(), AI_TIMEOUT_MS);
-
   try {
-    if (timeoutController.signal.aborted) {
-      throw new Error("Generation aborted");
+    // Sanitize and truncate input to prevent excessive token usage
+    const sanitizedInput = sanitizeAndTruncateInput(inputText);
+
+    if (!sanitizedInput || sanitizedInput.length === 0) {
+      throw new Error(GenerationErrorCodes.AI_GENERATION_ERROR);
     }
 
-    // TODO: Replace with actual AI API call
-    const mockFlashcards = await generateMockFlashcards(inputText, timeoutController.signal);
+    // Calculate optimal flashcard count based on text length
+    const flashcardCount = calculateFlashcardCount(sanitizedInput.length);
 
-    return mockFlashcards;
+    // Build messages array (system + user)
+    const messages: ChatMessage[] = [
+      {
+        role: "system",
+        content: SYSTEM_PROMPT,
+      },
+      {
+        role: "user",
+        content: buildUserPrompt(sanitizedInput, flashcardCount),
+      },
+    ];
+
+    // Build JSON Schema response format
+    const responseFormat = buildFlashcardResponseFormat();
+
+    // Get OpenRouter service instance
+    const openRouterService = getOpenRouterService();
+
+    // Call OpenRouter API with schema
+    const responseMessage = await openRouterService.createChatCompletionWithSchema(messages, responseFormat);
+
+    // Parse JSON from response content
+    const parsedResponse = parseFlashcardResponse(responseMessage.content);
+
+    // Validate flashcard proposals
+    if (!validateFlashcardProposals(parsedResponse)) {
+      throw new Error(GenerationErrorCodes.AI_RESPONSE_INVALID);
+    }
+
+    return parsedResponse;
   } catch (error) {
-    if (error instanceof Error) {
-      if (error.name === "AbortError" || error.message === "Generation aborted") {
-        throw new Error("AI_TIMEOUT");
-      }
-      throw error;
+    // Handle OpenRouterServiceError (already mapped to domain codes)
+    if (error instanceof OpenRouterServiceError) {
+      throw new Error(error.code);
     }
-    throw new Error("AI_GENERATION_ERROR");
-  } finally {
-    clearTimeout(timeoutId);
+
+    // Handle known error codes
+    if (error instanceof Error) {
+      if (Object.values(GenerationErrorCodes).includes(error.message as any)) {
+        throw error;
+      }
+    }
+
+    // Unknown errors -> generic generation error
+    console.error("Unexpected error in generateFlashcards:", error);
+    throw new Error(GenerationErrorCodes.AI_GENERATION_ERROR);
   }
 };
 
 /**
- * Generate mock flashcards for development/testing
- * Simulates AI generation with realistic delay
+ * Parse flashcard response JSON
+ * @throws Error if JSON parsing fails or structure is invalid
  */
-const generateMockFlashcards = async (inputText: string, signal: AbortSignal): Promise<FlashcardProposalDto[]> => {
-  // Simulate realistic AI processing delay (1-3 seconds)
-  const delay = 1000 + Math.random() * 2000;
+const parseFlashcardResponse = (content: string): FlashcardProposalDto[] => {
+  try {
+    const parsed = JSON.parse(content);
 
-  await new Promise<void>((resolve, reject) => {
-    const timeoutId = setTimeout(() => resolve(), delay);
+    // Validate response structure
+    if (!parsed || typeof parsed !== "object") {
+      throw new Error("Response is not an object");
+    }
 
-    signal.addEventListener(
-      "abort",
-      () => {
-        clearTimeout(timeoutId);
-        reject(new Error("Generation aborted"));
-      },
-      { once: true }
-    );
-  });
+    if (!Array.isArray(parsed.flashcards)) {
+      throw new Error("Response does not contain flashcards array");
+    }
 
-  if (signal.aborted) {
-    throw new Error("Generation aborted");
+    // Map to FlashcardProposalDto[]
+    return parsed.flashcards.map((card: any) => ({
+      front: String(card.front || ""),
+      back: String(card.back || ""),
+    }));
+  } catch (error) {
+    console.error("Failed to parse flashcard response:", error);
+    throw new Error(GenerationErrorCodes.AI_RESPONSE_INVALID);
   }
-
-  const mockFlashcards: FlashcardProposalDto[] = [];
-
-  for (let i = 1; i <= 10; i++) {
-    mockFlashcards.push({
-      front: `MockFront${i}`,
-      back: `MockBack${i} ${MOCK_PADDING}`,
-    });
-  }
-
-  return mockFlashcards;
 };
 
 /**

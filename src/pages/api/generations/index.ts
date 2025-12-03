@@ -109,7 +109,7 @@ export const POST: APIRoute = async ({ request, locals }) => {
 
       // Validate generated proposals
       if (!validateFlashcardProposals(flashcardProposals)) {
-        throw new Error("Generated flashcards contain invalid data");
+        throw new Error(GenerationErrorCodes.AI_RESPONSE_INVALID);
       }
     } catch (error) {
       // Determine error type and code
@@ -117,14 +117,24 @@ export const POST: APIRoute = async ({ request, locals }) => {
       let errorMessage = "AI generation failed. Please try again later.";
 
       if (error instanceof Error) {
-        if (error.message === "AI_TIMEOUT") {
+        // Map error codes to user-friendly messages
+        if (error.message === GenerationErrorCodes.AI_TIMEOUT) {
           errorCode = GenerationErrorCodes.AI_TIMEOUT;
           errorMessage = "AI generation timed out. Please try again with shorter text.";
-        } else if (error.message.includes("invalid data")) {
+        } else if (error.message === GenerationErrorCodes.AI_RESPONSE_INVALID) {
           errorCode = GenerationErrorCodes.AI_RESPONSE_INVALID;
           errorMessage = "AI generated invalid flashcards. Please try again.";
+        } else if (error.message === GenerationErrorCodes.AI_GENERATION_ERROR) {
+          errorCode = GenerationErrorCodes.AI_GENERATION_ERROR;
+          errorMessage = "AI generation failed. Please try again later.";
         }
       }
+
+      // Log error details (without sensitive data)
+      console.error(`Generation failed for session ${sessionId}:`, {
+        errorCode,
+        errorType: error instanceof Error ? error.name : "Unknown",
+      });
 
       // Update generation record with error
       await finalizeGenerationError(supabase, sessionId, USER_ID, errorCode, errorMessage);

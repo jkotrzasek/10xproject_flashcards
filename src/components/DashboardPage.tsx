@@ -181,7 +181,7 @@ export default function DashboardPage() {
 
   // Handlery generacji AI
   const handleGenerateFlashcards = () => {
-    window.location.href = "/generate";
+    window.location.href = "/generator";
   };
 
   // Obliczanie czy są jakieś fiszki ogólnie
