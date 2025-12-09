@@ -11,6 +11,14 @@ export const AuthErrorCodes = {
   EMAIL_NOT_CONFIRMED: "EMAIL_NOT_CONFIRMED",
   USER_NOT_FOUND: "USER_NOT_FOUND",
   
+  // Registration errors
+  EMAIL_ALREADY_REGISTERED: "EMAIL_ALREADY_REGISTERED",
+  
+  // Password reset errors
+  RESET_TOKEN_INVALID_OR_EXPIRED: "RESET_TOKEN_INVALID_OR_EXPIRED",
+  RESET_TOKEN_MISSING: "RESET_TOKEN_MISSING",
+  PASSWORD_SAME_AS_OLD: "PASSWORD_SAME_AS_OLD",
+  
   // Session errors
   SESSION_EXPIRED: "SESSION_EXPIRED",
   INVALID_SESSION: "INVALID_SESSION",
@@ -36,6 +44,10 @@ const ERROR_MESSAGES: Record<string, string> = {
   [AuthErrorCodes.INVALID_CREDENTIALS]: "Nieprawidłowy adres e-mail lub hasło",
   [AuthErrorCodes.EMAIL_NOT_CONFIRMED]: "Potwierdź swój adres e-mail, aby się zalogować",
   [AuthErrorCodes.USER_NOT_FOUND]: "Nieprawidłowy adres e-mail lub hasło",
+  [AuthErrorCodes.EMAIL_ALREADY_REGISTERED]: "Konto z tym adresem e-mail już istnieje",
+  [AuthErrorCodes.RESET_TOKEN_INVALID_OR_EXPIRED]: "Link do resetowania hasła wygasł lub jest nieprawidłowy",
+  [AuthErrorCodes.RESET_TOKEN_MISSING]: "Link do resetowania hasła wygasł lub jest nieprawidłowy",
+  [AuthErrorCodes.PASSWORD_SAME_AS_OLD]: "Nowe hasło musi być inne niż poprzednie",
   [AuthErrorCodes.SESSION_EXPIRED]: "Twoja sesja wygasła. Zaloguj się ponownie",
   [AuthErrorCodes.INVALID_SESSION]: "Nieprawidłowa sesja. Zaloguj się ponownie",
   [AuthErrorCodes.INVALID_EMAIL_FORMAT]: "Podaj prawidłowy adres e-mail",
@@ -79,6 +91,12 @@ export function mapSupabaseAuthError(error: unknown): AuthErrorDto {
         return {
           code: AuthErrorCodes.USER_NOT_FOUND,
           message: ERROR_MESSAGES[AuthErrorCodes.INVALID_CREDENTIALS],
+        };
+      
+      case "User already registered":
+        return {
+          code: AuthErrorCodes.EMAIL_ALREADY_REGISTERED,
+          message: ERROR_MESSAGES[AuthErrorCodes.EMAIL_ALREADY_REGISTERED],
         };
       
       default:

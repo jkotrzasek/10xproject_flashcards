@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
-import { InfoIcon } from "lucide-react";
+import { InfoIcon, CheckCircle2 } from "lucide-react";
 import { AuthErrorBanner } from "./AuthErrorBanner";
 import { useAuthApi } from "./hooks/useAuthApi";
 import type { RegisterFormValues, RegisterFormErrors } from "./auth.types";
@@ -129,6 +129,7 @@ export function RegisterForm() {
     passwordConfirmation: false,
   });
   const [submitError, setSubmitError] = useState<string | undefined>();
+  const [registrationSuccess, setRegistrationSuccess] = useState(false);
 
   // Clear submit error when API error changes
   useEffect(() => {
@@ -246,8 +247,9 @@ export function RegisterForm() {
     });
 
     if (result) {
-      // Success - redirect to main panel
-      window.location.href = "/";
+      // Success - show confirmation message
+      // User must confirm email before logging in
+      setRegistrationSuccess(true);
     }
     // Error is handled by useEffect watching apiError
   }, [values, register, clearError]);
@@ -255,6 +257,40 @@ export function RegisterForm() {
   const showFieldError = (field: keyof RegisterFormValues): boolean => {
     return touched[field] && !!errors[field];
   };
+
+  // Show success message after registration
+  if (registrationSuccess) {
+    return (
+      <div className="space-y-6">
+        {/* Success message */}
+        <div className="bg-green-50 border border-green-200 rounded-lg p-6">
+          <div className="flex items-start gap-3">
+            <CheckCircle2 className="h-6 w-6 text-green-600 flex-shrink-0 mt-0.5" />
+            <div className="space-y-2">
+              <h3 className="font-semibold text-green-900">Konto utworzone pomyślnie!</h3>
+              <p className="text-sm text-green-800">
+                Na adres <strong>{values.email}</strong> został wysłany link aktywacyjny. 
+                Kliknij w link w wiadomości, aby aktywować konto i móc się zalogować.
+              </p>
+              <p className="text-sm text-green-800">
+                Jeśli nie widzisz wiadomości, sprawdź folder spam.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        {/* Login link */}
+        <div className="text-center">
+          <a
+            href="/auth/login"
+            className="text-primary hover:underline font-medium transition-colors"
+          >
+            Przejdź do logowania
+          </a>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <form className="space-y-6" onSubmit={handleSubmit} noValidate>

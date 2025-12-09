@@ -2,12 +2,11 @@
 import AuthLayout from "../../layouts/AuthLayout.astro";
 import { RegisterForm } from "../../components/auth/RegisterForm";
 
-// TODO: Server-side check if user is already logged in
-// If logged in, redirect to /app or main panel
-// const user = Astro.locals.user;
-// if (user) {
-//   return Astro.redirect('/');
-// }
+// Server-side check: redirect authenticated users to main panel
+const user = Astro.locals.user;
+if (user) {
+  return Astro.redirect('/');
+}
 ---
 
 <AuthLayout title="Rejestracja – AI Flashcards">
