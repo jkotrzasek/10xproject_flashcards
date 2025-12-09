@@ -214,6 +214,73 @@ export interface CreateGenerationCommand {
 export type UpdateGenerationAcceptedCommand = Pick<GenerationInsert, "accepted_total">;
 
 // ============================================================================
+// Authentication - DTOs (Data Transfer Objects)
+// ============================================================================
+
+/**
+ * User data returned after successful authentication
+ */
+export interface AuthUserDto {
+  id: string;
+  email: string;
+}
+
+/**
+ * Response for POST /api/auth/login and POST /api/auth/register
+ */
+export interface AuthResponseDto {
+  user: AuthUserDto;
+  access_token?: string;
+  refresh_token?: string;
+}
+
+/**
+ * Standard auth error response
+ */
+export interface AuthErrorDto {
+  code: string;
+  message: string;
+  details?: Record<string, string[]>;
+}
+
+// ============================================================================
+// Authentication - Command Models (Request Types)
+// ============================================================================
+
+/**
+ * Request body for POST /api/auth/login
+ */
+export interface LoginCommand {
+  email: string;
+  password: string;
+}
+
+/**
+ * Request body for POST /api/auth/register
+ */
+export interface RegisterCommand {
+  email: string;
+  password: string;
+  password_confirmation: string;
+}
+
+/**
+ * Request body for POST /api/auth/forgot-password
+ */
+export interface ForgotPasswordCommand {
+  email: string;
+}
+
+/**
+ * Request body for POST /api/auth/reset-password
+ */
+export interface ResetPasswordCommand {
+  new_password: string;
+  new_password_confirmation: string;
+  token?: string;
+}
+
+// ============================================================================
 // Generic API Response Wrapper
 // ============================================================================
 

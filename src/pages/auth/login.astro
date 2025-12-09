@@ -1,9 +1,29 @@
 ---
-import Layout from "../../layouts/Layout.astro";
-import AuthView from "../../components/auth/AuthView";
+import AuthLayout from "../../layouts/AuthLayout.astro";
+import { LoginForm } from "../../components/auth/LoginForm";
+
+// TODO: Server-side check if user is already logged in
+// If logged in, redirect to /app or main panel
+// const user = Astro.locals.user;
+// if (user) {
+//   return Astro.redirect('/');
+// }
 ---
 
-<Layout title="Logowanie – AI Flashcards">
-  <AuthView client:load mode="login" />
-</Layout>
+<AuthLayout title="Logowanie – AI Flashcards">
+  <div class="space-y-8">
+    <!-- Header -->
+    <div class="text-center">
+      <h1 class="text-3xl font-bold text-foreground mb-3">Witaj ponownie</h1>
+      <p class="text-muted-foreground">
+        Zaloguj się, aby zobaczyć swoje zasoby
+      </p>
+    </div>
+
+    <!-- Login Form Card -->
+    <div class="bg-card border rounded-lg p-6 shadow-sm">
+      <LoginForm client:load />
+    </div>
+  </div>
+</AuthLayout>
 

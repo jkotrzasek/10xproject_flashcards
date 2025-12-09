@@ -1,0 +1,56 @@
+---
+import "../styles/global.css";
+
+interface Props {
+  title?: string;
+}
+
+const { title = "AI Flashcards" } = Astro.props;
+---
+
+<!doctype html>
+<html lang="pl" class="dark" transition:animate="fade">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" type="image/png" href="/favicon.png" />
+    <meta name="generator" content={Astro.generator} />
+    <title>{title}</title>
+  </head>
+  <body>
+    <div class="min-h-screen flex flex-col bg-background">
+      <!-- Header with logo -->
+      <header class="border-b bg-background">
+        <div class="container mx-auto px-4 py-4">
+          <a href="/" class="inline-block text-2xl font-bold text-foreground hover:text-primary transition-colors">
+            AI Flashcards
+          </a>
+        </div>
+      </header>
+
+      <!-- Main content -->
+      <main class="flex-1 flex items-center justify-center px-4 py-12">
+        <div class="w-full max-w-md">
+          <slot />
+        </div>
+      </main>
+
+      <!-- Footer -->
+      <footer class="border-t bg-background py-6">
+        <div class="container mx-auto px-4 text-center text-sm text-muted-foreground">
+          <p>&copy; {new Date().getFullYear()} AI Flashcards. Ucz się efektywniej.</p>
+        </div>
+      </footer>
+    </div>
+  </body>
+</html>
+
+<style>
+  html,
+  body {
+    margin: 0;
+    width: 100%;
+    min-height: 100%;
+  }
+</style>
+
