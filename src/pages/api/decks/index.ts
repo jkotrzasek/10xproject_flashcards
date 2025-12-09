@@ -1,16 +1,9 @@
 import type { APIRoute } from "astro";
 import { createDeckSchema, deckSortSchema } from "../../../lib/validation/deck.schema";
 import { createDeck, getDecks, DeckErrorCodes } from "../../../lib/services/deck.service";
-import { DEFAULT_USER_ID } from "../../../db/supabase.client";
 import type { ApiResponse, DeckCreatedDto, DeckDto, ApiErrorResponse } from "../../../types";
 
 export const prerender = false;
-
-/**
- * User ID for MVP testing
- * TODO: Replace with actual authentication in future versions
- */
-const USER_ID = DEFAULT_USER_ID;
 
 /**
  * GET /api/decks
@@ -22,6 +15,19 @@ const USER_ID = DEFAULT_USER_ID;
  */
 export const GET: APIRoute = async ({ request, locals }) => {
   const supabase = locals.supabase;
+
+  // Check if user is authenticated
+  if (!locals.user) {
+    return new Response(
+      JSON.stringify({
+        error: {
+          message: "Authentication required",
+          code: "UNAUTHORIZED",
+        },
+      } satisfies ApiErrorResponse),
+      { status: 401, headers: { "Content-Type": "application/json" } }
+    );
+  }
 
   try {
     // Parse and validate sort query parameter
@@ -45,7 +51,7 @@ export const GET: APIRoute = async ({ request, locals }) => {
     // Retrieve decks using service
     let decks: DeckDto[];
     try {
-      decks = await getDecks(supabase, USER_ID, sort);
+      decks = await getDecks(supabase, locals.user.id, sort);
     } catch (error) {
       if (error instanceof Error && error.message === DeckErrorCodes.DATABASE_ERROR) {
         return new Response(
@@ -99,6 +105,19 @@ export const GET: APIRoute = async ({ request, locals }) => {
 export const POST: APIRoute = async ({ request, locals }) => {
   const supabase = locals.supabase;
 
+  // Check if user is authenticated
+  if (!locals.user) {
+    return new Response(
+      JSON.stringify({
+        error: {
+          message: "Authentication required",
+          code: "UNAUTHORIZED",
+        },
+      } satisfies ApiErrorResponse),
+      { status: 401, headers: { "Content-Type": "application/json" } }
+    );
+  }
+
   try {
     // Parse and validate request body
     let body: unknown;
@@ -136,7 +155,7 @@ export const POST: APIRoute = async ({ request, locals }) => {
     // Create deck using service
     let createdDeck: DeckCreatedDto;
     try {
-      createdDeck = await createDeck(supabase, USER_ID, name);
+      createdDeck = await createDeck(supabase, locals.user.id, name);
     } catch (error) {
       if (error instanceof Error) {
         // Handle deck name conflict (duplicate name for user)

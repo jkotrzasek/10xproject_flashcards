@@ -1,15 +1,8 @@
 import type { APIRoute } from "astro";
 import { getDailyGenerationLimitsMetadata } from "../../../lib/services/generation.service";
-import { DEFAULT_USER_ID } from "../../../db/supabase.client";
 import type { ApiResponse, GenerationLimitDto, ApiErrorResponse } from "../../../types";
 
 export const prerender = false;
-
-/**
- * User ID for MVP testing
- * TODO: Replace with actual authentication in future versions
- */
-const USER_ID = DEFAULT_USER_ID;
 
 /**
  * GET /api/generations/:sessionId
@@ -22,11 +15,24 @@ const USER_ID = DEFAULT_USER_ID;
 export const GET: APIRoute = async ({ locals }) => {
   const supabase = locals.supabase;
 
+  // Check if user is authenticated
+  if (!locals.user) {
+    return new Response(
+      JSON.stringify({
+        error: {
+          message: "Authentication required",
+          code: "UNAUTHORIZED",
+        },
+      } satisfies ApiErrorResponse),
+      { status: 401, headers: { "Content-Type": "application/json" } }
+    );
+  }
+
   try {
     // Fetch generation history
     let limitMetadata: GenerationLimitDto;
     try {
-      limitMetadata = await getDailyGenerationLimitsMetadata(supabase, USER_ID);
+      limitMetadata = await getDailyGenerationLimitsMetadata(supabase, locals.user.id);
     } catch (error) {
       console.error("Error fetching generation limits:", error);
       return new Response(

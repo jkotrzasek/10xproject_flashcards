@@ -4,16 +4,9 @@ import {
   updateGenerationAcceptedSchema,
 } from "../../../../lib/validation/generation.schema";
 import { updateGenerationAcceptedTotal } from "../../../../lib/services/generation.service";
-import { DEFAULT_USER_ID } from "../../../../db/supabase.client";
 import type { ApiErrorResponse } from "../../../../types";
 
 export const prerender = false;
-
-/**
- * User ID for MVP testing
- * TODO: Replace with actual authentication in future versions
- */
-const USER_ID = DEFAULT_USER_ID;
 
 /**
  * PATCH /api/generations/:sessionId/accepted
@@ -27,6 +20,19 @@ const USER_ID = DEFAULT_USER_ID;
  */
 export const PATCH: APIRoute = async ({ params, request, locals }) => {
   const supabase = locals.supabase;
+
+  // Check if user is authenticated
+  if (!locals.user) {
+    return new Response(
+      JSON.stringify({
+        error: {
+          message: "Authentication required",
+          code: "UNAUTHORIZED",
+        },
+      } satisfies ApiErrorResponse),
+      { status: 401, headers: { "Content-Type": "application/json" } }
+    );
+  }
 
   try {
     // Validate sessionId parameter
@@ -94,7 +100,7 @@ export const PATCH: APIRoute = async ({ params, request, locals }) => {
 
     // Update accepted total via service
     try {
-      await updateGenerationAcceptedTotal(supabase, USER_ID, sessionId, accepted_total);
+      await updateGenerationAcceptedTotal(supabase, locals.user.id, sessionId, accepted_total);
     } catch (error) {
       if (error instanceof Error) {
         // Handle specific business logic errors

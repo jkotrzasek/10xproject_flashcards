@@ -1,16 +1,9 @@
 import type { APIRoute } from "astro";
 import { deckIdSchema, updateDeckSchema } from "../../../../lib/validation/deck.schema";
 import { getDeckById, updateDeckName, deleteDeck, DeckErrorCodes } from "../../../../lib/services/deck.service";
-import { DEFAULT_USER_ID } from "../../../../db/supabase.client";
 import type { ApiResponse, DeckDto, DeckUpdatedDto, ApiErrorResponse } from "../../../../types";
 
 export const prerender = false;
-
-/**
- * User ID for MVP testing
- * TODO: Replace with actual authentication in future versions
- */
-const USER_ID = DEFAULT_USER_ID;
 
 /**
  * GET /api/decks/:deckId
@@ -22,6 +15,19 @@ const USER_ID = DEFAULT_USER_ID;
  */
 export const GET: APIRoute = async ({ params, locals }) => {
   const supabase = locals.supabase;
+
+  // Check if user is authenticated
+  if (!locals.user) {
+    return new Response(
+      JSON.stringify({
+        error: {
+          message: "Authentication required",
+          code: "UNAUTHORIZED",
+        },
+      } satisfies ApiErrorResponse),
+      { status: 401, headers: { "Content-Type": "application/json" } }
+    );
+  }
 
   try {
     // Parse and validate deckId from URL path
@@ -44,7 +50,7 @@ export const GET: APIRoute = async ({ params, locals }) => {
     // Retrieve deck using service
     let deck: DeckDto;
     try {
-      deck = await getDeckById(supabase, USER_ID, deckId);
+      deck = await getDeckById(supabase, locals.user.id, deckId);
     } catch (error) {
       if (error instanceof Error) {
         // Handle deck not found
@@ -115,6 +121,19 @@ export const GET: APIRoute = async ({ params, locals }) => {
 export const PATCH: APIRoute = async ({ params, request, locals }) => {
   const supabase = locals.supabase;
 
+  // Check if user is authenticated
+  if (!locals.user) {
+    return new Response(
+      JSON.stringify({
+        error: {
+          message: "Authentication required",
+          code: "UNAUTHORIZED",
+        },
+      } satisfies ApiErrorResponse),
+      { status: 401, headers: { "Content-Type": "application/json" } }
+    );
+  }
+
   try {
     // Parse and validate deckId from URL path
     const deckIdValidation = deckIdSchema.safeParse(params.deckId);
@@ -169,7 +188,7 @@ export const PATCH: APIRoute = async ({ params, request, locals }) => {
     // Update deck using service
     let updatedDeck: DeckUpdatedDto;
     try {
-      updatedDeck = await updateDeckName(supabase, USER_ID, deckId, name);
+      updatedDeck = await updateDeckName(supabase, locals.user.id, deckId, name);
     } catch (error) {
       if (error instanceof Error) {
         // Handle deck not found
@@ -252,6 +271,19 @@ export const PATCH: APIRoute = async ({ params, request, locals }) => {
 export const DELETE: APIRoute = async ({ params, locals }) => {
   const supabase = locals.supabase;
 
+  // Check if user is authenticated
+  if (!locals.user) {
+    return new Response(
+      JSON.stringify({
+        error: {
+          message: "Authentication required",
+          code: "UNAUTHORIZED",
+        },
+      } satisfies ApiErrorResponse),
+      { status: 401, headers: { "Content-Type": "application/json" } }
+    );
+  }
+
   try {
     // Parse and validate deckId from URL path
     const validationResult = deckIdSchema.safeParse(params.deckId);
@@ -272,7 +304,7 @@ export const DELETE: APIRoute = async ({ params, locals }) => {
 
     // Delete deck using service
     try {
-      await deleteDeck(supabase, USER_ID, deckId);
+      await deleteDeck(supabase, locals.user.id, deckId);
     } catch (error) {
       if (error instanceof Error) {
         // Handle deck not found

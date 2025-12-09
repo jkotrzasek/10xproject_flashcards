@@ -30,8 +30,7 @@ const PUBLIC_PATHS = [
  * 3. Populate context.locals with supabase client and user data
  * 4. Protect non-public routes (redirect to /auth/login if not authenticated)
  * 
- * Note: For MVP, authentication is optional (users can access app with DEFAULT_USER_ID)
- * This will be enforced in a future release
+ * Authentication is now enforced - all protected routes require valid user session
  */
 export const onRequest = defineMiddleware(async (context, next) => {
   const { cookies, url, request, redirect, locals } = context;

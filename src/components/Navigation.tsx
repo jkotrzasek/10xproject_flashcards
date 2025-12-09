@@ -1,21 +1,45 @@
 import { useState } from 'react';
-import { Menu, X } from 'lucide-react';
+import { Menu, X, LogOut } from 'lucide-react';
 
 interface NavigationProps {
   currentPath?: string;
+  isAuthenticated?: boolean;
+  userEmail?: string;
 }
 
-export default function Navigation({ currentPath }: NavigationProps) {
+export default function Navigation({ currentPath, isAuthenticated = false, userEmail }: NavigationProps) {
   const [isOpen, setIsOpen] = useState(false);
+  const [isLoggingOut, setIsLoggingOut] = useState(false);
 
   const links = [
     { href: '/', label: 'Widok Decków' },
     { href: '/generator', label: 'Generator AI' },
     { href: '/manual', label: 'Dodawanie manualne' },
-    { href: '/auth/login', label: 'Zaloguj' },
   ];
 
   const isActive = (href: string) => currentPath === href;
+
+  const handleLogout = async () => {
+    if (isLoggingOut) return;
+    
+    setIsLoggingOut(true);
+    try {
+      const response = await fetch('/api/auth/logout', {
+        method: 'POST',
+      });
+
+      if (response.ok) {
+        // Redirect to login page after successful logout
+        window.location.href = '/auth/login';
+      } else {
+        console.error('Logout failed');
+        setIsLoggingOut(false);
+      }
+    } catch (error) {
+      console.error('Logout error:', error);
+      setIsLoggingOut(false);
+    }
+  };
 
   return (
     <>
@@ -38,6 +62,28 @@ export default function Navigation({ currentPath }: NavigationProps) {
             {link.label}
           </a>
         ))}
+        
+        {/* Logout button - only visible when authenticated */}
+        {/* Separated from main navigation to prevent accidental clicks */}
+        {isAuthenticated && (
+          <>
+            <div className="h-8 w-px bg-border mx-2" aria-hidden="true" />
+            <button
+              onClick={handleLogout}
+              disabled={isLoggingOut}
+              className="
+                px-4 py-2 rounded-md transition-colors text-sm font-medium
+                bg-destructive/90 text-destructive-foreground hover:bg-destructive
+                disabled:opacity-50 disabled:cursor-not-allowed
+                flex items-center gap-2
+              "
+              title={userEmail}
+            >
+              <LogOut className="h-4 w-4" />
+              {isLoggingOut ? 'Wylogowywanie...' : 'Wyloguj'}
+            </button>
+          </>
+        )}
       </nav>
 
       {/* Mobile Navigation */}
@@ -76,6 +122,31 @@ export default function Navigation({ currentPath }: NavigationProps) {
                   {link.label}
                 </a>
               ))}
+              
+              {/* Logout button - mobile - only visible when authenticated */}
+              {/* Separated with border to prevent accidental clicks */}
+              {isAuthenticated && (
+                <>
+                  <div className="border-t my-2" aria-hidden="true" />
+                  <button
+                    onClick={() => {
+                      setIsOpen(false);
+                      handleLogout();
+                    }}
+                    disabled={isLoggingOut}
+                    className="
+                      px-4 py-2 rounded-md transition-colors text-sm font-medium
+                      bg-destructive/90 text-destructive-foreground hover:bg-destructive
+                      disabled:opacity-50 disabled:cursor-not-allowed
+                      flex items-center justify-center gap-2
+                    "
+                    title={userEmail}
+                  >
+                    <LogOut className="h-4 w-4" />
+                    {isLoggingOut ? 'Wylogowywanie...' : 'Wyloguj'}
+                  </button>
+                </>
+              )}
             </div>
           </div>
         )}

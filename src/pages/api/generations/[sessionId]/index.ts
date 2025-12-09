@@ -1,16 +1,9 @@
 import type { APIRoute } from "astro";
 import { generationSessionIdSchema } from "../../../../lib/validation/generation.schema";
 import { getGenerationMetadata } from "../../../../lib/services/generation.service";
-import { DEFAULT_USER_ID } from "../../../../db/supabase.client";
 import type { ApiResponse, GenerationMetadataDto, ApiErrorResponse } from "../../../../types";
 
 export const prerender = false;
-
-/**
- * User ID for MVP testing
- * TODO: Replace with actual authentication in future versions
- */
-const USER_ID = DEFAULT_USER_ID;
 
 /**
  * GET /api/generations/:sessionId
@@ -23,6 +16,19 @@ const USER_ID = DEFAULT_USER_ID;
  */
 export const GET: APIRoute = async ({ params, locals }) => {
   const supabase = locals.supabase;
+
+  // Check if user is authenticated
+  if (!locals.user) {
+    return new Response(
+      JSON.stringify({
+        error: {
+          message: "Authentication required",
+          code: "UNAUTHORIZED",
+        },
+      } satisfies ApiErrorResponse),
+      { status: 401, headers: { "Content-Type": "application/json" } }
+    );
+  }
 
   try {
     // Validate sessionId parameter
@@ -45,7 +51,7 @@ export const GET: APIRoute = async ({ params, locals }) => {
     // Fetch generation metadata
     let metadata: GenerationMetadataDto | null;
     try {
-      metadata = await getGenerationMetadata(supabase, USER_ID, sessionId);
+      metadata = await getGenerationMetadata(supabase, locals.user.id, sessionId);
     } catch (error) {
       console.error("Error fetching generation metadata:", error);
       return new Response(

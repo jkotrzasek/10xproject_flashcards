@@ -1,16 +1,9 @@
 import type { APIRoute } from "astro";
-import { DEFAULT_USER_ID } from "../../../db/supabase.client";
 import type { ApiResponse, ApiErrorResponse, FlashcardDto, FlashcardCreatedDto } from "../../../types";
 import { flashcardListQuerySchema, createFlashcardsSchema } from "../../../lib/validation/flashcard.schema";
 import { listFlashcards, createFlashcards, FlashcardErrorCodes } from "../../../lib/services/flashcard.service";
 
 export const prerender = false;
-
-/**
- * User ID for MVP testing
- * TODO: Replace with actual authentication in future versions
- */
-const USER_ID = DEFAULT_USER_ID;
 
 /**
  * GET /api/flashcards
@@ -26,6 +19,19 @@ const USER_ID = DEFAULT_USER_ID;
  */
 export const GET: APIRoute = async ({ request, locals }) => {
   const supabase = locals.supabase;
+
+  // Check if user is authenticated
+  if (!locals.user) {
+    return new Response(
+      JSON.stringify({
+        error: {
+          message: "Authentication required",
+          code: "UNAUTHORIZED",
+        },
+      } satisfies ApiErrorResponse),
+      { status: 401, headers: { "Content-Type": "application/json" } }
+    );
+  }
 
   try {
     // Parse query parameters
@@ -58,7 +64,7 @@ export const GET: APIRoute = async ({ request, locals }) => {
     // Retrieve flashcards using service
     let flashcards: FlashcardDto[];
     try {
-      flashcards = await listFlashcards(supabase, USER_ID, {
+      flashcards = await listFlashcards(supabase, locals.user.id, {
         deckId: deck_id,
         unassigned: unassigned,
         sort: sort,
@@ -134,6 +140,19 @@ export const GET: APIRoute = async ({ request, locals }) => {
 export const POST: APIRoute = async ({ request, locals }) => {
   const supabase = locals.supabase;
 
+  // Check if user is authenticated
+  if (!locals.user) {
+    return new Response(
+      JSON.stringify({
+        error: {
+          message: "Authentication required",
+          code: "UNAUTHORIZED",
+        },
+      } satisfies ApiErrorResponse),
+      { status: 401, headers: { "Content-Type": "application/json" } }
+    );
+  }
+
   try {
     // Parse and validate request body
     let body: unknown;
@@ -171,7 +190,7 @@ export const POST: APIRoute = async ({ request, locals }) => {
     // Create flashcards using service
     let createdFlashcards: FlashcardCreatedDto[];
     try {
-      createdFlashcards = await createFlashcards(supabase, USER_ID, deck_id, source, generation_id, flashcards);
+      createdFlashcards = await createFlashcards(supabase, locals.user.id, deck_id, source, generation_id, flashcards);
     } catch (error) {
       if (error instanceof Error) {
         // Handle deck not found

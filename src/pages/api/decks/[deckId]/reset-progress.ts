@@ -1,16 +1,9 @@
 import type { APIRoute } from "astro";
 import { deckIdSchema } from "../../../../lib/validation/deck.schema";
 import { resetDeckProgress, DeckErrorCodes } from "../../../../lib/services/deck.service";
-import { DEFAULT_USER_ID } from "../../../../db/supabase.client";
 import type { ApiErrorResponse } from "../../../../types";
 
 export const prerender = false;
-
-/**
- * User ID for MVP testing
- * TODO: Replace with actual authentication in future versions
- */
-const USER_ID = DEFAULT_USER_ID;
 
 /**
  * POST /api/decks/:deckId/reset-progress
@@ -23,6 +16,19 @@ const USER_ID = DEFAULT_USER_ID;
  */
 export const POST: APIRoute = async ({ params, locals }) => {
   const supabase = locals.supabase;
+
+  // Check if user is authenticated
+  if (!locals.user) {
+    return new Response(
+      JSON.stringify({
+        error: {
+          message: "Authentication required",
+          code: "UNAUTHORIZED",
+        },
+      } satisfies ApiErrorResponse),
+      { status: 401, headers: { "Content-Type": "application/json" } }
+    );
+  }
 
   try {
     // Parse and validate deckId from URL path
@@ -44,7 +50,7 @@ export const POST: APIRoute = async ({ params, locals }) => {
 
     // Reset deck progress using service
     try {
-      await resetDeckProgress(supabase, USER_ID, deckId);
+      await resetDeckProgress(supabase, locals.user.id, deckId);
     } catch (error) {
       if (error instanceof Error) {
         // Handle deck not found

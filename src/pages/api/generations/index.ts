@@ -10,16 +10,9 @@ import {
   GenerationErrorCodes,
   getGenerationHistory,
 } from "../../../lib/services/generation.service";
-import { DEFAULT_USER_ID } from "../../../db/supabase.client";
 import type { ApiResponse, GenerationResultDto, ApiErrorResponse, GenerationHistoryItemDto } from "../../../types";
 
 export const prerender = false;
-
-/**
- * User ID for MVP testing
- * TODO: Replace with actual authentication in future versions
- */
-const USER_ID = DEFAULT_USER_ID;
 
 /**
  * POST /api/generations
@@ -32,6 +25,19 @@ const USER_ID = DEFAULT_USER_ID;
  */
 export const POST: APIRoute = async ({ request, locals }) => {
   const supabase = locals.supabase;
+
+  // Check if user is authenticated
+  if (!locals.user) {
+    return new Response(
+      JSON.stringify({
+        error: {
+          message: "Authentication required",
+          code: "UNAUTHORIZED",
+        },
+      } satisfies ApiErrorResponse),
+      { status: 401, headers: { "Content-Type": "application/json" } }
+    );
+  }
 
   try {
     // Parse and validate request body
@@ -69,7 +75,7 @@ export const POST: APIRoute = async ({ request, locals }) => {
 
     // Check daily generation limit
     try {
-      await ensureDailyLimit(supabase, USER_ID);
+      await ensureDailyLimit(supabase, locals.user.id);
     } catch (error) {
       if (error instanceof Error && error.message === GenerationErrorCodes.DAILY_LIMIT_EXCEEDED) {
         return new Response(
@@ -88,7 +94,7 @@ export const POST: APIRoute = async ({ request, locals }) => {
     // Create pending generation record
     let sessionId: number;
     try {
-      sessionId = await createPendingGeneration(supabase, USER_ID, input_text);
+      sessionId = await createPendingGeneration(supabase, locals.user.id, input_text);
     } catch (error) {
       console.error("Failed to create pending generation:", error);
       return new Response(
@@ -137,7 +143,7 @@ export const POST: APIRoute = async ({ request, locals }) => {
       });
 
       // Update generation record with error
-      await finalizeGenerationError(supabase, sessionId, USER_ID, errorCode, errorMessage);
+      await finalizeGenerationError(supabase, sessionId, locals.user.id, errorCode, errorMessage);
 
       return new Response(
         JSON.stringify({
@@ -201,11 +207,24 @@ export const POST: APIRoute = async ({ request, locals }) => {
 export const GET: APIRoute = async ({ locals }) => {
   const supabase = locals.supabase;
 
+  // Check if user is authenticated
+  if (!locals.user) {
+    return new Response(
+      JSON.stringify({
+        error: {
+          message: "Authentication required",
+          code: "UNAUTHORIZED",
+        },
+      } satisfies ApiErrorResponse),
+      { status: 401, headers: { "Content-Type": "application/json" } }
+    );
+  }
+
   try {
     // Fetch generation history
     let history: GenerationHistoryItemDto[];
     try {
-      history = await getGenerationHistory(supabase, USER_ID);
+      history = await getGenerationHistory(supabase, locals.user.id);
     } catch (error) {
       console.error("Error fetching generation history:", error);
       return new Response(

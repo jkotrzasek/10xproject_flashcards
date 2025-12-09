@@ -1,16 +1,9 @@
 import type { APIRoute } from "astro";
-import { DEFAULT_USER_ID } from "../../../db/supabase.client";
 import type { ApiResponse, ApiErrorResponse } from "../../../types";
 import { reviewFlashcardsSchema } from "../../../lib/validation/learn.schema";
 import { applyFlashcardReviews, LearnErrorCodes } from "../../../lib/services/learn.service";
 
 export const prerender = false;
-
-/**
- * User ID for MVP testing
- * TODO: Replace with actual authentication in future versions
- */
-const USER_ID = DEFAULT_USER_ID;
 
 /**
  * PATCH /api/learn/review
@@ -23,6 +16,19 @@ const USER_ID = DEFAULT_USER_ID;
  */
 export const PATCH: APIRoute = async ({ request, locals }) => {
   const supabase = locals.supabase;
+
+  // Check if user is authenticated
+  if (!locals.user) {
+    return new Response(
+      JSON.stringify({
+        error: {
+          message: "Authentication required",
+          code: "UNAUTHORIZED",
+        },
+      } satisfies ApiErrorResponse),
+      { status: 401, headers: { "Content-Type": "application/json" } }
+    );
+  }
 
   try {
     // Parse and validate request body
@@ -76,7 +82,7 @@ export const PATCH: APIRoute = async ({ request, locals }) => {
     // Apply flashcard reviews using service
     let updatedCount: number;
     try {
-      updatedCount = await applyFlashcardReviews(supabase, USER_ID, review);
+      updatedCount = await applyFlashcardReviews(supabase, locals.user.id, review);
     } catch (error) {
       if (error instanceof Error) {
         // Handle flashcard not found

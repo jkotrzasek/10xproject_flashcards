@@ -3,6 +3,9 @@
 import Navigation from '../components/Navigation';
 
 const currentPath = Astro.url.pathname;
+// Check if user is authenticated from middleware
+const isAuthenticated = !!Astro.locals.user;
+const userEmail = Astro.locals.user?.email;
 ---
 
 <header class="border-b bg-background relative">
@@ -11,7 +14,12 @@ const currentPath = Astro.url.pathname;
       <a href="/" class="text-2xl font-bold text-foreground hover:text-primary transition-colors">
         AI Flashcards
       </a>
-      <Navigation client:load currentPath={currentPath} />
+      <Navigation 
+        client:load 
+        currentPath={currentPath} 
+        isAuthenticated={isAuthenticated}
+        userEmail={userEmail}
+      />
     </div>
   </div>
 </header>
