@@ -2,6 +2,14 @@
 import Layout from "../../layouts/Layout.astro";
 import DeckDetailsPage from "../../components/DeckDetailsPage";
 
+// Defense in depth: Verify user is authenticated
+// Middleware should already handle this, but we add an extra check
+const { user } = Astro.locals;
+
+if (!user) {
+  return Astro.redirect("/auth/login");
+}
+
 const { id } = Astro.params;
 const deckId = id ? parseInt(id, 10) : NaN;
 ---

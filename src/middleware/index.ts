@@ -58,9 +58,6 @@ export const onRequest = defineMiddleware(async (context, next) => {
     };
   }
   
-  // Note: For MVP, we're not enforcing authentication
-  // Uncomment the following block to enforce auth on protected routes:
-  
   // Check if current path requires authentication
   const isPublicPath = PUBLIC_PATHS.includes(url.pathname);
   

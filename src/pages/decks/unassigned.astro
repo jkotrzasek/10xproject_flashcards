@@ -1,6 +1,14 @@
 ---
 import Layout from "../../layouts/Layout.astro";
 import UnassignedDeckPage from "../../components/UnassignedDeckPage";
+
+// Defense in depth: Verify user is authenticated
+// Middleware should already handle this, but we add an extra check
+const { user } = Astro.locals;
+
+if (!user) {
+  return Astro.redirect("/auth/login");
+}
 ---
 
 <Layout title="Nieprzypisane fiszki - AI Flashcard Generator">
