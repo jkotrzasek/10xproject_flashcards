@@ -263,23 +263,6 @@ export interface RegisterCommand {
   password: string;
   password_confirmation: string;
 }
-
-/**
- * Request body for POST /api/auth/forgot-password
- */
-export interface ForgotPasswordCommand {
-  email: string;
-}
-
-/**
- * Request body for POST /api/auth/reset-password
- */
-export interface ResetPasswordCommand {
-  new_password: string;
-  new_password_confirmation: string;
-  token?: string;
-}
-
 // ============================================================================
 // Generic API Response Wrapper
 // ============================================================================
