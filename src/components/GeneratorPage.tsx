@@ -22,7 +22,7 @@ export default function GeneratorPage() {
   const { decks, isLoading: isLoadingDecks, refetch: refetchDecks } = useDecks();
   const { saveFlashcards, isSaving } = useSaveFlashcards();
   const { patchAcceptedTotal } = usePatchAcceptedTotal();
-  
+
   const [proposals, setProposals] = useState<FlashcardProposalVM[]>([]);
   const [sessionId, setSessionId] = useState<number | null>(null);
   const [selectedDeckId, setSelectedDeckId] = useState<number | null | undefined>(undefined);
@@ -59,13 +59,7 @@ export default function GeneratorPage() {
   };
 
   const handleProposalChange = (itemId: number, changes: Partial<FlashcardProposalVM>) => {
-    setProposals((prev) =>
-      prev.map((item) =>
-        item.id === itemId
-          ? { ...item, ...changes }
-          : item
-      )
-    );
+    setProposals((prev) => prev.map((item) => (item.id === itemId ? { ...item, ...changes } : item)));
   };
 
   const handleSaveAccepted = async () => {
@@ -98,13 +92,13 @@ export default function GeneratorPage() {
         if (stats.failed === 0) {
           // Full success - all saved
           toast.success(`Zapisano ${stats.saved} fiszek`);
-          
+
           // Clear proposals and reset form
           setProposals([]);
           setSessionId(null);
           setSelectedDeckId(undefined);
           setShouldClearForm(true);
-          
+
           // Refresh decks in background if saved to a deck
           if (selectedDeckId) {
             refetchDecks();
@@ -112,7 +106,7 @@ export default function GeneratorPage() {
         } else {
           // Partial success - remove only successfully saved proposals
           toast.warning(`Zapisano ${stats.saved} z ${stats.attempted} fiszek`);
-          
+
           setProposals((prev) => prev.filter((p) => !stats.savedIds.includes(p.id)));
         }
       } else {
@@ -153,13 +147,13 @@ export default function GeneratorPage() {
         if (stats.failed === 0) {
           // Full success
           toast.success(`Zapisano ${stats.saved} fiszek`);
-          
+
           // Clear proposals and reset form
           setProposals([]);
           setSessionId(null);
           setSelectedDeckId(undefined);
           setShouldClearForm(true);
-          
+
           // Refresh decks in background if saved to a deck
           if (selectedDeckId) {
             refetchDecks();
@@ -167,7 +161,7 @@ export default function GeneratorPage() {
         } else {
           // Partial success - remove only successfully saved proposals
           toast.warning(`Zapisano ${stats.saved} z ${stats.attempted} fiszek`);
-          
+
           setProposals((prev) => prev.filter((p) => !stats.savedIds.includes(p.id)));
         }
       } else {
@@ -226,32 +220,32 @@ export default function GeneratorPage() {
       <div className="flex flex-col" style={{ height: "calc(100vh - 73px)" }}>
         {/* Fixed Header + Form Section */}
         <div className="shrink-0 border-b border-border bg-background">
-        <div className="container mx-auto max-w-7xl px-4 py-6">
-          <div className="space-y-6">
-            {/* Header */}
-            <header className="space-y-3">
-              <div className="flex items-center justify-between">
-                <h1 className="text-2xl font-bold">Generator AI</h1>
-                <LimitBadge limit={limits} />
-              </div>
-              <p className="text-sm text-muted-foreground">
-                Wklej tekst, a AI wygeneruje propozycje fiszek do akceptacji i edycji.
-              </p>
-            </header>
+          <div className="container mx-auto max-w-7xl px-4 py-6">
+            <div className="space-y-6">
+              {/* Header */}
+              <header className="space-y-3">
+                <div className="flex items-center justify-between">
+                  <h1 className="text-2xl font-bold">Generator AI</h1>
+                  <LimitBadge limit={limits} />
+                </div>
+                <p className="text-sm text-muted-foreground">
+                  Wklej tekst, a AI wygeneruje propozycje fiszek do akceptacji i edycji.
+                </p>
+              </header>
 
-            {/* Input Form */}
-            <AIInputForm
-              remaining={limits.remaining}
-              onGenerate={handleGenerate}
-              isGenerating={isGenerating}
-              error={generationError}
-              hasUnsavedProposals={hasProposals}
-              shouldClear={shouldClearForm}
-              onCleared={() => setShouldClearForm(false)}
-            />
+              {/* Input Form */}
+              <AIInputForm
+                remaining={limits.remaining}
+                onGenerate={handleGenerate}
+                isGenerating={isGenerating}
+                error={generationError}
+                hasUnsavedProposals={hasProposals}
+                shouldClear={shouldClearForm}
+                onCleared={() => setShouldClearForm(false)}
+              />
+            </div>
           </div>
         </div>
-      </div>
 
         {/* Scrollable Content Area */}
         <div className="min-h-0 flex-1 overflow-y-auto">
@@ -265,18 +259,18 @@ export default function GeneratorPage() {
 
             {/* Proposals Section */}
             {proposals.length > 0 && !isGenerating && (
-            <AIProposalList
-              items={proposals}
-              onChange={handleProposalChange}
-              decks={decks}
-              selectedDeckId={selectedDeckId}
-              onDeckChange={setSelectedDeckId}
-              isLoadingDecks={isLoadingDecks}
-              onSaveAccepted={handleSaveAccepted}
-              onSaveAll={handleSaveAll}
-              onCancel={handleCancel}
-              isSaving={isSaving || isSavingLocal}
-            />
+              <AIProposalList
+                items={proposals}
+                onChange={handleProposalChange}
+                decks={decks}
+                selectedDeckId={selectedDeckId}
+                onDeckChange={setSelectedDeckId}
+                isLoadingDecks={isLoadingDecks}
+                onSaveAccepted={handleSaveAccepted}
+                onSaveAll={handleSaveAll}
+                onCancel={handleCancel}
+                isSaving={isSaving || isSavingLocal}
+              />
             )}
           </div>
         </div>
@@ -284,4 +278,3 @@ export default function GeneratorPage() {
     </>
   );
 }
-

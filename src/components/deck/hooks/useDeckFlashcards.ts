@@ -1,5 +1,11 @@
 import { useState, useEffect, useCallback } from "react";
-import type { FlashcardDto, ApiResponse, ApiErrorResponse, FlashcardSource, SpaceRepetitionStatus } from "../../../types";
+import type {
+  FlashcardDto,
+  ApiResponse,
+  ApiErrorResponse,
+  FlashcardSource,
+  SpaceRepetitionStatus,
+} from "../../../types";
 import type { DeckFlashcardVM } from "../../DeckDetailsPage";
 
 interface UseDeckFlashcardsReturn {
@@ -25,22 +31,25 @@ function formatDate(dateString: string): string {
   if (diffMins < 60) return `${diffMins} min temu`;
   if (diffHours < 24) return `${diffHours}h temu`;
   if (diffDays < 7) return `${diffDays} dni temu`;
-  
-  return date.toLocaleDateString("pl-PL", { 
-    day: "numeric", 
-    month: "short", 
-    year: date.getFullYear() !== now.getFullYear() ? "numeric" : undefined 
+
+  return date.toLocaleDateString("pl-PL", {
+    day: "numeric",
+    month: "short",
+    year: date.getFullYear() !== now.getFullYear() ? "numeric" : undefined,
   });
 }
 
-function formatLastRepetitionLabel(lastRepetition: string | null, spaceRepetition: SpaceRepetitionStatus): string | null {
+function formatLastRepetitionLabel(
+  lastRepetition: string | null,
+  spaceRepetition: SpaceRepetitionStatus
+): string | null {
   if (!lastRepetition) return null;
-  
+
   const date = new Date(lastRepetition);
-  return `Ostatnia: ${date.toLocaleDateString("pl-PL", { 
-    day: "numeric", 
+  return `Ostatnia: ${date.toLocaleDateString("pl-PL", {
+    day: "numeric",
     month: "short",
-    year: "numeric"
+    year: "numeric",
   })}`;
 }
 
@@ -103,42 +112,45 @@ export function useDeckFlashcards(deckId: number): UseDeckFlashcardsReturn {
     setRefetchTrigger((prev) => prev + 1);
   }, []);
 
-  const fetchFlashcards = useCallback(async (cancelled: { current: boolean }) => {
-    setIsLoading(true);
-    setError(undefined);
+  const fetchFlashcards = useCallback(
+    async (cancelled: { current: boolean }) => {
+      setIsLoading(true);
+      setError(undefined);
 
-    try {
-      const response = await fetch(`/api/flashcards?deck_id=${deckId}&sort=created_asc`);
+      try {
+        const response = await fetch(`/api/flashcards?deck_id=${deckId}&sort=created_asc`);
 
-      if (!response.ok) {
-        const errorData: ApiErrorResponse = await response.json();
+        if (!response.ok) {
+          const errorData: ApiErrorResponse = await response.json();
+          if (!cancelled.current) {
+            setError({
+              message: errorData.error.message || "Nie udało się pobrać fiszek",
+              code: errorData.error.code,
+            });
+            setIsLoading(false);
+          }
+          return;
+        }
+
+        const data: ApiResponse<FlashcardDto[]> = await response.json();
+
+        if (!cancelled.current) {
+          const mappedFlashcards = data.data.map(mapToViewModel);
+          setFlashcards(mappedFlashcards);
+          setError(undefined);
+          setIsLoading(false);
+        }
+      } catch (err) {
         if (!cancelled.current) {
           setError({
-            message: errorData.error.message || "Nie udało się pobrać fiszek",
-            code: errorData.error.code,
+            message: err instanceof Error ? err.message : "Błąd sieci lub serwera",
           });
           setIsLoading(false);
         }
-        return;
       }
-
-      const data: ApiResponse<FlashcardDto[]> = await response.json();
-
-      if (!cancelled.current) {
-        const mappedFlashcards = data.data.map(mapToViewModel);
-        setFlashcards(mappedFlashcards);
-        setError(undefined);
-        setIsLoading(false);
-      }
-    } catch (err) {
-      if (!cancelled.current) {
-        setError({
-          message: err instanceof Error ? err.message : "Błąd sieci lub serwera",
-        });
-        setIsLoading(false);
-      }
-    }
-  }, [deckId]);
+    },
+    [deckId]
+  );
 
   useEffect(() => {
     const cancelled = { current: false };
@@ -157,4 +169,3 @@ export function useDeckFlashcards(deckId: number): UseDeckFlashcardsReturn {
     refetch,
   };
 }
-

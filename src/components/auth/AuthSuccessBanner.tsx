@@ -9,18 +9,13 @@ interface AuthSuccessBannerProps {
 
 export function AuthSuccessBanner({ message, onDismiss, className }: AuthSuccessBannerProps) {
   return (
-    <div 
-      className={cn(
-        "flex items-start gap-3 rounded-md bg-green-500/10 border border-green-500/20 p-4",
-        className
-      )}
+    <div
+      className={cn("flex items-start gap-3 rounded-md bg-green-500/10 border border-green-500/20 p-4", className)}
       role="status"
       aria-live="polite"
     >
       <CheckCircle className="h-5 w-5 text-green-600 dark:text-green-500 shrink-0 mt-0.5" />
-      <div className="flex-1 text-sm text-foreground">
-        {message}
-      </div>
+      <div className="flex-1 text-sm text-foreground">{message}</div>
       {onDismiss && (
         <button
           onClick={onDismiss}
@@ -33,4 +28,3 @@ export function AuthSuccessBanner({ message, onDismiss, className }: AuthSuccess
     </div>
   );
 }
-

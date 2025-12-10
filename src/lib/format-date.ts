@@ -14,11 +14,10 @@ export function formatDate(dateString: string): string {
   if (diffMins < 60) return `${diffMins} min temu`;
   if (diffHours < 24) return `${diffHours}h temu`;
   if (diffDays < 7) return `${diffDays} dni temu`;
-  
-  return date.toLocaleDateString("pl-PL", { 
-    day: "numeric", 
-    month: "short", 
-    year: date.getFullYear() !== now.getFullYear() ? "numeric" : undefined 
+
+  return date.toLocaleDateString("pl-PL", {
+    day: "numeric",
+    month: "short",
+    year: date.getFullYear() !== now.getFullYear() ? "numeric" : undefined,
   });
 }
-

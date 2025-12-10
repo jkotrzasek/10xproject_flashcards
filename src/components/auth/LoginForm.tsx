@@ -15,7 +15,7 @@ import type { LoginFormErrors } from "./auth.types";
 /**
  * Validates email format
  * Returns error message string if invalid, undefined if valid
- * 
+ *
  * Using permissive regex based on HTML5 spec + RFC 5322 simplified
  * Pattern: local-part @ domain . TLD
  * - local-part: alphanumeric + special chars (. _ % + -)
@@ -104,74 +104,83 @@ export function LoginForm({ showEmailConfirmed = false }: LoginFormProps) {
     }
   }, [apiError]);
 
-  const handleChange = useCallback((field: keyof LoginCommand) => {
-    return (e: React.ChangeEvent<HTMLInputElement>) => {
-      const newValue = e.target.value;
-      setValues((prev) => ({ ...prev, [field]: newValue }));
+  const handleChange = useCallback(
+    (field: keyof LoginCommand) => {
+      return (e: React.ChangeEvent<HTMLInputElement>) => {
+        const newValue = e.target.value;
+        setValues((prev) => ({ ...prev, [field]: newValue }));
 
-      // Clear field error on change
-      if (errors[field]) {
-        setErrors((prev) => {
-          const newErrors = { ...prev };
-          delete newErrors[field];
-          return newErrors;
-        });
-      }
-
-      // Clear submit error on any change
-      if (submitError) {
-        setSubmitError(undefined);
-        clearError();
-      }
-    };
-  }, [errors, submitError, clearError]);
-
-  const handleBlur = useCallback((field: keyof LoginCommand) => {
-    return () => {
-      setTouched((prev) => ({ ...prev, [field]: true }));
-
-      // Validate on blur
-      if (field === "email") {
-        const emailError = validateEmail(values.email);
-        if (emailError) {
-          setErrors((prev) => ({ ...prev, email: emailError }));
+        // Clear field error on change
+        if (errors[field]) {
+          setErrors((prev) => {
+            const newErrors = { ...prev };
+            delete newErrors[field];
+            return newErrors;
+          });
         }
-      } else if (field === "password") {
-        const passwordError = validatePassword(values.password);
-        if (passwordError) {
-          setErrors((prev) => ({ ...prev, password: passwordError }));
+
+        // Clear submit error on any change
+        if (submitError) {
+          setSubmitError(undefined);
+          clearError();
         }
+      };
+    },
+    [errors, submitError, clearError]
+  );
+
+  const handleBlur = useCallback(
+    (field: keyof LoginCommand) => {
+      return () => {
+        setTouched((prev) => ({ ...prev, [field]: true }));
+
+        // Validate on blur
+        if (field === "email") {
+          const emailError = validateEmail(values.email);
+          if (emailError) {
+            setErrors((prev) => ({ ...prev, email: emailError }));
+          }
+        } else if (field === "password") {
+          const passwordError = validatePassword(values.password);
+          if (passwordError) {
+            setErrors((prev) => ({ ...prev, password: passwordError }));
+          }
+        }
+      };
+    },
+    [values]
+  );
+
+  const handleSubmit = useCallback(
+    async (e: React.FormEvent<HTMLFormElement>) => {
+      e.preventDefault();
+
+      // Mark all fields as touched
+      setTouched({ email: true, password: true });
+
+      // Validate
+      const validationErrors = validateForm(values);
+      if (Object.keys(validationErrors).length > 0) {
+        setErrors(validationErrors);
+        return;
       }
-    };
-  }, [values]);
 
-  const handleSubmit = useCallback(async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
+      // Clear previous errors
+      setErrors({});
+      setSubmitError(undefined);
+      clearError();
 
-    // Mark all fields as touched
-    setTouched({ email: true, password: true });
+      // Call API
+      const result = await login(values);
 
-    // Validate
-    const validationErrors = validateForm(values);
-    if (Object.keys(validationErrors).length > 0) {
-      setErrors(validationErrors);
-      return;
-    }
-
-    // Clear previous errors
-    setErrors({});
-    setSubmitError(undefined);
-    clearError();
-
-    // Call API
-    const result = await login(values);
-
-    if (result) {
-      // Success - redirect to main panel
-      window.location.href = "/";
-    }
-    // Error is handled by useEffect watching apiError
-  }, [values, login, clearError]);
+      if (result) {
+        // Success - redirect to main panel
+        window.location.href = "/";
+      }
+      // Error is handled by useEffect watching apiError
+    },
+    [values, login, clearError]
+  );
 
   const showFieldError = (field: keyof LoginCommand): boolean => {
     return touched[field] && !!errors[field];
@@ -180,12 +189,7 @@ export function LoginForm({ showEmailConfirmed = false }: LoginFormProps) {
   return (
     <form className="space-y-6" onSubmit={handleSubmit} noValidate>
       {/* Success banner */}
-      {showSuccess && (
-        <AuthSuccessBanner
-          message="Potwierdzono adres email"
-          onDismiss={() => setShowSuccess(false)}
-        />
-      )}
+      {showSuccess && <AuthSuccessBanner message="Potwierdzono adres email" onDismiss={() => setShowSuccess(false)} />}
 
       {/* Global error banner */}
       {submitError && (
@@ -245,11 +249,7 @@ export function LoginForm({ showEmailConfirmed = false }: LoginFormProps) {
       </div>
 
       {/* Submit button */}
-      <Button
-        type="submit"
-        className="w-full"
-        disabled={isLoading}
-      >
+      <Button type="submit" className="w-full" disabled={isLoading}>
         {isLoading ? "Logowanie..." : "Zaloguj się"}
       </Button>
 
@@ -257,10 +257,7 @@ export function LoginForm({ showEmailConfirmed = false }: LoginFormProps) {
       <div className="text-center">
         <p className="text-sm text-muted-foreground">
           Nie masz konta?{" "}
-          <a
-            href="/auth/register"
-            className="text-primary hover:underline font-medium transition-colors"
-          >
+          <a href="/auth/register" className="text-primary hover:underline font-medium transition-colors">
             Zarejestruj się
           </a>
         </p>
@@ -268,4 +265,3 @@ export function LoginForm({ showEmailConfirmed = false }: LoginFormProps) {
     </form>
   );
 }
-

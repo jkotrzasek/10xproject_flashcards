@@ -1,10 +1,5 @@
 import { useState } from "react";
-import type {
-  CreateFlashcardsCommand,
-  FlashcardCreatedDto,
-  ApiResponse,
-  ApiErrorResponse,
-} from "../../../types";
+import type { CreateFlashcardsCommand, FlashcardCreatedDto, ApiResponse, ApiErrorResponse } from "../../../types";
 import type { ManualFlashcardRowViewModel, ManualSaveStats } from "../typesManual";
 
 // ============================================================================
@@ -12,10 +7,7 @@ import type { ManualFlashcardRowViewModel, ManualSaveStats } from "../typesManua
 // ============================================================================
 
 interface UseSaveManualFlashcardsReturn {
-  saveFlashcards: (
-    rows: ManualFlashcardRowViewModel[],
-    deckId: number | null
-  ) => Promise<ManualSaveStats>;
+  saveFlashcards: (rows: ManualFlashcardRowViewModel[], deckId: number | null) => Promise<ManualSaveStats>;
   isSaving: boolean;
   error: { message: string; code?: string } | null;
 }
@@ -98,4 +90,3 @@ export function useSaveManualFlashcards(): UseSaveManualFlashcardsReturn {
     error,
   };
 }
-

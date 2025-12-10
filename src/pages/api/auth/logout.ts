@@ -7,20 +7,20 @@ export const prerender = false;
 /**
  * POST /api/auth/logout
  * Signs out the currently authenticated user by invalidating their session.
- * 
+ *
  * @returns 200 - Successfully logged out (cookies cleared)
  * @returns 401 - Logout failed (error from Supabase Auth)
  * @returns 500 - Server error
- * 
+ *
  * Flow:
  * 1. Call Supabase Auth signOut() to invalidate session
  * 2. Cookies are automatically cleared by Supabase client via setAll
  * 3. Return success response
- * 
+ *
  * Error handling:
  * - 401: Session invalidation failed
  * - 500: Server/database errors
- * 
+ *
  * Security:
  * - Requires active session (middleware redirects unauthenticated users)
  * - Clears all session cookies on success
@@ -59,4 +59,3 @@ export const POST: APIRoute = async ({ locals }) => {
     });
   }
 };
-

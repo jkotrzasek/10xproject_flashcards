@@ -59,4 +59,3 @@ export type DeckSortOption = (typeof deckSortOptions)[number];
 export const deckSortSchema = z.enum(deckSortOptions).optional();
 
 export type DeckSortInput = z.infer<typeof deckSortSchema>;
-

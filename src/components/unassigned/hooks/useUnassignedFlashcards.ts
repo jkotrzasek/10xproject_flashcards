@@ -1,5 +1,11 @@
 import { useState, useEffect, useCallback } from "react";
-import type { FlashcardDto, ApiResponse, ApiErrorResponse, FlashcardSource, SpaceRepetitionStatus } from "../../../types";
+import type {
+  FlashcardDto,
+  ApiResponse,
+  ApiErrorResponse,
+  FlashcardSource,
+  SpaceRepetitionStatus,
+} from "../../../types";
 import type { UnassignedFlashcardVM } from "../../UnassignedDeckPage";
 
 interface UseUnassignedFlashcardsReturn {
@@ -25,22 +31,22 @@ function formatDate(dateString: string): string {
   if (diffMins < 60) return `${diffMins} min temu`;
   if (diffHours < 24) return `${diffHours}h temu`;
   if (diffDays < 7) return `${diffDays} dni temu`;
-  
-  return date.toLocaleDateString("pl-PL", { 
-    day: "numeric", 
-    month: "short", 
-    year: date.getFullYear() !== now.getFullYear() ? "numeric" : undefined 
+
+  return date.toLocaleDateString("pl-PL", {
+    day: "numeric",
+    month: "short",
+    year: date.getFullYear() !== now.getFullYear() ? "numeric" : undefined,
   });
 }
 
 function formatLastRepetitionLabel(lastRepetition: string | null): string | null {
   if (!lastRepetition) return "Brak powtórek";
-  
+
   const date = new Date(lastRepetition);
-  return `Ostatnia: ${date.toLocaleDateString("pl-PL", { 
-    day: "numeric", 
+  return `Ostatnia: ${date.toLocaleDateString("pl-PL", {
+    day: "numeric",
     month: "short",
-    year: "numeric"
+    year: "numeric",
   })}`;
 }
 
@@ -160,4 +166,3 @@ export function useUnassignedFlashcards(): UseUnassignedFlashcardsReturn {
     refetch,
   };
 }
-

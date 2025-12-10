@@ -30,4 +30,3 @@ export default function ManualPage() {
 
   return <ManualFlashcardView initialDeckId={initialDeckId} />;
 }
-

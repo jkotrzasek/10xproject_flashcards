@@ -66,12 +66,12 @@ export function useDeckMutations(
       // Success - 204 No Content
       toast.success("Postęp nauki w decku został zresetowany");
       setIsResettingProgress(false);
-      
+
       // Call optional success callback (e.g., to refetch flashcards)
       if (options?.onResetSuccess) {
         options.onResetSuccess();
       }
-      
+
       return { success: true };
     } catch (err) {
       const errorMessage = err instanceof Error ? err.message : "Błąd połączenia z serwerem";
@@ -86,4 +86,3 @@ export function useDeckMutations(
     isResettingProgress,
   };
 }
-

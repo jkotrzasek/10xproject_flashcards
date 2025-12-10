@@ -9,7 +9,7 @@ export const prerender = false;
  * POST /api/decks/:deckId/reset-progress
  * Reset learning progress for all flashcards in a deck
  * Sets space_repetition to 'not_checked' and last_repetition to null
- * 
+ *
  * @param deckId - Deck ID from URL path
  * @returns 204 No Content on success
  * @returns ApiErrorResponse on error (400/401/404/500)
@@ -103,4 +103,3 @@ export const POST: APIRoute = async ({ params, locals }) => {
     );
   }
 };
-

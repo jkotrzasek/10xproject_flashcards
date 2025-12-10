@@ -69,4 +69,3 @@ export interface ManualSaveStats {
   saved: number;
   failed: number;
 }
-

@@ -19,12 +19,7 @@ interface DeckFlashcardItemProps {
 // Component
 // ============================================================================
 
-export function DeckFlashcardItem({
-  item,
-  itemNumber,
-  onEdit,
-  onDelete,
-}: DeckFlashcardItemProps) {
+export function DeckFlashcardItem({ item, itemNumber, onEdit, onDelete }: DeckFlashcardItemProps) {
   const handleEdit = () => {
     onEdit(item.id);
   };
@@ -38,9 +33,7 @@ export function DeckFlashcardItem({
       <CardHeader className="pb-2">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <Label className="text-xs font-medium">
-              {item.spaceRepetition}
-            </Label>
+            <Label className="text-xs font-medium">{item.spaceRepetition}</Label>
           </div>
           <div className="flex items-center gap-2">
             <Badge variant="secondary" className="text-xs">
@@ -73,33 +66,21 @@ export function DeckFlashcardItem({
       <CardContent className="space-y-3">
         {/* Front field */}
         <div className="space-y-1">
-          <Label className="text-xs font-medium">
-            Przód
-          </Label>
+          <Label className="text-xs font-medium">Przód</Label>
           <p className="text-sm whitespace-pre-wrap break-words">{item.front}</p>
         </div>
 
         {/* Back field */}
         <div className="space-y-1">
-          <Label className="text-xs font-medium">
-            Tył
-          </Label>
+          <Label className="text-xs font-medium">Tył</Label>
           <p className="text-sm whitespace-pre-wrap break-words">{item.back}</p>
         </div>
 
         {/* Deleting state */}
-        {item.isDeleting && (
-          <div className="text-xs text-muted-foreground">
-            Usuwanie...
-          </div>
-        )}
+        {item.isDeleting && <div className="text-xs text-muted-foreground">Usuwanie...</div>}
 
         {/* Error state */}
-        {item.error && (
-          <div className="text-xs text-destructive">
-            {item.error}
-          </div>
-        )}
+        {item.error && <div className="text-xs text-destructive">{item.error}</div>}
       </CardContent>
 
       <CardFooter className="pt-2 text-xs text-muted-foreground">
@@ -120,4 +101,3 @@ export function DeckFlashcardItem({
     </Card>
   );
 }
-

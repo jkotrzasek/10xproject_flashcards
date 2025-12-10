@@ -1,12 +1,5 @@
 import { useState } from "react";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-} from "../ui/dialog";
+import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "../ui/dialog";
 import { Button } from "../ui/button";
 import { Input } from "../ui/input";
 import { Label } from "../ui/label";
@@ -46,7 +39,7 @@ export function DeleteDeckConfirmDialog({ open, deck, onClose, onConfirm }: Dele
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     if (!deck) return;
 
     // Wymaga wpisania nazwy decku jako potwierdzenie
@@ -83,11 +76,12 @@ export function DeleteDeckConfirmDialog({ open, deck, onClose, onConfirm }: Dele
 
   if (!deck) return null;
 
-  const flashcardText = deck.flashcard_count === 1 
-    ? "1 fiszka" 
-    : deck.flashcard_count > 1 && deck.flashcard_count < 5 
-      ? `${deck.flashcard_count} fiszki` 
-      : `${deck.flashcard_count} fiszek`;
+  const flashcardText =
+    deck.flashcard_count === 1
+      ? "1 fiszka"
+      : deck.flashcard_count > 1 && deck.flashcard_count < 5
+        ? `${deck.flashcard_count} fiszki`
+        : `${deck.flashcard_count} fiszek`;
 
   return (
     <Dialog open={open} onOpenChange={handleClose}>
@@ -95,7 +89,8 @@ export function DeleteDeckConfirmDialog({ open, deck, onClose, onConfirm }: Dele
         <DialogHeader>
           <DialogTitle>Usuń deck</DialogTitle>
           <DialogDescription>
-            Ta operacja jest nieodwracalna i spowoduje trwałe usunięcie decku oraz wszystkich przypisanych do niego fiszek.
+            Ta operacja jest nieodwracalna i spowoduje trwałe usunięcie decku oraz wszystkich przypisanych do niego
+            fiszek.
           </DialogDescription>
         </DialogHeader>
 
@@ -103,11 +98,11 @@ export function DeleteDeckConfirmDialog({ open, deck, onClose, onConfirm }: Dele
           <div className="space-y-4 py-4">
             {/* Ostrzeżenie */}
             <div className="bg-destructive/10 border border-destructive/20 rounded-md p-4">
-              <p className="text-sm font-semibold text-destructive mb-2">
-                ⚠️ Uwaga! Zostanie usunięte:
-              </p>
+              <p className="text-sm font-semibold text-destructive mb-2">⚠️ Uwaga! Zostanie usunięte:</p>
               <ul className="text-sm text-destructive/90 list-disc list-inside space-y-1">
-                <li>Deck: <strong>{deck.name}</strong></li>
+                <li>
+                  Deck: <strong>{deck.name}</strong>
+                </li>
                 <li>{flashcardText} przypisanych do tego decku</li>
               </ul>
             </div>
@@ -125,26 +120,15 @@ export function DeleteDeckConfirmDialog({ open, deck, onClose, onConfirm }: Dele
                 disabled={isSubmitting}
                 autoFocus
               />
-              {error && (
-                <p className="text-sm text-destructive">{error}</p>
-              )}
+              {error && <p className="text-sm text-destructive">{error}</p>}
             </div>
           </div>
 
           <DialogFooter>
-            <Button
-              type="button"
-              variant="outline"
-              onClick={handleClose}
-              disabled={isSubmitting}
-            >
+            <Button type="button" variant="outline" onClick={handleClose} disabled={isSubmitting}>
               Anuluj
             </Button>
-            <Button 
-              type="submit" 
-              variant="destructive"
-              disabled={isSubmitting}
-            >
+            <Button type="submit" variant="destructive" disabled={isSubmitting}>
               {isSubmitting ? "Usuwanie..." : "Usuń deck"}
             </Button>
           </DialogFooter>
@@ -153,4 +137,3 @@ export function DeleteDeckConfirmDialog({ open, deck, onClose, onConfirm }: Dele
     </Dialog>
   );
 }
-

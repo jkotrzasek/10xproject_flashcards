@@ -31,34 +31,34 @@ function createMutationError(message: string, code?: string): DeckMutationError 
 async function handleApiResponse<T>(response: Response): Promise<T> {
   if (!response.ok) {
     const errorData = await response.json().catch(() => null);
-    
+
     if (response.status === 401) {
       // Przekieruj do strony logowania
       window.location.href = "/login";
       throw createMutationError("Sesja wygasła. Zaloguj się ponownie.", "UNAUTHORIZED");
     }
-    
+
     if (response.status === 409) {
       throw createMutationError("Deck o tej nazwie już istnieje", "DUPLICATE_NAME");
     }
-    
+
     if (response.status === 404) {
       throw createMutationError("Deck nie został znaleziony", "NOT_FOUND");
     }
-    
+
     if (response.status === 400) {
       const message = errorData?.error?.message || "Nieprawidłowe dane";
       throw createMutationError(message, "VALIDATION_ERROR");
     }
-    
+
     throw createMutationError("Wystąpił błąd. Spróbuj ponownie", "UNKNOWN");
   }
-  
+
   // Obsługa 204 No Content (np. DELETE)
   if (response.status === 204) {
     return undefined as T;
   }
-  
+
   return response.json();
 }
 
@@ -123,4 +123,3 @@ export function useDeckMutations(): UseDeckMutationsResult {
     isDeleting,
   };
 }
-

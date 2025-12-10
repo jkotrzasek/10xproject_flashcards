@@ -8,7 +8,7 @@ export const prerender = false;
 /**
  * GET /api/learn/:deckId
  * Retrieve flashcards due for review based on spaced repetition algorithm
- * 
+ *
  * @param deckId - Deck ID (path parameter)
  * @query limit - Maximum number of flashcards to return (optional, 1-100, default 50)
  * @returns LearnResponseDto with flashcard data and metadata on success (200)
@@ -127,4 +127,3 @@ export const GET: APIRoute = async ({ params, request, locals }) => {
     );
   }
 };
-

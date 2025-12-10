@@ -16,12 +16,7 @@ interface DeckHeaderProps {
 // Component
 // ============================================================================
 
-export function DeckHeader({
-  deck,
-  onResetProgress,
-  onStartLearn,
-  onAddManual,
-}: DeckHeaderProps) {
+export function DeckHeader({ deck, onResetProgress, onStartLearn, onAddManual }: DeckHeaderProps) {
   return (
     <section className="mb-6 flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
       {/* Left side - Deck info */}
@@ -43,11 +38,7 @@ export function DeckHeader({
         >
           Ucz się
         </Button>
-        <Button
-          variant="outline"
-          onClick={onAddManual}
-          disabled={deck.isResettingProgress}
-        >
+        <Button variant="outline" onClick={onAddManual} disabled={deck.isResettingProgress}>
           Dodaj fiszkę
         </Button>
         <Button
@@ -62,4 +53,3 @@ export function DeckHeader({
     </section>
   );
 }
-

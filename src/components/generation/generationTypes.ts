@@ -58,4 +58,3 @@ export interface SaveStats {
   savedIds: number[]; // IDs of successfully saved proposals
   failedIds: number[]; // IDs of failed proposals
 }
-

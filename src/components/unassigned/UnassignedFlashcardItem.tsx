@@ -45,9 +45,7 @@ export function UnassignedFlashcardItem({
       <CardHeader className="pb-2">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <Label className="text-xs font-medium">
-              {item.spaceRepetition}
-            </Label>
+            <Label className="text-xs font-medium">{item.spaceRepetition}</Label>
           </div>
           <div className="flex items-center gap-2">
             <Badge variant="secondary" className="text-xs">
@@ -70,17 +68,13 @@ export function UnassignedFlashcardItem({
       <CardContent className="space-y-3">
         {/* Front field */}
         <div className="space-y-1">
-          <Label className="text-xs font-medium">
-            Przód
-          </Label>
+          <Label className="text-xs font-medium">Przód</Label>
           <p className="text-sm whitespace-pre-wrap break-words">{item.front}</p>
         </div>
 
         {/* Back field */}
         <div className="space-y-1">
-          <Label className="text-xs font-medium">
-            Tył
-          </Label>
+          <Label className="text-xs font-medium">Tył</Label>
           <p className="text-sm whitespace-pre-wrap break-words">{item.back}</p>
         </div>
 
@@ -97,11 +91,7 @@ export function UnassignedFlashcardItem({
         </div>
 
         {/* Assigning state */}
-        {isAssigning && (
-          <div className="text-xs text-muted-foreground">
-            Przypisywanie...
-          </div>
-        )}
+        {isAssigning && <div className="text-xs text-muted-foreground">Przypisywanie...</div>}
       </CardContent>
 
       <CardFooter className="pt-2 text-xs text-muted-foreground">
@@ -110,4 +100,3 @@ export function UnassignedFlashcardItem({
     </Card>
   );
 }
-

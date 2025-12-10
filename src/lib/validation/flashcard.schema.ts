@@ -3,12 +3,7 @@ import { z } from "zod";
 /**
  * Valid sort options for GET /api/flashcards
  */
-export const flashcardSortOptions = [
-  "created_asc",
-  "created_desc",
-  "updated_asc",
-  "updated_desc",
-] as const;
+export const flashcardSortOptions = ["created_asc", "created_desc", "updated_asc", "updated_desc"] as const;
 
 export type FlashcardSortOption = (typeof flashcardSortOptions)[number];
 
@@ -29,7 +24,7 @@ export const spaceRepetitionStatusOptions = ["OK", "NOK", "not_checked"] as cons
  * - sort: optional sort parameter
  * - source: optional flashcard source filter
  * - space_repetition: optional space repetition status filter
- * 
+ *
  * Validation ensures deck_id and unassigned cannot be used together
  */
 export const flashcardListQuerySchema = z
@@ -84,16 +79,8 @@ export type FlashcardIdInput = z.infer<typeof flashcardIdSchema>;
  * - back: 1-500 characters after trim
  */
 const createFlashcardItemSchema = z.object({
-  front: z
-    .string()
-    .trim()
-    .min(1, "Front text must not be empty")
-    .max(200, "Front text must not exceed 200 characters"),
-  back: z
-    .string()
-    .trim()
-    .min(1, "Back text must not be empty")
-    .max(500, "Back text must not exceed 500 characters"),
+  front: z.string().trim().min(1, "Front text must not be empty").max(200, "Front text must not exceed 200 characters"),
+  back: z.string().trim().min(1, "Back text must not be empty").max(500, "Back text must not exceed 500 characters"),
 });
 
 /**
@@ -103,7 +90,7 @@ const createFlashcardItemSchema = z.object({
  * - source: one of ai_full, ai_edited, manual
  * - generation_id: required for ai_full, optional for ai_edited, null for manual
  * - flashcards: array with at least 1 item
- * 
+ *
  * Additional validation ensures generation_id rules are enforced per source
  */
 export const createFlashcardsSchema = z
@@ -182,4 +169,3 @@ export const updateFlashcardSchema = z
   );
 
 export type UpdateFlashcardInput = z.infer<typeof updateFlashcardSchema>;
-

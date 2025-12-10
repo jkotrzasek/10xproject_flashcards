@@ -37,23 +37,21 @@ export function StudyCard({ card, isBackVisible, isTransitioning, onReveal }: St
   if (!card) {
     return (
       <Card className="min-h-[300px] flex items-center justify-center">
-        <CardContent className="text-center text-muted-foreground">
-          Ładowanie karty...
-        </CardContent>
+        <CardContent className="text-center text-muted-foreground">Ładowanie karty...</CardContent>
       </Card>
     );
   }
 
   const handleReveal = () => {
     if (isFlipping) return;
-    
+
     setIsFlipping(true);
-    
+
     // Trigger state change after half the animation (when card is perpendicular)
     setTimeout(() => {
       onReveal();
     }, 300);
-    
+
     // Reset flipping state after animation completes
     setTimeout(() => {
       setIsFlipping(false);
@@ -65,48 +63,39 @@ export function StudyCard({ card, isBackVisible, isTransitioning, onReveal }: St
   };
 
   return (
-    <div className="relative min-h-[300px] overflow-hidden" style={{ perspective: '1500px' }}>
-      <div 
+    <div className="relative min-h-[300px] overflow-hidden" style={{ perspective: "1500px" }}>
+      <div
         className="relative w-full min-h-[300px] transition-all duration-400 ease-out"
-        style={{ 
-          transformStyle: 'preserve-3d',
-          transform: isTransitioning 
-            ? 'translateX(-120%) rotateY(180deg)' 
-            : 'translateX(0) rotateY(0deg)',
+        style={{
+          transformStyle: "preserve-3d",
+          transform: isTransitioning ? "translateX(-120%) rotateY(180deg)" : "translateX(0) rotateY(0deg)",
           opacity: isTransitioning ? 0 : 1,
         }}
       >
-        <Card 
+        <Card
           className={`min-h-[300px] flex flex-col transition-all duration-600 ease-in-out ${
-            isFlipping ? 'card-flipping' : ''
-          } ${isBackVisible && !isFlipping ? 'card-flipped' : ''} ${
-            !isBackVisible && !isFlipping ? 'cursor-pointer hover:shadow-lg' : ''
+            isFlipping ? "card-flipping" : ""
+          } ${isBackVisible && !isFlipping ? "card-flipped" : ""} ${
+            !isBackVisible && !isFlipping ? "cursor-pointer hover:shadow-lg" : ""
           }`}
           style={{
-            transformStyle: 'preserve-3d',
-            transform: isFlipping || isBackVisible ? 'rotateY(180deg)' : 'rotateY(0deg)',
+            transformStyle: "preserve-3d",
+            transform: isFlipping || isBackVisible ? "rotateY(180deg)" : "rotateY(0deg)",
           }}
           onClick={!isBackVisible && !isFlipping ? handleReveal : undefined}
         >
           <CardContent className="flex-1 flex flex-col justify-between">
             {/* Show only front (before reveal) */}
-            {!isBackVisible && !isFlipping && !isTransitioning &&(
+            {!isBackVisible && !isFlipping && !isTransitioning && (
               <>
                 <div className="space-y-4">
-                  <div className="text-sm font-medium text-muted-foreground">
-                    Przód:
-                  </div>
-                  <div 
-                    className="text-lg whitespace-pre-wrap break-words"
-                    style={{ whiteSpace: 'pre-wrap' }}
-                  >
+                  <div className="text-sm font-medium text-muted-foreground">Przód:</div>
+                  <div className="text-lg whitespace-pre-wrap break-words" style={{ whiteSpace: "pre-wrap" }}>
                     {card.front}
                   </div>
                 </div>
 
-                <div className="mt-6 text-center text-sm text-muted-foreground">
-                  Naciśnij na fiszkę aby odsłonić 👆
-                </div>
+                <div className="mt-6 text-center text-sm text-muted-foreground">Naciśnij na fiszkę aby odsłonić 👆</div>
               </>
             )}
 
@@ -120,24 +109,15 @@ export function StudyCard({ card, isBackVisible, isTransitioning, onReveal }: St
             {/* Show only back (after flip, before "show full") */}
             {isBackVisible && !showFullView && !isFlipping && (
               <>
-                <div className="space-y-4" style={{ transform: 'rotateY(180deg)' }}>
-                  <div className="text-sm font-medium text-muted-foreground">
-                    Tył:
-                  </div>
-                  <div 
-                    className="text-lg whitespace-pre-wrap break-words"
-                    style={{ whiteSpace: 'pre-wrap' }}
-                  >
+                <div className="space-y-4" style={{ transform: "rotateY(180deg)" }}>
+                  <div className="text-sm font-medium text-muted-foreground">Tył:</div>
+                  <div className="text-lg whitespace-pre-wrap break-words" style={{ whiteSpace: "pre-wrap" }}>
                     {card.back}
                   </div>
                 </div>
 
-                <div className="mt-6 flex justify-center" style={{ transform: 'rotateY(180deg)' }}>
-                  <Button 
-                    onClick={handleShowFull}
-                    size="sm"
-                    variant="ghost"
-                  >
+                <div className="mt-6 flex justify-center" style={{ transform: "rotateY(180deg)" }}>
+                  <Button onClick={handleShowFull} size="sm" variant="ghost">
                     Pokaż całość
                   </Button>
                 </div>
@@ -146,27 +126,17 @@ export function StudyCard({ card, isBackVisible, isTransitioning, onReveal }: St
 
             {/* Show both sides (after "show full") */}
             {isBackVisible && showFullView && !isFlipping && (
-              <div style={{ transform: 'rotateY(180deg)' }}>
+              <div style={{ transform: "rotateY(180deg)" }}>
                 <div className="space-y-4">
-                  <div className="text-sm font-medium text-muted-foreground">
-                    Przód:
-                  </div>
-                  <div 
-                    className="text-lg whitespace-pre-wrap break-words"
-                    style={{ whiteSpace: 'pre-wrap' }}
-                  >
+                  <div className="text-sm font-medium text-muted-foreground">Przód:</div>
+                  <div className="text-lg whitespace-pre-wrap break-words" style={{ whiteSpace: "pre-wrap" }}>
                     {card.front}
                   </div>
                 </div>
 
                 <div className="mt-6 pt-6 border-t space-y-4">
-                  <div className="text-sm font-medium text-muted-foreground">
-                    Tył:
-                  </div>
-                  <div 
-                    className="text-lg whitespace-pre-wrap break-words"
-                    style={{ whiteSpace: 'pre-wrap' }}
-                  >
+                  <div className="text-sm font-medium text-muted-foreground">Tył:</div>
+                  <div className="text-lg whitespace-pre-wrap break-words" style={{ whiteSpace: "pre-wrap" }}>
                     {card.back}
                   </div>
                 </div>
@@ -188,4 +158,3 @@ export function StudyCard({ card, isBackVisible, isTransitioning, onReveal }: St
     </div>
   );
 }
-

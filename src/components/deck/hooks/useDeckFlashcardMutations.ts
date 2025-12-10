@@ -47,59 +47,62 @@ export function useDeckFlashcardMutations(deckId: number): UseDeckFlashcardMutat
   // Update Flashcard
   // ============================================================================
 
-  const updateFlashcard = useCallback(async ({ flashcardId, front, back }: UpdateFlashcardParams): Promise<UpdateFlashcardResult> => {
-    setIsUpdating(true);
+  const updateFlashcard = useCallback(
+    async ({ flashcardId, front, back }: UpdateFlashcardParams): Promise<UpdateFlashcardResult> => {
+      setIsUpdating(true);
 
-    try {
-      const response = await fetch(`/api/flashcards/${flashcardId}`, {
-        method: "PATCH",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ front, back }),
-      });
+      try {
+        const response = await fetch(`/api/flashcards/${flashcardId}`, {
+          method: "PATCH",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ front, back }),
+        });
 
-      if (!response.ok) {
-        const errorData: ApiErrorResponse = await response.json();
-        const errorMessage = errorData.error.message || "Nie udało się zaktualizować fiszki";
+        if (!response.ok) {
+          const errorData: ApiErrorResponse = await response.json();
+          const errorMessage = errorData.error.message || "Nie udało się zaktualizować fiszki";
 
-        // 404 - Flashcard not found
-        if (response.status === 404) {
-          toast.error("Fiszka nie istnieje lub została usunięta");
-          setIsUpdating(false);
-          return { success: false, error: "FLASHCARD_NOT_FOUND" };
-        }
+          // 404 - Flashcard not found
+          if (response.status === 404) {
+            toast.error("Fiszka nie istnieje lub została usunięta");
+            setIsUpdating(false);
+            return { success: false, error: "FLASHCARD_NOT_FOUND" };
+          }
 
-        // 400 - Invalid input
-        if (response.status === 400) {
+          // 400 - Invalid input
+          if (response.status === 400) {
+            setIsUpdating(false);
+            return { success: false, error: errorMessage };
+          }
+
+          // 500 - Server error
+          toast.error("Nie udało się zapisać zmian. Spróbuj ponownie później.");
           setIsUpdating(false);
           return { success: false, error: errorMessage };
         }
 
-        // 500 - Server error
-        toast.error("Nie udało się zapisać zmian. Spróbuj ponownie później.");
+        // Success - 200
+        const data: ApiResponse<FlashcardUpdatedDto> = await response.json();
+
+        toast.success("Fiszka zaktualizowana");
+        setIsUpdating(false);
+
+        // Return updated timestamp
+        return {
+          success: true,
+          updatedAt: new Date().toISOString(), // Backend nie zwraca updated_at, więc używamy lokalnego czasu
+        };
+      } catch (err) {
+        const errorMessage = err instanceof Error ? err.message : "Błąd połączenia z serwerem";
+        toast.error("Problem z połączeniem. Sprawdź internet i spróbuj ponownie.");
         setIsUpdating(false);
         return { success: false, error: errorMessage };
       }
-
-      // Success - 200
-      const data: ApiResponse<FlashcardUpdatedDto> = await response.json();
-      
-      toast.success("Fiszka zaktualizowana");
-      setIsUpdating(false);
-      
-      // Return updated timestamp
-      return { 
-        success: true, 
-        updatedAt: new Date().toISOString() // Backend nie zwraca updated_at, więc używamy lokalnego czasu
-      };
-    } catch (err) {
-      const errorMessage = err instanceof Error ? err.message : "Błąd połączenia z serwerem";
-      toast.error("Problem z połączeniem. Sprawdź internet i spróbuj ponownie.");
-      setIsUpdating(false);
-      return { success: false, error: errorMessage };
-    }
-  }, []);
+    },
+    []
+  );
 
   // ============================================================================
   // Delete Flashcard
@@ -151,4 +154,3 @@ export function useDeckFlashcardMutations(deckId: number): UseDeckFlashcardMutat
     isDeleting,
   };
 }
-

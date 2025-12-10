@@ -32,7 +32,7 @@ function validateEmail(email: string): string | undefined {
 /**
  * Validates password field with strength requirements
  * Returns error message string if invalid, undefined if valid
- * 
+ *
  * Requirements:
  * - Minimum 8 characters
  * - At least one uppercase letter
@@ -46,15 +46,15 @@ function validatePassword(password: string): string | undefined {
   if (password.length < 8) {
     return "Hasło musi mieć minimum 8 znaków";
   }
-  
+
   if (!/\p{Ll}/u.test(password)) {
     return "Hasło musi zawierać co najmniej jedną małą literę";
   }
-  
+
   if (!/\p{Lu}/u.test(password)) {
     return "Hasło musi zawierać co najmniej jedną dużą literę";
   }
-  
+
   if (!/[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/.test(password)) {
     return "Hasło musi zawierać co najmniej jeden znak specjalny";
   }
@@ -66,10 +66,7 @@ function validatePassword(password: string): string | undefined {
  * Validates password confirmation field
  * Returns error message string if invalid, undefined if valid
  */
-function validatePasswordConfirmation(
-  password: string,
-  passwordConfirmation: string
-): string | undefined {
+function validatePasswordConfirmation(password: string, passwordConfirmation: string): string | undefined {
   if (!passwordConfirmation) {
     return "Potwierdzenie hasła jest wymagane";
   }
@@ -98,10 +95,7 @@ function validateForm(values: RegisterFormValues): RegisterFormErrors {
     errors.password = passwordError;
   }
 
-  const passwordConfirmationError = validatePasswordConfirmation(
-    values.password,
-    values.passwordConfirmation
-  );
+  const passwordConfirmationError = validatePasswordConfirmation(values.password, values.passwordConfirmation);
   if (passwordConfirmationError) {
     errors.passwordConfirmation = passwordConfirmationError;
   }
@@ -143,116 +137,119 @@ export function RegisterForm() {
     }
   }, [apiError]);
 
-  const handleChange = useCallback((field: keyof RegisterFormValues) => {
-    return (e: React.ChangeEvent<HTMLInputElement>) => {
-      const newValue = e.target.value;
-      setValues((prev) => ({ ...prev, [field]: newValue }));
+  const handleChange = useCallback(
+    (field: keyof RegisterFormValues) => {
+      return (e: React.ChangeEvent<HTMLInputElement>) => {
+        const newValue = e.target.value;
+        setValues((prev) => ({ ...prev, [field]: newValue }));
 
-      // Clear field error on change
-      if (errors[field]) {
-        setErrors((prev) => {
-          const newErrors = { ...prev };
-          delete newErrors[field];
-          return newErrors;
-        });
-      }
-
-      // Clear submit error on any change
-      if (submitError) {
-        setSubmitError(undefined);
-        clearError();
-      }
-
-      // Special case: clear passwordConfirmation error when password changes
-      if (field === "password" && errors.passwordConfirmation) {
-        setErrors((prev) => {
-          const newErrors = { ...prev };
-          delete newErrors.passwordConfirmation;
-          return newErrors;
-        });
-      }
-    };
-  }, [errors, submitError, clearError]);
-
-  const handleBlur = useCallback((field: keyof RegisterFormValues) => {
-    return () => {
-      setTouched((prev) => ({ ...prev, [field]: true }));
-
-      // Validate on blur
-      if (field === "email") {
-        const emailError = validateEmail(values.email);
-        if (emailError) {
-          setErrors((prev) => ({ ...prev, email: emailError }));
+        // Clear field error on change
+        if (errors[field]) {
+          setErrors((prev) => {
+            const newErrors = { ...prev };
+            delete newErrors[field];
+            return newErrors;
+          });
         }
-      } else if (field === "password") {
-        const passwordError = validatePassword(values.password);
-        if (passwordError) {
-          setErrors((prev) => ({ ...prev, password: passwordError }));
+
+        // Clear submit error on any change
+        if (submitError) {
+          setSubmitError(undefined);
+          clearError();
         }
-        // Also revalidate confirmation if it's been touched
-        if (touched.passwordConfirmation && values.passwordConfirmation) {
-          const confirmError = validatePasswordConfirmation(
-            values.password,
-            values.passwordConfirmation
-          );
+
+        // Special case: clear passwordConfirmation error when password changes
+        if (field === "password" && errors.passwordConfirmation) {
+          setErrors((prev) => {
+            const newErrors = { ...prev };
+            delete newErrors.passwordConfirmation;
+            return newErrors;
+          });
+        }
+      };
+    },
+    [errors, submitError, clearError]
+  );
+
+  const handleBlur = useCallback(
+    (field: keyof RegisterFormValues) => {
+      return () => {
+        setTouched((prev) => ({ ...prev, [field]: true }));
+
+        // Validate on blur
+        if (field === "email") {
+          const emailError = validateEmail(values.email);
+          if (emailError) {
+            setErrors((prev) => ({ ...prev, email: emailError }));
+          }
+        } else if (field === "password") {
+          const passwordError = validatePassword(values.password);
+          if (passwordError) {
+            setErrors((prev) => ({ ...prev, password: passwordError }));
+          }
+          // Also revalidate confirmation if it's been touched
+          if (touched.passwordConfirmation && values.passwordConfirmation) {
+            const confirmError = validatePasswordConfirmation(values.password, values.passwordConfirmation);
+            if (confirmError) {
+              setErrors((prev) => ({ ...prev, passwordConfirmation: confirmError }));
+            } else {
+              setErrors((prev) => {
+                const newErrors = { ...prev };
+                delete newErrors.passwordConfirmation;
+                return newErrors;
+              });
+            }
+          }
+        } else if (field === "passwordConfirmation") {
+          const confirmError = validatePasswordConfirmation(values.password, values.passwordConfirmation);
           if (confirmError) {
             setErrors((prev) => ({ ...prev, passwordConfirmation: confirmError }));
-          } else {
-            setErrors((prev) => {
-              const newErrors = { ...prev };
-              delete newErrors.passwordConfirmation;
-              return newErrors;
-            });
           }
         }
-      } else if (field === "passwordConfirmation") {
-        const confirmError = validatePasswordConfirmation(
-          values.password,
-          values.passwordConfirmation
-        );
-        if (confirmError) {
-          setErrors((prev) => ({ ...prev, passwordConfirmation: confirmError }));
-        }
+      };
+    },
+    [values, touched]
+  );
+
+  const handleSubmit = useCallback(
+    async (e: React.FormEvent<HTMLFormElement>) => {
+      e.preventDefault();
+
+      // Mark all fields as touched
+      setTouched({
+        email: true,
+        password: true,
+        passwordConfirmation: true,
+      });
+
+      // Validate
+      const validationErrors = validateForm(values);
+      if (Object.keys(validationErrors).length > 0) {
+        setErrors(validationErrors);
+        return;
       }
-    };
-  }, [values, touched]);
 
-  const handleSubmit = useCallback(async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
+      // Clear previous errors
+      setErrors({});
+      setSubmitError(undefined);
+      clearError();
 
-    // Mark all fields as touched
-    setTouched({
-      email: true,
-      password: true,
-      passwordConfirmation: true,
-    });
+      // Map camelCase to snake_case for API
+      const result = await register({
+        email: values.email,
+        password: values.password,
+        password_confirmation: values.passwordConfirmation,
+      });
 
-    // Validate
-    const validationErrors = validateForm(values);
-    if (Object.keys(validationErrors).length > 0) {
-      setErrors(validationErrors);
-      return;
-    }
-
-    // Clear previous errors
-    setErrors({});
-    setSubmitError(undefined);
-    clearError();
-
-    // Map camelCase to snake_case for API
-    const result = await register({
-      email: values.email,
-      password: values.password,
-      password_confirmation: values.passwordConfirmation,
-    });
-
-    if (result) {
-      // Success - show confirmation message
-      // User must confirm email before logging in
-      setRegistrationSuccess(true);
-    }
-    // Error is handled by useEffect watching apiError
-  }, [values, register, clearError]);
+      if (result) {
+        // Success - show confirmation message
+        // User must confirm email before logging in
+        setRegistrationSuccess(true);
+      }
+      // Error is handled by useEffect watching apiError
+    },
+    [values, register, clearError]
+  );
 
   const showFieldError = (field: keyof RegisterFormValues): boolean => {
     return touched[field] && !!errors[field];
@@ -269,22 +266,17 @@ export function RegisterForm() {
             <div className="space-y-2">
               <h3 className="font-semibold text-green-900">Konto utworzone pomyślnie!</h3>
               <p className="text-sm text-green-800">
-                Na adres <strong>{values.email}</strong> został wysłany link aktywacyjny. 
-                Kliknij w link w wiadomości, aby aktywować konto i móc się zalogować.
+                Na adres <strong>{values.email}</strong> został wysłany link aktywacyjny. Kliknij w link w wiadomości,
+                aby aktywować konto i móc się zalogować.
               </p>
-              <p className="text-sm text-green-800">
-                Jeśli nie widzisz wiadomości, sprawdź folder spam.
-              </p>
+              <p className="text-sm text-green-800">Jeśli nie widzisz wiadomości, sprawdź folder spam.</p>
             </div>
           </div>
         </div>
 
         {/* Login link */}
         <div className="text-center">
-          <a
-            href="/auth/login"
-            className="text-primary hover:underline font-medium transition-colors"
-          >
+          <a href="/auth/login" className="text-primary hover:underline font-medium transition-colors">
             Przejdź do logowania
           </a>
         </div>
@@ -338,11 +330,14 @@ export function RegisterForm() {
               </TooltipTrigger>
               <TooltipContent side="left" className="max-w-[200px]">
                 <p className="text-xs">
-                  Hasło musi zawierać:<br />
-                  • minimum 8 znaków<br />
-                  • co najmniej jedną dużą literę<br />
-                  • co najmniej jedną małą literę<br />
-                  • co najmniej jeden znak specjalny
+                  Hasło musi zawierać:
+                  <br />
+                  • minimum 8 znaków
+                  <br />
+                  • co najmniej jedną dużą literę
+                  <br />
+                  • co najmniej jedną małą literę
+                  <br />• co najmniej jeden znak specjalny
                 </p>
               </TooltipContent>
             </Tooltip>
@@ -394,11 +389,7 @@ export function RegisterForm() {
       </div>
 
       {/* Submit button */}
-      <Button
-        type="submit"
-        className="w-full"
-        disabled={isLoading}
-      >
+      <Button type="submit" className="w-full" disabled={isLoading}>
         {isLoading ? "Rejestracja..." : "Zarejestruj się"}
       </Button>
 
@@ -406,10 +397,7 @@ export function RegisterForm() {
       <div className="text-center">
         <p className="text-sm text-muted-foreground">
           Masz już konto?{" "}
-          <a
-            href="/auth/login"
-            className="text-primary hover:underline font-medium transition-colors"
-          >
+          <a href="/auth/login" className="text-primary hover:underline font-medium transition-colors">
             Zaloguj się
           </a>
         </p>

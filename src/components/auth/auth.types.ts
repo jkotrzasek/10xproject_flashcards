@@ -1,6 +1,6 @@
 /**
  * Local types for auth forms - UI-specific types
- * 
+ *
  * For API types (Commands, DTOs), use @/types.ts
  * This file contains ONLY types that don't exist in API:
  * - FormErrors (client-side validation)

@@ -66,7 +66,7 @@ export function useAssignFlashcardToDeck(): UseAssignFlashcardToDeckReturn {
       // Success
       const data: ApiResponse<FlashcardUpdatedDto> = await response.json();
       toast.success("Fiszka została przypisana do decku");
-      
+
       return { success: true };
     } catch (err) {
       // Network error
@@ -80,4 +80,3 @@ export function useAssignFlashcardToDeck(): UseAssignFlashcardToDeckReturn {
     assign,
   };
 }
-

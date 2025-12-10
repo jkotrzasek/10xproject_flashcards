@@ -1,10 +1,4 @@
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "../ui/select";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../ui/select";
 import { Label } from "../ui/label";
 import type { DeckDto } from "../../types";
 
@@ -77,4 +71,3 @@ export function DeckSelect({ decks, value, onChange, disabled, compact = false }
     </div>
   );
 }
-

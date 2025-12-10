@@ -46,4 +46,3 @@ export function FlashcardSkeleton({ count = 6 }: FlashcardSkeletonProps) {
     </div>
   );
 }
-

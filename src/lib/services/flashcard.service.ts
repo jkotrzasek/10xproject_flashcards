@@ -270,10 +270,7 @@ export async function createFlashcards(
     }));
 
     // Insert flashcards and return created data
-    const { data, error } = await supabase
-      .from("flashcards")
-      .insert(flashcardsToInsert)
-      .select("id, front, back");
+    const { data, error } = await supabase.from("flashcards").insert(flashcardsToInsert).select("id, front, back");
 
     if (error) {
       console.error("Database error in createFlashcards (insert):", error);
@@ -426,11 +423,7 @@ export async function updateFlashcard(
  * @throws Error with FlashcardErrorCodes.FLASHCARD_NOT_FOUND if flashcard doesn't exist or doesn't belong to user
  * @throws Error with FlashcardErrorCodes.DATABASE_ERROR on database errors
  */
-export async function deleteFlashcard(
-  supabase: SupabaseClient,
-  userId: string,
-  flashcardId: number
-): Promise<void> {
+export async function deleteFlashcard(supabase: SupabaseClient, userId: string, flashcardId: number): Promise<void> {
   try {
     const { error, count } = await supabase
       .from("flashcards")
@@ -458,4 +451,3 @@ export async function deleteFlashcard(
     throw new Error(FlashcardErrorCodes.DATABASE_ERROR);
   }
 }
-

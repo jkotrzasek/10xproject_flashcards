@@ -191,7 +191,7 @@ export default function DashboardPage() {
   return (
     <>
       <Toaster position="top-center" richColors />
-      
+
       <div className="container mx-auto px-4 py-8">
         {/* Header Actions */}
         <div className="flex items-center justify-between mb-8">
@@ -199,13 +199,7 @@ export default function DashboardPage() {
             <h1 className="text-3xl font-bold text-foreground">Dashboard</h1>
             <p className="text-muted-foreground mt-1">Zarządzaj swoimi deckami i fiszkami</p>
           </div>
-          {
-            !hasError && (
-              <Button onClick={handleOpenCreateDialog}>
-                Stwórz nowy deck
-              </Button>
-            )
-          }
+          {!hasError && <Button onClick={handleOpenCreateDialog}>Stwórz nowy deck</Button>}
         </div>
 
         {/* Error State - Błąd pobierania danych */}
@@ -228,15 +222,11 @@ export default function DashboardPage() {
                   />
                 </svg>
               </div>
-              <h2 className="text-xl font-semibold text-foreground mb-2">
-                Nie udało się pobrać danych
-              </h2>
+              <h2 className="text-xl font-semibold text-foreground mb-2">Nie udało się pobrać danych</h2>
               <p className="text-muted-foreground mb-6">
                 Wystąpił problem z połączeniem. Sprawdź swoje połączenie z internetem i odśwież stronę.
               </p>
-              <Button onClick={() => window.location.reload()}>
-                Odśwież stronę
-              </Button>
+              <Button onClick={() => window.location.reload()}>Odśwież stronę</Button>
             </div>
           </div>
         )}
@@ -253,15 +243,9 @@ export default function DashboardPage() {
           <div className="mb-6">
             <div className="text-center py-8 border rounded-lg bg-primary/5 border-primary/20">
               <div className="max-w-md mx-auto">
-                <h3 className="text-lg font-semibold text-foreground mb-2">
-                  Nie masz jeszcze żadnych fiszek
-                </h3>
-                <p className="text-muted-foreground mb-4">
-                  Wygeneruj fiszki używając AI lub dodaj je ręcznie
-                </p>
-                <Button onClick={handleGenerateFlashcards}>
-                  Wygeneruj fiszki z AI
-                </Button>
+                <h3 className="text-lg font-semibold text-foreground mb-2">Nie masz jeszcze żadnych fiszek</h3>
+                <p className="text-muted-foreground mb-4">Wygeneruj fiszki używając AI lub dodaj je ręcznie</p>
+                <Button onClick={handleGenerateFlashcards}>Wygeneruj fiszki z AI</Button>
               </div>
             </div>
           </div>
@@ -308,4 +292,3 @@ export default function DashboardPage() {
     </>
   );
 }
-

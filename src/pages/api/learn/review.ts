@@ -9,7 +9,7 @@ export const prerender = false;
  * PATCH /api/learn/review
  * Apply flashcard reviews from user learning session
  * Updates space_repetition status and last_repetition timestamp
- * 
+ *
  * @body ReviewFlashcardsCommand { review: ReviewFlashcardItemCommand[] }
  * @returns ApiResponse<{ updated: number }> on success (200)
  * @returns ApiErrorResponse on error (400/404/500)
@@ -142,4 +142,3 @@ export const PATCH: APIRoute = async ({ request, locals }) => {
     );
   }
 };
-

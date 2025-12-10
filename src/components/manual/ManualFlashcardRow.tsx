@@ -85,11 +85,9 @@ export function ManualFlashcardRow({
             <Label htmlFor={`front-${row.id}`} className="text-xs font-medium">
               Przód
             </Label>
-            <span 
+            <span
               className={`text-xs ${
-                frontLength > MAX_FRONT_LENGTH 
-                  ? "text-destructive font-medium" 
-                  : "text-muted-foreground"
+                frontLength > MAX_FRONT_LENGTH ? "text-destructive font-medium" : "text-muted-foreground"
               }`}
             >
               {frontLength}/{MAX_FRONT_LENGTH}
@@ -106,11 +104,7 @@ export function ManualFlashcardRow({
             aria-invalid={hasFrontError}
           />
           {hasFrontError && (
-            <p
-              id={`front-error-${row.id}`}
-              className="text-xs text-destructive"
-              role="alert"
-            >
+            <p id={`front-error-${row.id}`} className="text-xs text-destructive" role="alert">
               {errors.front}
             </p>
           )}
@@ -122,11 +116,9 @@ export function ManualFlashcardRow({
             <Label htmlFor={`back-${row.id}`} className="text-xs font-medium">
               Tył
             </Label>
-            <span 
+            <span
               className={`text-xs ${
-                backLength > MAX_BACK_LENGTH 
-                  ? "text-destructive font-medium" 
-                  : "text-muted-foreground"
+                backLength > MAX_BACK_LENGTH ? "text-destructive font-medium" : "text-muted-foreground"
               }`}
             >
               {backLength}/{MAX_BACK_LENGTH}
@@ -143,11 +135,7 @@ export function ManualFlashcardRow({
             aria-invalid={hasBackError}
           />
           {hasBackError && (
-            <p
-              id={`back-error-${row.id}`}
-              className="text-xs text-destructive"
-              role="alert"
-            >
+            <p id={`back-error-${row.id}`} className="text-xs text-destructive" role="alert">
               {errors.back}
             </p>
           )}
@@ -156,4 +144,3 @@ export function ManualFlashcardRow({
     </Card>
   );
 }
-

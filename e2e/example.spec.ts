@@ -1,22 +1,22 @@
-import { test, expect } from '@playwright/test';
-import AxeBuilder from '@axe-core/playwright';
+import { test, expect } from "@playwright/test";
+import AxeBuilder from "@axe-core/playwright";
 
 /**
  * Example E2E test demonstrating Playwright setup.
  * Delete this file once you have real tests.
  */
-test.describe('Example E2E Test Suite', () => {
-  test('should load homepage', async ({ page }) => {
+test.describe("Example E2E Test Suite", () => {
+  test("should load homepage", async ({ page }) => {
     // Arrange & Act
-    await page.goto('/');
+    await page.goto("/");
 
     // Assert
     await expect(page).toHaveTitle(/./);
   });
 
-  test('should pass accessibility checks', async ({ page }) => {
+  test("should pass accessibility checks", async ({ page }) => {
     // Arrange
-    await page.goto('/');
+    await page.goto("/");
 
     // Act
     const accessibilityScanResults = await new AxeBuilder({ page }).analyze();
@@ -25,9 +25,9 @@ test.describe('Example E2E Test Suite', () => {
     expect(accessibilityScanResults.violations).toEqual([]);
   });
 
-  test('should interact with page elements', async ({ page }) => {
+  test("should interact with page elements", async ({ page }) => {
     // Arrange
-    await page.goto('/');
+    await page.goto("/");
 
     // Act
     // Example: await page.getByTestId('some-button').click();
@@ -37,4 +37,3 @@ test.describe('Example E2E Test Suite', () => {
     expect(true).toBe(true);
   });
 });
-

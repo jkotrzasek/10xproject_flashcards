@@ -8,7 +8,7 @@ export const prerender = false;
 /**
  * GET /api/decks
  * Retrieve all decks for the authenticated user
- * 
+ *
  * @query sort - Optional sort parameter (name_asc, name_desc, created_asc, created_desc, updated_asc, updated_desc)
  * @returns ApiResponse<DeckDto[]> on success (200)
  * @returns ApiErrorResponse on error (400/401/500)
@@ -38,7 +38,8 @@ export const GET: APIRoute = async ({ request, locals }) => {
       return new Response(
         JSON.stringify({
           error: {
-            message: "Invalid sort parameter. Must be one of: name_asc, name_desc, created_asc, created_desc, updated_asc, updated_desc",
+            message:
+              "Invalid sort parameter. Must be one of: name_asc, name_desc, created_asc, created_desc, updated_asc, updated_desc",
             code: "INVALID_INPUT",
           },
         } satisfies ApiErrorResponse),
@@ -97,7 +98,7 @@ export const GET: APIRoute = async ({ request, locals }) => {
 /**
  * POST /api/decks
  * Create a new deck for the authenticated user
- * 
+ *
  * @body CreateDeckCommand { name: string }
  * @returns ApiResponse<DeckCreatedDto> on success (200)
  * @returns ApiErrorResponse on error (400/401/409/500)
@@ -213,4 +214,3 @@ export const POST: APIRoute = async ({ request, locals }) => {
     );
   }
 };
-

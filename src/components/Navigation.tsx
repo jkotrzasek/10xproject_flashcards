@@ -1,5 +1,5 @@
-import { useState } from 'react';
-import { Menu, X, LogOut } from 'lucide-react';
+import { useState } from "react";
+import { Menu, X, LogOut } from "lucide-react";
 
 interface NavigationProps {
   currentPath?: string;
@@ -12,31 +12,31 @@ export default function Navigation({ currentPath, isAuthenticated = false, userE
   const [isLoggingOut, setIsLoggingOut] = useState(false);
 
   const links = [
-    { href: '/', label: 'Widok Decków' },
-    { href: '/generator', label: 'Generator AI' },
-    { href: '/manual', label: 'Dodawanie manualne' },
+    { href: "/", label: "Widok Decków" },
+    { href: "/generator", label: "Generator AI" },
+    { href: "/manual", label: "Dodawanie manualne" },
   ];
 
   const isActive = (href: string) => currentPath === href;
 
   const handleLogout = async () => {
     if (isLoggingOut) return;
-    
+
     setIsLoggingOut(true);
     try {
-      const response = await fetch('/api/auth/logout', {
-        method: 'POST',
+      const response = await fetch("/api/auth/logout", {
+        method: "POST",
       });
 
       if (response.ok) {
         // Redirect to login page after successful logout
-        window.location.href = '/auth/login';
+        window.location.href = "/auth/login";
       } else {
-        console.error('Logout failed');
+        console.error("Logout failed");
         setIsLoggingOut(false);
       }
     } catch (error) {
-      console.error('Logout error:', error);
+      console.error("Logout error:", error);
       setIsLoggingOut(false);
     }
   };
@@ -54,15 +54,15 @@ export default function Navigation({ currentPath, isAuthenticated = false, userE
               min-w-[180px] whitespace-nowrap
               ${
                 isActive(link.href)
-                  ? 'bg-primary text-primary-foreground'
-                  : 'bg-primary/90 text-primary-foreground hover:bg-primary'
+                  ? "bg-primary text-primary-foreground"
+                  : "bg-primary/90 text-primary-foreground hover:bg-primary"
               }
             `}
           >
             {link.label}
           </a>
         ))}
-        
+
         {/* Logout button - only visible when authenticated */}
         {/* Separated from main navigation to prevent accidental clicks */}
         {isAuthenticated && (
@@ -80,7 +80,7 @@ export default function Navigation({ currentPath, isAuthenticated = false, userE
               title={userEmail}
             >
               <LogOut className="h-4 w-4" />
-              {isLoggingOut ? 'Wylogowywanie...' : 'Wyloguj'}
+              {isLoggingOut ? "Wylogowywanie..." : "Wyloguj"}
             </button>
           </>
         )}
@@ -94,11 +94,7 @@ export default function Navigation({ currentPath, isAuthenticated = false, userE
           aria-label="Toggle menu"
           aria-expanded={isOpen}
         >
-          {isOpen ? (
-            <X className="h-6 w-6" />
-          ) : (
-            <Menu className="h-6 w-6" />
-          )}
+          {isOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
         </button>
 
         {/* Mobile Menu Dropdown */}
@@ -113,8 +109,8 @@ export default function Navigation({ currentPath, isAuthenticated = false, userE
                     px-6 py-3 rounded-md transition-colors font-medium text-center
                     ${
                       isActive(link.href)
-                        ? 'bg-primary text-primary-foreground'
-                        : 'bg-primary/90 text-primary-foreground hover:bg-primary'
+                        ? "bg-primary text-primary-foreground"
+                        : "bg-primary/90 text-primary-foreground hover:bg-primary"
                     }
                   `}
                   onClick={() => setIsOpen(false)}
@@ -122,7 +118,7 @@ export default function Navigation({ currentPath, isAuthenticated = false, userE
                   {link.label}
                 </a>
               ))}
-              
+
               {/* Logout button - mobile - only visible when authenticated */}
               {/* Separated with border to prevent accidental clicks */}
               {isAuthenticated && (
@@ -143,7 +139,7 @@ export default function Navigation({ currentPath, isAuthenticated = false, userE
                     title={userEmail}
                   >
                     <LogOut className="h-4 w-4" />
-                    {isLoggingOut ? 'Wylogowywanie...' : 'Wyloguj'}
+                    {isLoggingOut ? "Wylogowywanie..." : "Wyloguj"}
                   </button>
                 </>
               )}
@@ -154,4 +150,3 @@ export default function Navigation({ currentPath, isAuthenticated = false, userE
     </>
   );
 }
-

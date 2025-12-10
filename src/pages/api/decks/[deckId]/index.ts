@@ -8,7 +8,7 @@ export const prerender = false;
 /**
  * GET /api/decks/:deckId
  * Retrieve a specific deck by ID
- * 
+ *
  * @param deckId - Deck ID from URL path
  * @returns ApiResponse<DeckDto> on success (200)
  * @returns ApiErrorResponse on error (400/401/404/500)
@@ -112,7 +112,7 @@ export const GET: APIRoute = async ({ params, locals }) => {
 /**
  * PATCH /api/decks/:deckId
  * Update deck name
- * 
+ *
  * @param deckId - Deck ID from URL path
  * @body UpdateDeckCommand { name: string }
  * @returns ApiResponse<DeckUpdatedDto> on success (200)
@@ -263,7 +263,7 @@ export const PATCH: APIRoute = async ({ params, request, locals }) => {
 /**
  * DELETE /api/decks/:deckId
  * Delete a deck and all associated flashcards
- * 
+ *
  * @param deckId - Deck ID from URL path
  * @returns 204 No Content on success
  * @returns ApiErrorResponse on error (400/401/404/500)
@@ -357,4 +357,3 @@ export const DELETE: APIRoute = async ({ params, locals }) => {
     );
   }
 };
-

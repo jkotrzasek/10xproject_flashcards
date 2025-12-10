@@ -1,10 +1,4 @@
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "../ui/select";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../ui/select";
 import { Label } from "../ui/label";
 import type { DeckOptionViewModel } from "./typesManual";
 
@@ -45,8 +39,8 @@ export function DeckSelect({ options, value, onChange, error, disabled = false }
         Wybierz deck (opcjonalnie)
       </Label>
       <Select value={currentValue} onValueChange={handleValueChange} disabled={disabled}>
-        <SelectTrigger 
-          id="deck-select" 
+        <SelectTrigger
+          id="deck-select"
           className="w-full"
           aria-invalid={!!error}
           aria-describedby={error ? "deck-select-error" : "deck-select-description"}
@@ -55,8 +49,8 @@ export function DeckSelect({ options, value, onChange, error, disabled = false }
         </SelectTrigger>
         <SelectContent>
           {options.map((option) => (
-            <SelectItem 
-              key={option.id === null ? "null" : option.id} 
+            <SelectItem
+              key={option.id === null ? "null" : option.id}
               value={option.id === null ? "null" : option.id.toString()}
             >
               {option.label}
@@ -65,13 +59,9 @@ export function DeckSelect({ options, value, onChange, error, disabled = false }
           ))}
         </SelectContent>
       </Select>
-      
+
       {error ? (
-        <p
-          id="deck-select-error"
-          className="text-xs text-destructive"
-          role="alert"
-        >
+        <p id="deck-select-error" className="text-xs text-destructive" role="alert">
           {error}
         </p>
       ) : (
@@ -82,4 +72,3 @@ export function DeckSelect({ options, value, onChange, error, disabled = false }
     </div>
   );
 }
-

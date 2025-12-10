@@ -46,4 +46,3 @@ export function DeckFlashcardSkeleton({ count = 6 }: DeckFlashcardSkeletonProps)
     </div>
   );
 }
-

@@ -8,27 +8,27 @@ export const prerender = false;
 /**
  * POST /api/auth/register
  * Register a new user with email and password
- * 
+ *
  * @body RegisterCommand { email: string, password: string, password_confirmation: string }
  * @returns AuthResponseDto on success (200) with user data
  * @returns AuthErrorDto on error (400/409/500)
- * 
+ *
  * Flow:
  * 1. Validate request body with Zod schema
  * 2. Attempt sign up with Supabase Auth
  * 3. Supabase sends confirmation email to user
  * 4. Return user data (without tokens - email not confirmed yet)
- * 
+ *
  * Error handling:
  * - 400: Invalid input (validation errors)
  * - 409: Email already registered
  * - 500: Server/database errors
- * 
+ *
  * Security:
  * - Passwords are never logged or exposed
  * - Error messages follow minimal disclosure principle
  * - User must confirm email before being able to log in
- * 
+ *
  * Note: After successful registration, user receives email with confirmation link.
  * Until email is confirmed, user cannot log in (EMAIL_NOT_CONFIRMED error).
  */
@@ -73,16 +73,16 @@ export const POST: APIRoute = async ({ request, locals }) => {
       password,
       options: {
         emailRedirectTo: `${new URL(request.url).origin}/auth/login`,
-      }
+      },
     });
 
     // Handle registration errors
     if (signUpError) {
       const authError = mapSupabaseAuthError(signUpError);
-      
+
       // Return 409 for already registered email, 400 for other errors
       const statusCode = authError.code === "EMAIL_ALREADY_REGISTERED" ? 409 : 400;
-      
+
       return new Response(JSON.stringify(authError), {
         status: statusCode,
         headers: { "Content-Type": "application/json" },
@@ -134,4 +134,3 @@ export const POST: APIRoute = async ({ request, locals }) => {
     });
   }
 };
-

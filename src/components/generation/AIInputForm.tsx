@@ -53,8 +53,7 @@ export function AIInputForm({
   const isLimitExhausted = remaining === 0;
   const isValidLength = currentLength >= MIN_LENGTH && currentLength <= MAX_LENGTH;
 
-  const canGenerate =
-    isValidLength && !isLimitExhausted && !isGenerating && !hasUnsavedProposals;
+  const canGenerate = isValidLength && !isLimitExhausted && !isGenerating && !hasUnsavedProposals;
 
   const handleChange = (e: ChangeEvent<HTMLTextAreaElement>) => {
     const value = e.target.value;
@@ -141,11 +140,7 @@ export function AIInputForm({
           </div>
         </div>
         {validationError && (
-          <div
-            id="input-error"
-            className="rounded-lg bg-destructive/10 p-3 text-sm text-destructive"
-            role="alert"
-          >
+          <div id="input-error" className="rounded-lg bg-destructive/10 p-3 text-sm text-destructive" role="alert">
             {validationError}
           </div>
         )}
@@ -170,17 +165,10 @@ export function AIInputForm({
       )}
 
       {!hasUnsavedProposals && (
-        <Button
-          type="button"
-          onClick={handleGenerate}
-          disabled={!canGenerate}
-          className="w-full"
-          size="lg"
-        >
+        <Button type="button" onClick={handleGenerate} disabled={!canGenerate} className="w-full" size="lg">
           {isGenerating ? "Generowanie..." : "Generuj fiszki"}
         </Button>
       )}
     </form>
   );
 }
-

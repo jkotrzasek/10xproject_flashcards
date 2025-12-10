@@ -16,16 +16,8 @@ import { useSaveManualFlashcards } from "./useSaveManualFlashcards";
 // ============================================================================
 
 const flashcardRowSchema = z.object({
-  front: z
-    .string()
-    .trim()
-    .min(1, "Pole nie może być puste")
-    .max(200, "Maksymalnie 200 znaków"),
-  back: z
-    .string()
-    .trim()
-    .min(1, "Pole nie może być puste")
-    .max(500, "Maksymalnie 500 znaków"),
+  front: z.string().trim().min(1, "Pole nie może być puste").max(200, "Maksymalnie 200 znaków"),
+  back: z.string().trim().min(1, "Pole nie może być puste").max(500, "Maksymalnie 500 znaków"),
 });
 
 // ============================================================================
@@ -159,9 +151,7 @@ export function useManualFlashcardForm({
   const updateRow = useCallback(
     (id: ManualFlashcardRowId, changes: Partial<Pick<ManualFlashcardRowViewModel, "front" | "back">>) => {
       setFormState((prev) => {
-        const updatedRows = prev.values.rows.map((row) =>
-          row.id === id ? { ...row, ...changes } : row
-        );
+        const updatedRows = prev.values.rows.map((row) => (row.id === id ? { ...row, ...changes } : row));
 
         // Clear errors for this row when user types
         const { [id]: _, ...remainingErrors } = prev.errors.rows;
@@ -262,9 +252,7 @@ export function useManualFlashcardForm({
     }
 
     // Filter out empty rows
-    const validRows = formState.values.rows.filter(
-      (row) => row.front.trim() !== "" || row.back.trim() !== ""
-    );
+    const validRows = formState.values.rows.filter((row) => row.front.trim() !== "" || row.back.trim() !== "");
 
     if (validRows.length === 0) {
       setFormState((prev) => ({
@@ -346,4 +334,3 @@ export function useManualFlashcardForm({
     reset,
   };
 }
-

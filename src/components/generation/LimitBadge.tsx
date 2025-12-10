@@ -20,7 +20,9 @@ export function LimitBadge({ limit }: LimitBadgeProps) {
   return (
     <Badge variant={isExhausted ? "destructive" : "secondary"} className="text-sm">
       {isExhausted ? (
-        <><strong>Limit wyczerpany</strong> 0/{daily_limit}</>
+        <>
+          <strong>Limit wyczerpany</strong> 0/{daily_limit}
+        </>
       ) : (
         <>
           Pozostało: {remaining}/{daily_limit}
@@ -29,4 +31,3 @@ export function LimitBadge({ limit }: LimitBadgeProps) {
     </Badge>
   );
 }
-

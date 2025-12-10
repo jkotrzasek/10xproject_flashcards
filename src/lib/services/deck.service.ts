@@ -13,7 +13,7 @@ export const DeckErrorCodes = {
 
 /**
  * Creates a new deck for the user
- * 
+ *
  * @param supabase - Supabase client instance
  * @param userId - User ID who owns the deck
  * @param name - Deck name (already validated and trimmed)
@@ -21,29 +21,21 @@ export const DeckErrorCodes = {
  * @throws Error with DeckErrorCodes.DECK_NAME_CONFLICT if name already exists for user
  * @throws Error with DeckErrorCodes.DATABASE_ERROR for other database errors
  */
-export async function createDeck(
-  supabase: SupabaseClient,
-  userId: string,
-  name: string
-): Promise<DeckCreatedDto> {
+export async function createDeck(supabase: SupabaseClient, userId: string, name: string): Promise<DeckCreatedDto> {
   try {
     const deckData: DeckInsert = {
       user_id: userId,
       name: name,
     };
 
-    const { data, error } = await supabase
-      .from("decks")
-      .insert(deckData)
-      .select("id")
-      .single();
+    const { data, error } = await supabase.from("decks").insert(deckData).select("id").single();
 
     if (error) {
       // Check for unique constraint violation (duplicate name)
       if (error.code === "23505") {
         throw new Error(DeckErrorCodes.DECK_NAME_CONFLICT);
       }
-      
+
       console.error("Database error in createDeck:", error);
       throw new Error(DeckErrorCodes.DATABASE_ERROR);
     }
@@ -59,7 +51,7 @@ export async function createDeck(
     if (error instanceof Error && Object.values(DeckErrorCodes).includes(error.message as any)) {
       throw error;
     }
-    
+
     // Log and wrap unexpected errors
     console.error("Unexpected error in createDeck:", error);
     throw new Error(DeckErrorCodes.DATABASE_ERROR);
@@ -68,18 +60,14 @@ export async function createDeck(
 
 /**
  * Retrieves all decks for a user with optional sorting
- * 
+ *
  * @param supabase - Supabase client instance
  * @param userId - User ID who owns the decks
  * @param sort - Optional sort parameter
  * @returns Array of decks with flashcard count
  * @throws Error with DeckErrorCodes.DATABASE_ERROR on database errors
  */
-export async function getDecks(
-  supabase: SupabaseClient,
-  userId: string,
-  sort?: DeckSortOption
-): Promise<DeckDto[]> {
+export async function getDecks(supabase: SupabaseClient, userId: string, sort?: DeckSortOption): Promise<DeckDto[]> {
   try {
     let query = supabase
       .from("decks")
@@ -130,7 +118,7 @@ export async function getDecks(
       name: deck.name,
       created_at: deck.created_at,
       updated_at: deck.updated_at,
-      flashcard_count: Array.isArray(deck.flashcards) ? deck.flashcards[0]?.count ?? 0 : 0,
+      flashcard_count: Array.isArray(deck.flashcards) ? (deck.flashcards[0]?.count ?? 0) : 0,
     }));
 
     return decks;
@@ -139,7 +127,7 @@ export async function getDecks(
     if (error instanceof Error && Object.values(DeckErrorCodes).includes(error.message as any)) {
       throw error;
     }
-    
+
     // Log and wrap unexpected errors
     console.error("Unexpected error in getDecks:", error);
     throw new Error(DeckErrorCodes.DATABASE_ERROR);
@@ -148,7 +136,7 @@ export async function getDecks(
 
 /**
  * Retrieves a single deck by ID
- * 
+ *
  * @param supabase - Supabase client instance
  * @param userId - User ID who owns the deck
  * @param deckId - Deck ID to retrieve
@@ -156,11 +144,7 @@ export async function getDecks(
  * @throws Error with DeckErrorCodes.DECK_NOT_FOUND if deck doesn't exist or doesn't belong to user
  * @throws Error with DeckErrorCodes.DATABASE_ERROR on database errors
  */
-export async function getDeckById(
-  supabase: SupabaseClient,
-  userId: string,
-  deckId: number
-): Promise<DeckDto> {
+export async function getDeckById(supabase: SupabaseClient, userId: string, deckId: number): Promise<DeckDto> {
   try {
     const { data, error } = await supabase
       .from("decks")
@@ -174,7 +158,7 @@ export async function getDeckById(
       if (error.code === "PGRST116") {
         throw new Error(DeckErrorCodes.DECK_NOT_FOUND);
       }
-      
+
       console.error("Database error in getDeckById:", error);
       throw new Error(DeckErrorCodes.DATABASE_ERROR);
     }
@@ -189,7 +173,7 @@ export async function getDeckById(
       name: data.name,
       created_at: data.created_at,
       updated_at: data.updated_at,
-      flashcard_count: Array.isArray(data.flashcards) ? data.flashcards[0]?.count ?? 0 : 0,
+      flashcard_count: Array.isArray(data.flashcards) ? (data.flashcards[0]?.count ?? 0) : 0,
     };
 
     return deck;
@@ -198,7 +182,7 @@ export async function getDeckById(
     if (error instanceof Error && Object.values(DeckErrorCodes).includes(error.message as any)) {
       throw error;
     }
-    
+
     // Log and wrap unexpected errors
     console.error("Unexpected error in getDeckById:", error);
     throw new Error(DeckErrorCodes.DATABASE_ERROR);
@@ -207,7 +191,7 @@ export async function getDeckById(
 
 /**
  * Updates deck name
- * 
+ *
  * @param supabase - Supabase client instance
  * @param userId - User ID who owns the deck
  * @param deckId - Deck ID to update
@@ -242,7 +226,7 @@ export async function updateDeckName(
       if (error.code === "PGRST116") {
         throw new Error(DeckErrorCodes.DECK_NOT_FOUND);
       }
-      
+
       console.error("Database error in updateDeckName:", error);
       throw new Error(DeckErrorCodes.DATABASE_ERROR);
     }
@@ -260,7 +244,7 @@ export async function updateDeckName(
     if (error instanceof Error && Object.values(DeckErrorCodes).includes(error.message as any)) {
       throw error;
     }
-    
+
     // Log and wrap unexpected errors
     console.error("Unexpected error in updateDeckName:", error);
     throw new Error(DeckErrorCodes.DATABASE_ERROR);
@@ -269,18 +253,14 @@ export async function updateDeckName(
 
 /**
  * Deletes a deck and all associated flashcards (via cascade)
- * 
+ *
  * @param supabase - Supabase client instance
  * @param userId - User ID who owns the deck
  * @param deckId - Deck ID to delete
  * @throws Error with DeckErrorCodes.DECK_NOT_FOUND if deck doesn't exist or doesn't belong to user
  * @throws Error with DeckErrorCodes.DATABASE_ERROR on database errors
  */
-export async function deleteDeck(
-  supabase: SupabaseClient,
-  userId: string,
-  deckId: number
-): Promise<void> {
+export async function deleteDeck(supabase: SupabaseClient, userId: string, deckId: number): Promise<void> {
   try {
     const { error, count } = await supabase
       .from("decks")
@@ -302,7 +282,7 @@ export async function deleteDeck(
     if (error instanceof Error && Object.values(DeckErrorCodes).includes(error.message as any)) {
       throw error;
     }
-    
+
     // Log and wrap unexpected errors
     console.error("Unexpected error in deleteDeck:", error);
     throw new Error(DeckErrorCodes.DATABASE_ERROR);
@@ -312,18 +292,14 @@ export async function deleteDeck(
 /**
  * Resets progress for all flashcards in a deck
  * Sets space_repetition to 'not_checked' and last_repetition to null
- * 
+ *
  * @param supabase - Supabase client instance
  * @param userId - User ID who owns the deck
  * @param deckId - Deck ID to reset progress for
  * @throws Error with DeckErrorCodes.DECK_NOT_FOUND if deck doesn't exist or doesn't belong to user
  * @throws Error with DeckErrorCodes.DATABASE_ERROR on database errors
  */
-export async function resetDeckProgress(
-  supabase: SupabaseClient,
-  userId: string,
-  deckId: number
-): Promise<void> {
+export async function resetDeckProgress(supabase: SupabaseClient, userId: string, deckId: number): Promise<void> {
   try {
     // First, verify that the deck exists and belongs to the user
     const { data: deck, error: deckError } = await supabase
@@ -368,10 +344,9 @@ export async function resetDeckProgress(
     if (error instanceof Error && Object.values(DeckErrorCodes).includes(error.message as any)) {
       throw error;
     }
-    
+
     // Log and wrap unexpected errors
     console.error("Unexpected error in resetDeckProgress:", error);
     throw new Error(DeckErrorCodes.DATABASE_ERROR);
   }
 }
-

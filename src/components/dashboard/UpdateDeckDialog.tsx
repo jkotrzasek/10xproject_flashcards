@@ -1,12 +1,5 @@
 import { useState, useEffect } from "react";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-} from "../ui/dialog";
+import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "../ui/dialog";
 import { Button } from "../ui/button";
 import { Input } from "../ui/input";
 import { Label } from "../ui/label";
@@ -58,21 +51,21 @@ export function UpdateDeckDialog({ open, deck, onClose, onSubmit }: UpdateDeckDi
 
   const validateName = (value: string): string | null => {
     const trimmed = value.trim();
-    
+
     if (trimmed.length === 0) {
       return "Nazwa decku nie może być pusta";
     }
-    
+
     if (trimmed.length < 1 || trimmed.length > 30) {
       return "Nazwa decku musi mieć od 1 do 30 znaków";
     }
-    
+
     return null;
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     const validationError = validateName(name);
     if (validationError) {
       setError(validationError);
@@ -136,19 +129,12 @@ export function UpdateDeckDialog({ open, deck, onClose, onSubmit }: UpdateDeckDi
                 maxLength={30}
                 autoFocus
               />
-              {error && (
-                <p className="text-sm text-destructive">{error}</p>
-              )}
+              {error && <p className="text-sm text-destructive">{error}</p>}
             </div>
           </div>
 
           <DialogFooter>
-            <Button
-              type="button"
-              variant="outline"
-              onClick={handleClose}
-              disabled={isSubmitting}
-            >
+            <Button type="button" variant="outline" onClick={handleClose} disabled={isSubmitting}>
               Anuluj
             </Button>
             <Button type="submit" disabled={isSubmitting}>
@@ -160,4 +146,3 @@ export function UpdateDeckDialog({ open, deck, onClose, onSubmit }: UpdateDeckDi
     </Dialog>
   );
 }
-

@@ -59,4 +59,3 @@ export function useGenerationLimits(): UseGenerationLimitsReturn {
     refetch: fetchLimits,
   };
 }
-

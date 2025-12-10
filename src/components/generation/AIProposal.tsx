@@ -152,11 +152,7 @@ export function AIProposal({ item, onChange }: AIProposalProps) {
             aria-invalid={!!item.errors?.front}
           />
           {item.errors?.front && (
-            <p
-              id={`front-error-${item.id}`}
-              className="text-xs text-destructive"
-              role="alert"
-            >
+            <p id={`front-error-${item.id}`} className="text-xs text-destructive" role="alert">
               {item.errors.front}
             </p>
           )}
@@ -180,11 +176,7 @@ export function AIProposal({ item, onChange }: AIProposalProps) {
             aria-invalid={!!item.errors?.back}
           />
           {item.errors?.back && (
-            <p
-              id={`back-error-${item.id}`}
-              className="text-xs text-destructive"
-              role="alert"
-            >
+            <p id={`back-error-${item.id}`} className="text-xs text-destructive" role="alert">
               {item.errors.back}
             </p>
           )}
@@ -196,4 +188,3 @@ export function AIProposal({ item, onChange }: AIProposalProps) {
     </Card>
   );
 }
-

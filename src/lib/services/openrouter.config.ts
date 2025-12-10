@@ -50,9 +50,7 @@ export class OpenRouterConfigError extends Error {
  */
 const validateModel = (model: string, allowedModels: string[]): void => {
   if (!allowedModels.includes(model)) {
-    throw new OpenRouterConfigError(
-      `Model "${model}" is not allowed. Allowed models: ${allowedModels.join(", ")}`
-    );
+    throw new OpenRouterConfigError(`Model "${model}" is not allowed. Allowed models: ${allowedModels.join(", ")}`);
   }
 };
 
@@ -91,4 +89,3 @@ export const buildOpenRouterConfig = (): OpenRouterConfig => {
     allowedModels,
   };
 };
-

@@ -39,11 +39,7 @@ export function DeckFlashcardList({
 
   // Empty state
   if (items.length === 0) {
-    return (
-      <div className="text-center py-8 text-muted-foreground">
-        Brak fiszek do wyświetlenia
-      </div>
-    );
+    return <div className="text-center py-8 text-muted-foreground">Brak fiszek do wyświetlenia</div>;
   }
 
   return (
@@ -64,11 +60,7 @@ export function DeckFlashcardList({
       {/* Load More Button */}
       {hasMore && (
         <div className="flex justify-center">
-          <Button
-            variant="outline"
-            onClick={onLoadMore}
-            disabled={isLoadingMore}
-          >
+          <Button variant="outline" onClick={onLoadMore} disabled={isLoadingMore}>
             {isLoadingMore ? "Ładowanie..." : "Załaduj więcej"}
           </Button>
         </div>
@@ -79,4 +71,3 @@ export function DeckFlashcardList({
     </div>
   );
 }
-

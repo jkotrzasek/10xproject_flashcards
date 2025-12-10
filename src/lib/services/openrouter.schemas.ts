@@ -83,7 +83,7 @@ Constraints:
  * @param requestedCount - Number of flashcards requested (1-50)
  * @returns Formatted user prompt
  */
-export const buildUserPrompt = (inputText: string, requestedCount: number = 20): string => {
+export const buildUserPrompt = (inputText: string, requestedCount = 20): string => {
   const clampedCount = Math.max(1, Math.min(30, requestedCount));
 
   return `Generate up to ${clampedCount} high-quality flashcards from the following text.
@@ -108,7 +108,7 @@ Generate the flashcards in the JSON format.`;
  * @param maxLength - Maximum character length (default: 30000)
  * @returns Sanitized and truncated text
  */
-export const sanitizeAndTruncateInput = (text: string, maxLength: number = 30000): string => {
+export const sanitizeAndTruncateInput = (text: string, maxLength = 30000): string => {
   if (!text || typeof text !== "string") {
     return "";
   }
@@ -123,4 +123,3 @@ export const sanitizeAndTruncateInput = (text: string, maxLength: number = 30000
 
   return sanitized;
 };
-

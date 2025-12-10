@@ -80,11 +80,7 @@ export function ManualFlashcardView({ initialDeckId }: ManualFlashcardViewProps)
                       </p>
                     </div>
                     {initialDeckId && (
-                      <Button
-                        variant="outline"
-                        onClick={handleReturnToDeck}
-                        className="shrink-0"
-                      >
+                      <Button variant="outline" onClick={handleReturnToDeck} className="shrink-0">
                         ← Powrót do decku
                       </Button>
                     )}
@@ -126,11 +122,7 @@ export function ManualFlashcardView({ initialDeckId }: ManualFlashcardViewProps)
                     </p>
                   </div>
                   {initialDeckId && (
-                    <Button
-                      variant="outline"
-                      onClick={handleReturnToDeck}
-                      className="shrink-0"
-                    >
+                    <Button variant="outline" onClick={handleReturnToDeck} className="shrink-0">
                       ← Powrót do decku
                     </Button>
                   )}
@@ -142,15 +134,10 @@ export function ManualFlashcardView({ initialDeckId }: ManualFlashcardViewProps)
 
         <div className="min-h-0 flex-1 overflow-y-auto">
           <div className="container mx-auto max-w-7xl px-4 py-6">
-            <ManualFlashcardForm 
-              deckOptions={deckOptions} 
-              initialDeckId={initialDeckId}
-              onSuccess={refetch}
-            />
+            <ManualFlashcardForm deckOptions={deckOptions} initialDeckId={initialDeckId} onSuccess={refetch} />
           </div>
         </div>
       </div>
     </>
   );
 }
-

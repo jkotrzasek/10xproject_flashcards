@@ -8,22 +8,22 @@ export const prerender = false;
 /**
  * POST /api/auth/login
  * Authenticate user with email and password
- * 
+ *
  * @body LoginCommand { email: string, password: string }
  * @returns AuthResponseDto on success (200) with user data and tokens
  * @returns AuthErrorDto on error (400/401/500)
- * 
+ *
  * Flow:
  * 1. Validate request body with Zod schema
  * 2. Attempt sign in with Supabase Auth
  * 3. Set secure HTTP-only cookies for session management
  * 4. Return user data and tokens (tokens also in cookies for SSR)
- * 
+ *
  * Error handling:
  * - 400: Invalid input (validation errors)
  * - 401: Invalid credentials or email not confirmed
  * - 500: Server/database errors
- * 
+ *
  * Security:
  * - Passwords are never logged or exposed
  * - Error messages follow minimal disclosure principle
@@ -128,4 +128,3 @@ export const POST: APIRoute = async ({ request, locals, cookies }) => {
     });
   }
 };
-

@@ -42,11 +42,11 @@ interface DeckDetailsState {
   deck: DeckHeaderVM | null;
   flashcards: DeckFlashcardVM[];
   visibleCount: number;
-  
+
   isDeckLoading: boolean;
   isFlashcardsInitialLoading: boolean;
   isFlashcardsLoadingMore: boolean;
-  
+
   loadDeckError?: string;
   loadFlashcardsError?: string;
   globalError?: string;
@@ -85,10 +85,7 @@ const initialState: DeckDetailsState = {
   globalError: undefined,
 };
 
-function deckDetailsReducer(
-  state: DeckDetailsState,
-  action: DeckDetailsAction
-): DeckDetailsState {
+function deckDetailsReducer(state: DeckDetailsState, action: DeckDetailsAction): DeckDetailsState {
   switch (action.type) {
     case "SET_DECK_LOADING":
       return { ...state, isDeckLoading: action.payload };
@@ -99,7 +96,12 @@ function deckDetailsReducer(
     case "SET_FLASHCARDS_LOADING":
       return { ...state, isFlashcardsInitialLoading: action.payload };
     case "SET_FLASHCARDS_SUCCESS":
-      return { ...state, flashcards: action.payload, isFlashcardsInitialLoading: false, loadFlashcardsError: undefined };
+      return {
+        ...state,
+        flashcards: action.payload,
+        isFlashcardsInitialLoading: false,
+        loadFlashcardsError: undefined,
+      };
     case "SET_FLASHCARDS_ERROR":
       return { ...state, loadFlashcardsError: action.payload, isFlashcardsInitialLoading: false };
     case "SET_VISIBLE_COUNT":
@@ -120,18 +122,14 @@ function deckDetailsReducer(
       return {
         ...state,
         flashcards: state.flashcards.map((item) =>
-          item.id === action.payload.id
-            ? { ...item, isDeleting: true, error: undefined }
-            : item
+          item.id === action.payload.id ? { ...item, isDeleting: true, error: undefined } : item
         ),
       };
     case "FINISH_DELETE_FLASHCARD":
       return {
         ...state,
         flashcards: state.flashcards.map((item) =>
-          item.id === action.payload.id
-            ? { ...item, isDeleting: false, error: action.payload.error }
-            : item
+          item.id === action.payload.id ? { ...item, isDeleting: false, error: action.payload.error } : item
         ),
       };
     case "REMOVE_FLASHCARD":
@@ -145,9 +143,9 @@ function deckDetailsReducer(
         ...state,
         flashcards: state.flashcards.map((item) =>
           item.id === action.payload.id
-            ? { 
-                ...item, 
-                front: action.payload.front, 
+            ? {
+                ...item,
+                front: action.payload.front,
                 back: action.payload.back,
                 updatedAtLabel: action.payload.updatedAt,
                 source: item.source === "AI" ? "AI (edytowana)" : item.source,
@@ -178,32 +176,24 @@ export default function DeckDetailsPage({ deckId }: DeckDetailsPageProps) {
 
   // Walidacja deckId - jeśli jest NaN, nie próbuj ładować danych
   const isValidDeckId = !isNaN(deckId) && deckId > 0;
-  
-  const { 
-    deck: deckData, 
-    isLoading: isDeckLoading, 
-    error: deckError, 
-    refetch: refetchDeck 
+
+  const {
+    deck: deckData,
+    isLoading: isDeckLoading,
+    error: deckError,
+    refetch: refetchDeck,
   } = useDeckDetails(isValidDeckId ? deckId : 0);
-  
-  const { 
-    flashcards: flashcardsData, 
-    isLoading: isFlashcardsLoading, 
-    error: flashcardsError, 
-    refetch: refetchFlashcards 
+
+  const {
+    flashcards: flashcardsData,
+    isLoading: isFlashcardsLoading,
+    error: flashcardsError,
+    refetch: refetchFlashcards,
   } = useDeckFlashcards(isValidDeckId ? deckId : 0);
 
-  const { 
-    updateFlashcard, 
-    deleteFlashcard, 
-    isUpdating, 
-    isDeleting 
-  } = useDeckFlashcardMutations(deckId);
+  const { updateFlashcard, deleteFlashcard, isUpdating, isDeleting } = useDeckFlashcardMutations(deckId);
 
-  const { 
-    resetProgress, 
-    isResettingProgress 
-  } = useDeckMutations(deckId, {
+  const { resetProgress, isResettingProgress } = useDeckMutations(deckId, {
     onResetSuccess: () => {
       // Opcjonalnie odśwież fiszki aby zaktualizować statusy nauki
       refetchFlashcards();
@@ -234,15 +224,9 @@ export default function DeckDetailsPage({ deckId }: DeckDetailsPageProps) {
                   />
                 </svg>
               </div>
-              <h2 className="text-xl font-semibold text-foreground mb-2">
-                Nieprawidłowy identyfikator decku
-              </h2>
-              <p className="text-muted-foreground mb-6">
-                Podany identyfikator decku jest nieprawidłowy.
-              </p>
-              <Button onClick={() => window.location.href = "/"}>
-                Wróć do listy decków
-              </Button>
+              <h2 className="text-xl font-semibold text-foreground mb-2">Nieprawidłowy identyfikator decku</h2>
+              <p className="text-muted-foreground mb-6">Podany identyfikator decku jest nieprawidłowy.</p>
+              <Button onClick={() => (window.location.href = "/")}>Wróć do listy decków</Button>
             </div>
           </div>
         </main>
@@ -256,9 +240,9 @@ export default function DeckDetailsPage({ deckId }: DeckDetailsPageProps) {
       dispatch({ type: "SET_DECK_ERROR", payload: deckError.message });
     } else if (!isDeckLoading && deckData) {
       // Sync deck data with isResettingProgress from hook
-      dispatch({ 
-        type: "SET_DECK_SUCCESS", 
-        payload: { ...deckData, isResettingProgress } 
+      dispatch({
+        type: "SET_DECK_SUCCESS",
+        payload: { ...deckData, isResettingProgress },
       });
     }
   }, [deckData, isDeckLoading, deckError, isResettingProgress]);
@@ -331,7 +315,7 @@ export default function DeckDetailsPage({ deckId }: DeckDetailsPageProps) {
   };
 
   const handleEdit = (flashcardId: number) => {
-    const flashcard = state.flashcards.find(f => f.id === flashcardId);
+    const flashcard = state.flashcards.find((f) => f.id === flashcardId);
     if (flashcard) {
       setEditingFlashcard(flashcard);
     }
@@ -417,13 +401,11 @@ export default function DeckDetailsPage({ deckId }: DeckDetailsPageProps) {
                   />
                 </svg>
               </div>
-              <h2 className="text-xl font-semibold text-foreground mb-2">
-                Nie udało się pobrać decku
-              </h2>
+              <h2 className="text-xl font-semibold text-foreground mb-2">Nie udało się pobrać decku</h2>
               <p className="text-muted-foreground mb-6">{state.loadDeckError}</p>
               <div className="flex gap-2 justify-center">
                 <Button onClick={handleRetryDeck}>Spróbuj ponownie</Button>
-                <Button variant="outline" onClick={() => window.location.href = "/"}>
+                <Button variant="outline" onClick={() => (window.location.href = "/")}>
                   Wróć do listy decków
                 </Button>
               </div>
@@ -474,9 +456,7 @@ export default function DeckDetailsPage({ deckId }: DeckDetailsPageProps) {
                   />
                 </svg>
               </div>
-              <h2 className="text-xl font-semibold text-foreground mb-2">
-                Nie udało się pobrać fiszek
-              </h2>
+              <h2 className="text-xl font-semibold text-foreground mb-2">Nie udało się pobrać fiszek</h2>
               <p className="text-muted-foreground mb-6">{state.loadFlashcardsError}</p>
               <Button onClick={handleRetryFlashcards}>Spróbuj ponownie</Button>
             </div>
@@ -484,44 +464,38 @@ export default function DeckDetailsPage({ deckId }: DeckDetailsPageProps) {
         )}
 
         {/* Empty State - No flashcards in deck */}
-        {!state.isFlashcardsInitialLoading &&
-          !state.loadFlashcardsError &&
-          state.flashcards.length === 0 && (
-            <div className="flex items-center justify-center min-h-[400px]">
-              <div className="text-center max-w-md">
-                <div className="mb-4 text-muted-foreground">
-                  <svg
-                    className="mx-auto h-12 w-12"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
-                    aria-hidden="true"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
-                    />
-                  </svg>
-                </div>
-                <h2 className="text-xl font-semibold text-foreground mb-2">
-                  Ten deck nie zawiera jeszcze żadnych fiszek
-                </h2>
-                <p className="text-muted-foreground mb-6">
-                  Dodaj fiszki używając generatora AI lub dodaj je ręcznie.
-                </p>
-                <div className="flex gap-2 justify-center">
-                  <Button onClick={() => window.location.href = "/generator"}>
-                    Generator AI
-                  </Button>
-                  <Button variant="outline" onClick={handleAddManual}>
-                    Dodaj ręcznie
-                  </Button>
-                </div>
+        {!state.isFlashcardsInitialLoading && !state.loadFlashcardsError && state.flashcards.length === 0 && (
+          <div className="flex items-center justify-center min-h-[400px]">
+            <div className="text-center max-w-md">
+              <div className="mb-4 text-muted-foreground">
+                <svg
+                  className="mx-auto h-12 w-12"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                  aria-hidden="true"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
+                  />
+                </svg>
+              </div>
+              <h2 className="text-xl font-semibold text-foreground mb-2">
+                Ten deck nie zawiera jeszcze żadnych fiszek
+              </h2>
+              <p className="text-muted-foreground mb-6">Dodaj fiszki używając generatora AI lub dodaj je ręcznie.</p>
+              <div className="flex gap-2 justify-center">
+                <Button onClick={() => (window.location.href = "/generator")}>Generator AI</Button>
+                <Button variant="outline" onClick={handleAddManual}>
+                  Dodaj ręcznie
+                </Button>
               </div>
             </div>
-          )}
+          </div>
+        )}
 
         {/* Flashcard List */}
         {!state.loadFlashcardsError && (
@@ -584,4 +558,3 @@ export default function DeckDetailsPage({ deckId }: DeckDetailsPageProps) {
     </>
   );
 }
-

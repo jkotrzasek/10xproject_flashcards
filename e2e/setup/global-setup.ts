@@ -1,4 +1,4 @@
-import { chromium, type FullConfig } from '@playwright/test';
+import { chromium, type FullConfig } from "@playwright/test";
 
 /**
  * Global setup for Playwright tests.
@@ -13,13 +13,13 @@ async function globalSetup(config: FullConfig) {
 
   try {
     // Wait for the dev server to be ready
-    await page.goto(baseURL || 'http://localhost:4321', {
-      waitUntil: 'networkidle',
+    await page.goto(baseURL || "http://localhost:4321", {
+      waitUntil: "networkidle",
       timeout: 30000,
     });
-    console.log('Server is ready');
+    console.log("Server is ready");
   } catch (error) {
-    console.error('Failed to connect to server:', error);
+    console.error("Failed to connect to server:", error);
     throw error;
   } finally {
     await page.close();
@@ -28,4 +28,3 @@ async function globalSetup(config: FullConfig) {
 }
 
 export default globalSetup;
-

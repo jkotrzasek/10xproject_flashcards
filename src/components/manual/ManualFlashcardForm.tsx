@@ -145,4 +145,3 @@ export function ManualFlashcardForm({ deckOptions, initialDeckId, onSuccess }: M
     </form>
   );
 }
-

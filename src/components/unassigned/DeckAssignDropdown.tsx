@@ -1,10 +1,4 @@
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "../ui/select";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../ui/select";
 import { Label } from "../ui/label";
 import type { DeckOptionVM } from "../UnassignedDeckPage";
 
@@ -51,13 +45,9 @@ export function DeckAssignDropdown({
       <Label htmlFor={`deck-assign-${flashcardId}`} className="text-xs font-medium">
         Przypisz do decku
       </Label>
-      <Select 
-        value={currentValue} 
-        onValueChange={handleValueChange} 
-        disabled={isDisabled}
-      >
-        <SelectTrigger 
-          id={`deck-assign-${flashcardId}`} 
+      <Select value={currentValue} onValueChange={handleValueChange} disabled={isDisabled}>
+        <SelectTrigger
+          id={`deck-assign-${flashcardId}`}
           className="w-full text-sm"
           aria-describedby={error ? `deck-error-${flashcardId}` : undefined}
           aria-invalid={!!error}
@@ -75,22 +65,15 @@ export function DeckAssignDropdown({
 
       {/* Helper text when no decks */}
       {!hasOptions && !disabled && (
-        <p className="text-xs text-muted-foreground">
-          Brak decków – utwórz deck w Dashboardzie
-        </p>
+        <p className="text-xs text-muted-foreground">Brak decków – utwórz deck w Dashboardzie</p>
       )}
 
       {/* Error message */}
       {error && (
-        <p
-          id={`deck-error-${flashcardId}`}
-          className="text-xs text-destructive"
-          role="alert"
-        >
+        <p id={`deck-error-${flashcardId}`} className="text-xs text-destructive" role="alert">
           {error}
         </p>
       )}
     </div>
   );
 }
-

@@ -12,10 +12,7 @@ export default function AuthForm({ mode }: AuthFormProps) {
     <form className="space-y-4" onSubmit={() => {}}>
       {/* Pole E-mail */}
       <div className="space-y-2">
-        <label
-          htmlFor="email"
-          className="block text-sm font-medium text-foreground"
-        >
+        <label htmlFor="email" className="block text-sm font-medium text-foreground">
           E-mail
         </label>
         <input
@@ -28,10 +25,7 @@ export default function AuthForm({ mode }: AuthFormProps) {
 
       {/* Pole Hasło */}
       <div className="space-y-2">
-        <label
-          htmlFor="password"
-          className="block text-sm font-medium text-foreground"
-        >
+        <label htmlFor="password" className="block text-sm font-medium text-foreground">
           Hasło
         </label>
         <input
@@ -45,10 +39,7 @@ export default function AuthForm({ mode }: AuthFormProps) {
       {/* Pole Potwierdź hasło - tylko dla rejestracji */}
       {!isLogin && (
         <div className="space-y-2">
-          <label
-            htmlFor="password-confirm"
-            className="block text-sm font-medium text-foreground"
-          >
+          <label htmlFor="password-confirm" className="block text-sm font-medium text-foreground">
             Potwierdź hasło
           </label>
           <input
@@ -62,9 +53,7 @@ export default function AuthForm({ mode }: AuthFormProps) {
 
       {/* Opis pomocniczy - statyczny tekst */}
       <p className="text-xs text-muted-foreground">
-        {isLogin
-          ? "Wprowadź swoje dane logowania."
-          : "Hasło musi mieć minimum 8 znaków."}
+        {isLogin ? "Wprowadź swoje dane logowania." : "Hasło musi mieć minimum 8 znaków."}
       </p>
 
       {/* Przycisk wysyłki - nieaktywny */}
@@ -77,4 +66,3 @@ export default function AuthForm({ mode }: AuthFormProps) {
     </form>
   );
 }
-

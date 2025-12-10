@@ -116,7 +116,7 @@ export async function fetchReviewFlashcards(
     }
 
     const okCards: FlashcardLearnDto[] = okFlashcards ?? [];
-    
+
     // Combine priority and OK cards
     const data = [...priorityCards, ...okCards];
     const total_due = priorityCards.length; // Only priority cards count as "due"
@@ -223,4 +223,3 @@ export async function applyFlashcardReviews(
     throw new Error(LearnErrorCodes.DATABASE_ERROR);
   }
 }
-

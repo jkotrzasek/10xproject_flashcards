@@ -8,7 +8,7 @@ export const prerender = false;
 /**
  * GET /api/flashcards
  * Retrieve flashcards with optional filtering and sorting
- * 
+ *
  * @query deck_id - Filter by deck ID (optional)
  * @query unassigned - Show only unassigned flashcards (optional, must be 'true')
  * @query sort - Sort order (optional: created_asc, created_desc, updated_asc, updated_desc)
@@ -132,7 +132,7 @@ export const GET: APIRoute = async ({ request, locals }) => {
 /**
  * POST /api/flashcards
  * Create multiple flashcards
- * 
+ *
  * @body CreateFlashcardsCommand { flashcards: CreateFlashcardItemCommand[] }
  * @returns ApiResponse<FlashcardCreatedDto[]> on success (201)
  * @returns ApiErrorResponse on error (400/404/500)
@@ -261,4 +261,3 @@ export const POST: APIRoute = async ({ request, locals }) => {
     );
   }
 };
-

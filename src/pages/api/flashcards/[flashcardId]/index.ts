@@ -13,7 +13,7 @@ export const prerender = false;
 /**
  * GET /api/flashcards/:id
  * Retrieve a single flashcard by ID
- * 
+ *
  * @param flashcardId - Flashcard ID from URL path
  * @returns ApiResponse<FlashcardDto> on success (200)
  * @returns ApiErrorResponse on error (400/404/500)
@@ -117,7 +117,7 @@ export const GET: APIRoute = async ({ params, locals }) => {
 /**
  * PATCH /api/flashcards/:id
  * Update a flashcard
- * 
+ *
  * @param flashcardId - Flashcard ID from URL path
  * @body UpdateFlashcardCommand { front?, back?, deck_id? }
  * @returns ApiResponse<FlashcardUpdatedDto> on success (200)
@@ -268,7 +268,7 @@ export const PATCH: APIRoute = async ({ params, request, locals }) => {
 /**
  * DELETE /api/flashcards/:id
  * Delete a flashcard
- * 
+ *
  * @param flashcardId - Flashcard ID from URL path
  * @returns 204 No Content on success
  * @returns ApiErrorResponse on error (400/404/500)
@@ -362,4 +362,3 @@ export const DELETE: APIRoute = async ({ params, locals }) => {
     );
   }
 };
-

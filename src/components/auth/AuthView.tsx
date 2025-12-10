@@ -13,9 +13,7 @@ export default function AuthView({ mode }: AuthViewProps) {
   const description = isLogin
     ? "Zaloguj się do swojego konta, aby uzyskać dostęp do swoich decków i fiszek."
     : "Załóż konto, aby zapisywać swoje decki i fiszki w chmurze.";
-  const switchLinkText = isLogin
-    ? "Nie masz konta? Zarejestruj się"
-    : "Masz już konto? Zaloguj się";
+  const switchLinkText = isLogin ? "Nie masz konta? Zarejestruj się" : "Masz już konto? Zaloguj się";
   const switchLinkHref = isLogin ? "/auth/register" : "/auth/login";
 
   return (
@@ -36,10 +34,7 @@ export default function AuthView({ mode }: AuthViewProps) {
         </div>
 
         <div className="mt-6 text-center">
-          <a
-            href={switchLinkHref}
-            className="text-sm text-primary hover:underline transition-colors"
-          >
+          <a href={switchLinkHref} className="text-sm text-primary hover:underline transition-colors">
             {switchLinkText}
           </a>
         </div>
@@ -47,4 +42,3 @@ export default function AuthView({ mode }: AuthViewProps) {
     </main>
   );
 }
-

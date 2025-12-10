@@ -1,10 +1,5 @@
 import { useState, useCallback } from "react";
-import type {
-  LoginCommand,
-  RegisterCommand,
-  AuthResponseDto,
-  AuthErrorDto,
-} from "@/types";
+import type { LoginCommand, RegisterCommand, AuthResponseDto, AuthErrorDto } from "@/types";
 
 // ============================================================================
 // Hook
@@ -207,4 +202,3 @@ export function useAuthApi() {
     clearError,
   };
 }
-

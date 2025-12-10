@@ -41,4 +41,3 @@ export function CTAEmptyState({ variant, onPrimaryAction }: CTAEmptyStateProps) 
     </div>
   );
 }
-

@@ -64,15 +64,9 @@ export default function LearnPage({ deckId }: LearnPageProps) {
                   />
                 </svg>
               </div>
-              <h2 className="text-xl font-semibold text-foreground mb-2">
-                Nieprawidłowy identyfikator decku
-              </h2>
-              <p className="text-muted-foreground mb-6">
-                Podany identyfikator decku jest nieprawidłowy.
-              </p>
-              <Button onClick={() => window.location.href = "/"}>
-                Wróć do listy decków
-              </Button>
+              <h2 className="text-xl font-semibold text-foreground mb-2">Nieprawidłowy identyfikator decku</h2>
+              <p className="text-muted-foreground mb-6">Podany identyfikator decku jest nieprawidłowy.</p>
+              <Button onClick={() => (window.location.href = "/")}>Wróć do listy decków</Button>
             </div>
           </div>
         </main>
@@ -81,7 +75,7 @@ export default function LearnPage({ deckId }: LearnPageProps) {
   }
 
   // Error state
-  if (phase === 'error') {
+  if (phase === "error") {
     return (
       <>
         <Toaster />
@@ -104,12 +98,8 @@ export default function LearnPage({ deckId }: LearnPageProps) {
                   />
                 </svg>
               </div>
-              <h2 className="text-xl font-semibold text-foreground mb-2">
-                Nie udało się załadować fiszek
-              </h2>
-              <p className="text-muted-foreground mb-6">
-                {errorMessage || "Wystąpił błąd podczas ładowania fiszek."}
-              </p>
+              <h2 className="text-xl font-semibold text-foreground mb-2">Nie udało się załadować fiszek</h2>
+              <p className="text-muted-foreground mb-6">{errorMessage || "Wystąpił błąd podczas ładowania fiszek."}</p>
               <div className="flex gap-2 justify-center">
                 <Button onClick={retryLoad}>Spróbuj ponownie</Button>
                 <Button variant="outline" onClick={goToDeck}>
@@ -124,7 +114,7 @@ export default function LearnPage({ deckId }: LearnPageProps) {
   }
 
   // Loading state
-  if (phase === 'loading') {
+  if (phase === "loading") {
     return (
       <>
         <Toaster />
@@ -146,7 +136,7 @@ export default function LearnPage({ deckId }: LearnPageProps) {
   }
 
   // Empty state
-  if (phase === 'empty') {
+  if (phase === "empty") {
     return (
       <>
         <Toaster />
@@ -169,21 +159,15 @@ export default function LearnPage({ deckId }: LearnPageProps) {
                   />
                 </svg>
               </div>
-              <h2 className="text-xl font-semibold text-foreground mb-2">
-                Świetna robota!
-              </h2>
-              <p className="text-muted-foreground mb-6">
-                Nie ma więcej fiszek do nauki w tym decku.
-              </p>
+              <h2 className="text-xl font-semibold text-foreground mb-2">Świetna robota!</h2>
+              <p className="text-muted-foreground mb-6">Nie ma więcej fiszek do nauki w tym decku.</p>
               {meta && meta.deckTotal > 0 && (
                 <p className="text-sm text-muted-foreground mb-6">
-                  W decku jest {meta.deckTotal} {meta.deckTotal === 1 ? 'fiszka' : 'fiszek'}, 
-                  ale wszystkie są już powtórzone.
+                  W decku jest {meta.deckTotal} {meta.deckTotal === 1 ? "fiszka" : "fiszek"}, ale wszystkie są już
+                  powtórzone.
                 </p>
               )}
-              <Button onClick={goToDeck}>
-                Wróć do decku
-              </Button>
+              <Button onClick={goToDeck}>Wróć do decku</Button>
             </div>
           </div>
         </main>
@@ -192,7 +176,7 @@ export default function LearnPage({ deckId }: LearnPageProps) {
   }
 
   // Summary state
-  if (phase === 'summary') {
+  if (phase === "summary") {
     return (
       <>
         <Toaster />
@@ -227,10 +211,7 @@ export default function LearnPage({ deckId }: LearnPageProps) {
               meta={meta}
               stats={stats}
             />
-            <ProgressBar
-              current={stats.reviewedCount}
-              total={totalInSession}
-            />
+            <ProgressBar current={stats.reviewedCount} total={totalInSession} />
           </div>
 
           {/* Study Card */}
@@ -249,14 +230,9 @@ export default function LearnPage({ deckId }: LearnPageProps) {
           />
 
           {/* Error message (if any during review submission) */}
-          {errorMessage && (
-            <div className="text-center text-sm text-destructive">
-              {errorMessage}
-            </div>
-          )}
+          {errorMessage && <div className="text-center text-sm text-destructive">{errorMessage}</div>}
         </div>
       </main>
     </>
   );
 }
-

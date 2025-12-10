@@ -57,11 +57,11 @@ export interface ChatCompletionMessage {
  */
 export interface ChatCompletionResponse {
   id: string;
-  choices: Array<{
+  choices: {
     index: number;
     message: ChatCompletionMessage;
     finish_reason: string;
-  }>;
+  }[];
   usage?: {
     prompt_tokens: number;
     completion_tokens: number;
@@ -364,7 +364,3 @@ export class OpenRouterService {
     return Math.max(0, Math.min(2, value));
   }
 }
-
-
-
-

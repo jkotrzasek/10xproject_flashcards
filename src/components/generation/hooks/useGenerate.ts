@@ -1,10 +1,5 @@
 import { useState } from "react";
-import type {
-  CreateGenerationCommand,
-  GenerationResultDto,
-  ApiResponse,
-  ApiErrorResponse,
-} from "../../../types";
+import type { CreateGenerationCommand, GenerationResultDto, ApiResponse, ApiErrorResponse } from "../../../types";
 import type { FlashcardProposalVM } from "../generationTypes";
 
 // ============================================================================
@@ -93,4 +88,3 @@ export function useGenerate(): UseGenerateReturn {
     error,
   };
 }
-

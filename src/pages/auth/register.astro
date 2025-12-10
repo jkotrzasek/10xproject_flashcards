@@ -5,7 +5,7 @@ import { RegisterForm } from "../../components/auth/RegisterForm";
 // Server-side check: redirect authenticated users to main panel
 const user = Astro.locals.user;
 if (user) {
-  return Astro.redirect('/');
+  return Astro.redirect("/");
 }
 ---
 
@@ -14,9 +14,7 @@ if (user) {
     <!-- Header -->
     <div class="text-center">
       <h1 class="text-3xl font-bold text-foreground mb-3">Załóż konto</h1>
-      <p class="text-muted-foreground">
-        Stwórz darmowe konto i ucz się efektywnie
-      </p>
+      <p class="text-muted-foreground">Stwórz darmowe konto i ucz się efektywnie</p>
     </div>
 
     <!-- Register Form Card -->

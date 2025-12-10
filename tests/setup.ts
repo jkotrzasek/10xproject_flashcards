@@ -1,14 +1,14 @@
-import '@testing-library/jest-dom/vitest';
-import { afterAll, afterEach, beforeAll } from 'vitest';
-import { cleanup } from '@testing-library/react';
-import { setupServer } from 'msw/node';
+import "@testing-library/jest-dom/vitest";
+import { afterAll, afterEach, beforeAll } from "vitest";
+import { cleanup } from "@testing-library/react";
+import { setupServer } from "msw/node";
 
 // MSW server for API mocking
 export const server = setupServer();
 
 // Start MSW server before all tests
 beforeAll(() => {
-  server.listen({ onUnhandledRequest: 'warn' });
+  server.listen({ onUnhandledRequest: "warn" });
 });
 
 // Reset handlers after each test
@@ -26,10 +26,7 @@ afterAll(() => {
 const originalError = console.error;
 beforeAll(() => {
   console.error = (...args: unknown[]) => {
-    if (
-      typeof args[0] === 'string' &&
-      args[0].includes('Warning: ReactDOM.render')
-    ) {
+    if (typeof args[0] === "string" && args[0].includes("Warning: ReactDOM.render")) {
       return;
     }
     originalError.call(console, ...args);
@@ -39,4 +36,3 @@ beforeAll(() => {
 afterAll(() => {
   console.error = originalError;
 });
-

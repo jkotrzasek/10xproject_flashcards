@@ -59,5 +59,3 @@ export function useDecks(): UseDecksReturn {
     refetch: fetchDecks,
   };
 }
-
-

@@ -1,12 +1,5 @@
 import { useEffect, useState } from "react";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-} from "../ui/dialog";
+import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "../ui/dialog";
 import { Button } from "../ui/button";
 import { Label } from "../ui/label";
 import { Textarea } from "../ui/textarea";
@@ -41,22 +34,22 @@ interface FormErrors {
 
 function validateForm(values: FormValues): FormErrors {
   const errors: FormErrors = {};
-  
+
   const trimmedFront = values.front.trim();
   const trimmedBack = values.back.trim();
-  
+
   if (!trimmedFront) {
     errors.front = "Przód fiszki jest wymagany";
   } else if (trimmedFront.length > 200) {
     errors.front = "Przód fiszki nie może być dłuższy niż 200 znaków";
   }
-  
+
   if (!trimmedBack) {
     errors.back = "Tył fiszki jest wymagany";
   } else if (trimmedBack.length > 500) {
     errors.back = "Tył fiszki nie może być dłuższy niż 500 znaków";
   }
-  
+
   return errors;
 }
 
@@ -94,10 +87,8 @@ export function FlashcardEditDialog({
     }
   }, [open, flashcard]);
 
-  const hasChanges = flashcard && (
-    values.front.trim() !== flashcard.front.trim() ||
-    values.back.trim() !== flashcard.back.trim()
-  );
+  const hasChanges =
+    flashcard && (values.front.trim() !== flashcard.front.trim() || values.back.trim() !== flashcard.back.trim());
 
   const formErrors = validateForm(values);
   const hasErrors = Object.keys(formErrors).length > 0;
@@ -133,22 +124,22 @@ export function FlashcardEditDialog({
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     // Mark all fields as touched
     setTouched({ front: true, back: true });
-    
+
     // Validate
     const newErrors = validateForm(values);
     setErrors(newErrors);
-    
+
     if (Object.keys(newErrors).length > 0) {
       return;
     }
-    
+
     if (!hasChanges) {
       return;
     }
-    
+
     await onSubmit({
       front: values.front.trim(),
       back: values.back.trim(),
@@ -194,11 +185,7 @@ export function FlashcardEditDialog({
                 autoFocus
               />
               <div className="flex justify-between text-xs">
-                <div>
-                  {errors.front && touched.front && (
-                    <span className="text-destructive">{errors.front}</span>
-                  )}
-                </div>
+                <div>{errors.front && touched.front && <span className="text-destructive">{errors.front}</span>}</div>
                 <span className={values.front.length > 200 ? "text-destructive" : "text-muted-foreground"}>
                   {values.front.length}/200
                 </span>
@@ -220,11 +207,7 @@ export function FlashcardEditDialog({
                 rows={4}
               />
               <div className="flex justify-between text-xs">
-                <div>
-                  {errors.back && touched.back && (
-                    <span className="text-destructive">{errors.back}</span>
-                  )}
-                </div>
+                <div>{errors.back && touched.back && <span className="text-destructive">{errors.back}</span>}</div>
                 <span className={values.back.length > 500 ? "text-destructive" : "text-muted-foreground"}>
                   {values.back.length}/500
                 </span>
@@ -233,18 +216,10 @@ export function FlashcardEditDialog({
           </div>
 
           <DialogFooter>
-            <Button
-              type="button"
-              variant="outline"
-              onClick={handleCancel}
-              disabled={isSaving}
-            >
+            <Button type="button" variant="outline" onClick={handleCancel} disabled={isSaving}>
               Anuluj
             </Button>
-            <Button
-              type="submit"
-              disabled={!canSubmit}
-            >
+            <Button type="submit" disabled={!canSubmit}>
               {isSaving ? "Zapisywanie..." : "Zapisz"}
             </Button>
           </DialogFooter>
@@ -253,4 +228,3 @@ export function FlashcardEditDialog({
     </Dialog>
   );
 }
-

@@ -1,6 +1,6 @@
 ---
 // Header widoczny na każdej stronie aplikacji
-import Navigation from '../components/Navigation';
+import Navigation from "../components/Navigation";
 
 const currentPath = Astro.url.pathname;
 // Check if user is authenticated from middleware
@@ -11,16 +11,8 @@ const userEmail = Astro.locals.user?.email;
 <header class="border-b bg-background relative">
   <div class="container mx-auto px-4 py-4">
     <div class="flex items-center justify-between">
-      <a href="/" class="text-2xl font-bold text-foreground hover:text-primary transition-colors">
-        AI Flashcards
-      </a>
-      <Navigation 
-        client:load 
-        currentPath={currentPath} 
-        isAuthenticated={isAuthenticated}
-        userEmail={userEmail}
-      />
+      <a href="/" class="text-2xl font-bold text-foreground hover:text-primary transition-colors"> AI Flashcards </a>
+      <Navigation client:load currentPath={currentPath} isAuthenticated={isAuthenticated} userEmail={userEmail} />
     </div>
   </div>
 </header>
-

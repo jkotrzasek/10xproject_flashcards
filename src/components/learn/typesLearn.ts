@@ -6,12 +6,12 @@
 /**
  * User's response to a flashcard review
  */
-export type ReviewResponse = 'OK' | 'NOK';
+export type ReviewResponse = "OK" | "NOK";
 
 /**
  * Phase of the learning session
  */
-export type LearnPhase = 'loading' | 'learning' | 'summary' | 'empty' | 'error';
+export type LearnPhase = "loading" | "learning" | "summary" | "empty" | "error";
 
 /**
  * Single flashcard in the learning session
@@ -20,7 +20,7 @@ export interface LearnFlashcardViewModel {
   id: number;
   front: string;
   back: string;
-  status: 'pending' | 'answered';
+  status: "pending" | "answered";
   lastResponse?: ReviewResponse;
 }
 
@@ -28,9 +28,9 @@ export interface LearnFlashcardViewModel {
  * Metadata about the learning session (from API response)
  */
 export interface LearnSessionMetaViewModel {
-  totalDue: number;      // Number of cards due for review (NOK/not_checked)
-  returned: number;      // Number of cards returned in this batch
-  deckTotal: number;     // Total number of cards in the deck
+  totalDue: number; // Number of cards due for review (NOK/not_checked)
+  returned: number; // Number of cards returned in this batch
+  deckTotal: number; // Total number of cards in the deck
 }
 
 /**
@@ -38,8 +38,8 @@ export interface LearnSessionMetaViewModel {
  */
 export interface LearnSessionStats {
   reviewedCount: number; // Number of cards reviewed in current session
-  okCount: number;       // Number of "OK" responses
-  nokCount: number;      // Number of "NOK" responses
+  okCount: number; // Number of "OK" responses
+  nokCount: number; // Number of "NOK" responses
 }
 
 /**
@@ -65,4 +65,3 @@ export interface LearnState {
   isTransitioning: boolean; // New: true when card is sliding out
   errorMessage?: string;
 }
-

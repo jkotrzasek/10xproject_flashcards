@@ -5,12 +5,12 @@ import { LoginForm } from "../../components/auth/LoginForm";
 // Server-side check: redirect authenticated users to main panel
 const user = Astro.locals.user;
 if (user) {
-  return Astro.redirect('/');
+  return Astro.redirect("/");
 }
 
 // Check for email confirmation code parameter
-const code = Astro.url.searchParams.get('code');
-const hasConfirmationCode = code !== null && code.trim() !== '';
+const code = Astro.url.searchParams.get("code");
+const hasConfirmationCode = code !== null && code.trim() !== "";
 ---
 
 <AuthLayout title="Logowanie – AI Flashcards">
@@ -18,9 +18,7 @@ const hasConfirmationCode = code !== null && code.trim() !== '';
     <!-- Header -->
     <div class="text-center">
       <h1 class="text-3xl font-bold text-foreground mb-3">Witaj ponownie</h1>
-      <p class="text-muted-foreground">
-        Zaloguj się, aby zobaczyć swoje zasoby
-      </p>
+      <p class="text-muted-foreground">Zaloguj się, aby zobaczyć swoje zasoby</p>
     </div>
 
     <!-- Login Form Card -->
@@ -29,4 +27,3 @@ const hasConfirmationCode = code !== null && code.trim() !== '';
     </div>
   </div>
 </AuthLayout>
-

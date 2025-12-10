@@ -19,10 +19,7 @@ export function usePatchAcceptedTotal(): UsePatchAcceptedTotalReturn {
   const [isPatching, setIsPatching] = useState(false);
   const [error, setError] = useState<{ message: string; code?: string } | null>(null);
 
-  const patchAcceptedTotal = async (
-    sessionId: number,
-    acceptedTotal: number
-  ): Promise<boolean> => {
+  const patchAcceptedTotal = async (sessionId: number, acceptedTotal: number): Promise<boolean> => {
     setIsPatching(true);
     setError(null);
 
@@ -61,4 +58,3 @@ export function usePatchAcceptedTotal(): UsePatchAcceptedTotalReturn {
     error,
   };
 }
-

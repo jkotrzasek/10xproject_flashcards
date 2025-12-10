@@ -35,4 +35,3 @@ export function SkeletonList({ count = 6 }: SkeletonListProps) {
     </div>
   );
 }
-

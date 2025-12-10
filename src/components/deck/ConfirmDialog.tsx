@@ -1,12 +1,5 @@
 import { useState, useEffect } from "react";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-} from "../ui/dialog";
+import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "../ui/dialog";
 import { Button } from "../ui/button";
 import { Input } from "../ui/input";
 import { Label } from "../ui/label";
@@ -38,7 +31,7 @@ interface ConfirmDialogProps {
 
 /**
  * Reużywalny dialog potwierdzenia operacji destrukcyjnych
- * 
+ *
  * @example Prosty dialog
  * <ConfirmDialog
  *   open={isOpen}
@@ -48,7 +41,7 @@ interface ConfirmDialogProps {
  *   onOpenChange={setIsOpen}
  *   onConfirm={handleDelete}
  * />
- * 
+ *
  * @example Dialog z weryfikacją tekstową
  * <ConfirmDialog
  *   open={isOpen}
@@ -119,9 +112,7 @@ export function ConfirmDialog({
 
         {requireConfirmation && (
           <div className="space-y-2 py-4">
-            <Label htmlFor="confirmation-text">
-              {requireConfirmation.label}
-            </Label>
+            <Label htmlFor="confirmation-text">{requireConfirmation.label}</Label>
             <Input
               id="confirmation-text"
               value={confirmationText}
@@ -143,12 +134,7 @@ export function ConfirmDialog({
           >
             {cancelText}
           </Button>
-          <Button
-            type="button"
-            variant={variant}
-            onClick={handleConfirm}
-            disabled={!canConfirm}
-          >
+          <Button type="button" variant={variant} onClick={handleConfirm} disabled={!canConfirm}>
             {isLoading ? "Przetwarzanie..." : confirmText}
           </Button>
         </DialogFooter>
@@ -156,4 +142,3 @@ export function ConfirmDialog({
     </Dialog>
   );
 }
-

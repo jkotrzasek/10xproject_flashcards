@@ -67,39 +67,18 @@ export function AIProposalList({
               {isLoadingDecks ? (
                 <div className="h-9 w-[180px] animate-pulse rounded bg-muted"></div>
               ) : (
-                <DeckSelect
-                  decks={decks}
-                  value={selectedDeckId}
-                  onChange={onDeckChange}
-                  disabled={isSaving}
-                  compact
-                />
+                <DeckSelect decks={decks} value={selectedDeckId} onChange={onDeckChange} disabled={isSaving} compact />
               )}
             </div>
 
             {/* Action buttons */}
-            <Button
-              onClick={onSaveAccepted}
-              disabled={!canSaveAccepted}
-              variant="default"
-              size="default"
-            >
+            <Button onClick={onSaveAccepted} disabled={!canSaveAccepted} variant="default" size="default">
               {isSaving ? "Zapisywanie..." : `Zapisz zaakceptowane (${acceptedCount})`}
             </Button>
-            <Button
-              onClick={onSaveAll}
-              disabled={!canSaveAll}
-              variant="secondary"
-              size="default"
-            >
+            <Button onClick={onSaveAll} disabled={!canSaveAll} variant="secondary" size="default">
               Zapisz wszystkie ({items.length})
             </Button>
-            <Button
-              onClick={onCancel}
-              disabled={isSaving}
-              variant="outline"
-              size="default"
-            >
+            <Button onClick={onCancel} disabled={isSaving} variant="outline" size="default">
               Anuluj
             </Button>
           </div>
@@ -109,14 +88,9 @@ export function AIProposalList({
       {/* Proposals grid - 3 columns */}
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
         {items.map((item) => (
-          <AIProposal
-            key={item.id}
-            item={item}
-            onChange={(changes) => onChange(item.id, changes)}
-          />
+          <AIProposal key={item.id} item={item} onChange={(changes) => onChange(item.id, changes)} />
         ))}
       </div>
     </div>
   );
 }
-

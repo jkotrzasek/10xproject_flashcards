@@ -25,11 +25,11 @@ function formatDate(dateString: string): string {
   if (diffMins < 60) return `${diffMins} min temu`;
   if (diffHours < 24) return `${diffHours}h temu`;
   if (diffDays < 7) return `${diffDays} dni temu`;
-  
-  return date.toLocaleDateString("pl-PL", { 
-    day: "numeric", 
-    month: "short", 
-    year: date.getFullYear() !== now.getFullYear() ? "numeric" : undefined 
+
+  return date.toLocaleDateString("pl-PL", {
+    day: "numeric",
+    month: "short",
+    year: date.getFullYear() !== now.getFullYear() ? "numeric" : undefined,
   });
 }
 
@@ -63,42 +63,45 @@ export function useDeckDetails(deckId: number): UseDeckDetailsReturn {
     setRefetchTrigger((prev) => prev + 1);
   }, []);
 
-  const fetchDeck = useCallback(async (cancelled: { current: boolean }) => {
-    setIsLoading(true);
-    setError(undefined);
+  const fetchDeck = useCallback(
+    async (cancelled: { current: boolean }) => {
+      setIsLoading(true);
+      setError(undefined);
 
-    try {
-      const response = await fetch(`/api/decks/${deckId}`);
+      try {
+        const response = await fetch(`/api/decks/${deckId}`);
 
-      if (!response.ok) {
-        const errorData: ApiErrorResponse = await response.json();
+        if (!response.ok) {
+          const errorData: ApiErrorResponse = await response.json();
+          if (!cancelled.current) {
+            setError({
+              message: errorData.error.message || "Nie udało się pobrać decku",
+              code: errorData.error.code,
+            });
+            setIsLoading(false);
+          }
+          return;
+        }
+
+        const data: ApiResponse<DeckDto> = await response.json();
+
+        if (!cancelled.current) {
+          const mappedDeck = mapToViewModel(data.data);
+          setDeck(mappedDeck);
+          setError(undefined);
+          setIsLoading(false);
+        }
+      } catch (err) {
         if (!cancelled.current) {
           setError({
-            message: errorData.error.message || "Nie udało się pobrać decku",
-            code: errorData.error.code,
+            message: err instanceof Error ? err.message : "Błąd sieci lub serwera",
           });
           setIsLoading(false);
         }
-        return;
       }
-
-      const data: ApiResponse<DeckDto> = await response.json();
-
-      if (!cancelled.current) {
-        const mappedDeck = mapToViewModel(data.data);
-        setDeck(mappedDeck);
-        setError(undefined);
-        setIsLoading(false);
-      }
-    } catch (err) {
-      if (!cancelled.current) {
-        setError({
-          message: err instanceof Error ? err.message : "Błąd sieci lub serwera",
-        });
-        setIsLoading(false);
-      }
-    }
-  }, [deckId]);
+    },
+    [deckId]
+  );
 
   useEffect(() => {
     const cancelled = { current: false };
@@ -117,4 +120,3 @@ export function useDeckDetails(deckId: number): UseDeckDetailsReturn {
     refetch,
   };
 }
-

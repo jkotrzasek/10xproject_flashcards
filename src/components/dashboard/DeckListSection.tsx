@@ -45,7 +45,7 @@ export function DeckListSection({
     <div className="space-y-4">
       <div className="flex items-center justify-between">
         <h2 className="text-xl font-semibold text-foreground">Twoje decki</h2>
-        
+
         <select
           value={sort}
           onChange={(e) => onSortChange(e.target.value as DeckSortOption)}
@@ -65,9 +65,7 @@ export function DeckListSection({
       {isLoading && <SkeletonList count={6} />}
 
       {/* Empty State */}
-      {!isLoading && decks.length === 0 && (
-        <CTAEmptyState variant="no-decks" onPrimaryAction={onCreateDeck} />
-      )}
+      {!isLoading && decks.length === 0 && <CTAEmptyState variant="no-decks" onPrimaryAction={onCreateDeck} />}
 
       {/* Deck Cards Grid */}
       {!isLoading && decks.length > 0 && (
@@ -87,4 +85,3 @@ export function DeckListSection({
     </div>
   );
 }
-
