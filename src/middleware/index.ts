@@ -11,14 +11,14 @@ const PUBLIC_PATHS = [
   // Auth pages
   "/auth/login",
   "/auth/register",
-  "/auth/forgot-password",
-  "/auth/reset-password",
+  //"/auth/forgot-password",
+  //"/auth/reset-password",
   
   // Auth API endpoints (public only)
   "/api/auth/login",
   "/api/auth/register",
-  "/api/auth/forgot-password",
-  "/api/auth/reset-password",
+  //"/api/auth/forgot-password",
+  //"/api/auth/reset-password",
 ];
 
 /**

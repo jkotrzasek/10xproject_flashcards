@@ -3,6 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { AuthErrorBanner } from "./AuthErrorBanner";
+import { AuthSuccessBanner } from "./AuthSuccessBanner";
 import { useAuthApi } from "./hooks/useAuthApi";
 import type { LoginCommand } from "@/types";
 import type { LoginFormErrors } from "./auth.types";
@@ -76,7 +77,11 @@ function validateForm(values: LoginCommand): LoginFormErrors {
 // Component
 // ============================================================================
 
-export function LoginForm() {
+interface LoginFormProps {
+  showEmailConfirmed?: boolean;
+}
+
+export function LoginForm({ showEmailConfirmed = false }: LoginFormProps) {
   const { login, isLoading, error: apiError, clearError } = useAuthApi();
 
   const [values, setValues] = useState<LoginCommand>({
@@ -90,6 +95,7 @@ export function LoginForm() {
     password: false,
   });
   const [submitError, setSubmitError] = useState<string | undefined>();
+  const [showSuccess, setShowSuccess] = useState<boolean>(showEmailConfirmed);
 
   // Clear submit error when API error changes
   useEffect(() => {
@@ -173,6 +179,14 @@ export function LoginForm() {
 
   return (
     <form className="space-y-6" onSubmit={handleSubmit} noValidate>
+      {/* Success banner */}
+      {showSuccess && (
+        <AuthSuccessBanner
+          message="Potwierdzono adres email"
+          onDismiss={() => setShowSuccess(false)}
+        />
+      )}
+
       {/* Global error banner */}
       {submitError && (
         <AuthErrorBanner
@@ -238,16 +252,6 @@ export function LoginForm() {
       >
         {isLoading ? "Logowanie..." : "Zaloguj się"}
       </Button>
-
-      {/* Forgot password link - full width below button */}
-      <div className="text-center">
-        <a
-          href="/auth/forgot-password"
-          className="text-sm text-primary hover:underline transition-colors"
-        >
-          Nie pamiętasz hasła?
-        </a>
-      </div>
 
       {/* Register link */}
       <div className="text-center">

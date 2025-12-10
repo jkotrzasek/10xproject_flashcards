@@ -7,6 +7,10 @@ const user = Astro.locals.user;
 if (user) {
   return Astro.redirect('/');
 }
+
+// Check for email confirmation code parameter
+const code = Astro.url.searchParams.get('code');
+const hasConfirmationCode = code !== null && code.trim() !== '';
 ---
 
 <AuthLayout title="Logowanie – AI Flashcards">
@@ -21,7 +25,7 @@ if (user) {
 
     <!-- Login Form Card -->
     <div class="bg-card border rounded-lg p-6 shadow-sm">
-      <LoginForm client:load />
+      <LoginForm client:load showEmailConfirmed={hasConfirmationCode} />
     </div>
   </div>
 </AuthLayout>

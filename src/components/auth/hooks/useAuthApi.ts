@@ -2,8 +2,6 @@ import { useState, useCallback } from "react";
 import type {
   LoginCommand,
   RegisterCommand,
-  ForgotPasswordCommand,
-  ResetPasswordCommand,
   AuthResponseDto,
   AuthErrorDto,
 } from "@/types";
@@ -122,77 +120,77 @@ export function useAuthApi() {
     }
   }, []);
 
-  const requestPasswordReset = useCallback(async (data: ForgotPasswordCommand): Promise<boolean> => {
-    setIsLoading(true);
-    setError(null);
+  // const requestPasswordReset = useCallback(async (data: ForgotPasswordCommand): Promise<boolean> => {
+  //   setIsLoading(true);
+  //   setError(null);
 
-    try {
-      const response = await fetch("/api/auth/forgot-password", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(data),
-      });
+  //   try {
+  //     const response = await fetch("/api/auth/forgot-password", {
+  //       method: "POST",
+  //       headers: {
+  //         "Content-Type": "application/json",
+  //       },
+  //       body: JSON.stringify(data),
+  //     });
 
-      if (!response.ok) {
-        const errorData = await response.json().catch(() => ({
-          code: "UNKNOWN_ERROR",
-          message: "Wystąpił nieznany błąd",
-        }));
+  //     if (!response.ok) {
+  //       const errorData = await response.json().catch(() => ({
+  //         code: "UNKNOWN_ERROR",
+  //         message: "Wystąpił nieznany błąd",
+  //       }));
 
-        setError(errorData);
-        return false;
-      }
+  //       setError(errorData);
+  //       return false;
+  //     }
 
-      return true;
-    } catch (err) {
-      const networkError: AuthErrorDto = {
-        code: "NETWORK_ERROR",
-        message: "Nie udało się połączyć z serwerem.",
-      };
-      setError(networkError);
-      return false;
-    } finally {
-      setIsLoading(false);
-    }
-  }, []);
+  //     return true;
+  //   } catch (err) {
+  //     const networkError: AuthErrorDto = {
+  //       code: "NETWORK_ERROR",
+  //       message: "Nie udało się połączyć z serwerem.",
+  //     };
+  //     setError(networkError);
+  //     return false;
+  //   } finally {
+  //     setIsLoading(false);
+  //   }
+  // }, []);
 
-  const resetPassword = useCallback(async (data: ResetPasswordCommand): Promise<boolean> => {
-    setIsLoading(true);
-    setError(null);
+  // const resetPassword = useCallback(async (data: ResetPasswordCommand): Promise<boolean> => {
+  //   setIsLoading(true);
+  //   setError(null);
 
-    try {
-      const response = await fetch("/api/auth/reset-password", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(data),
-      });
+  //   try {
+  //     const response = await fetch("/api/auth/reset-password", {
+  //       method: "POST",
+  //       headers: {
+  //         "Content-Type": "application/json",
+  //       },
+  //       body: JSON.stringify(data),
+  //     });
 
-      if (!response.ok) {
-        const errorData = await response.json().catch(() => ({
-          code: "UNKNOWN_ERROR",
-          message: "Wystąpił nieznany błąd",
-        }));
+  //     if (!response.ok) {
+  //       const errorData = await response.json().catch(() => ({
+  //         code: "UNKNOWN_ERROR",
+  //         message: "Wystąpił nieznany błąd",
+  //       }));
 
-        setError(errorData);
-        return false;
-      }
+  //       setError(errorData);
+  //       return false;
+  //     }
 
-      return true;
-    } catch (err) {
-      const networkError: AuthErrorDto = {
-        code: "NETWORK_ERROR",
-        message: "Nie udało się połączyć z serwerem.",
-      };
-      setError(networkError);
-      return false;
-    } finally {
-      setIsLoading(false);
-    }
-  }, []);
+  //     return true;
+  //   } catch (err) {
+  //     const networkError: AuthErrorDto = {
+  //       code: "NETWORK_ERROR",
+  //       message: "Nie udało się połączyć z serwerem.",
+  //     };
+  //     setError(networkError);
+  //     return false;
+  //   } finally {
+  //     setIsLoading(false);
+  //   }
+  // }, []);
 
   const clearError = useCallback(() => {
     setError(null);
@@ -202,8 +200,8 @@ export function useAuthApi() {
     login,
     register,
     logout,
-    requestPasswordReset,
-    resetPassword,
+    // requestPasswordReset,
+    // resetPassword,
     isLoading,
     error,
     clearError,
