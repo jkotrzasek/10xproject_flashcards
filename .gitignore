@@ -26,3 +26,11 @@ pnpm-debug.log*
 # supabase
 #disable rls policies
 supabase/migrations/20251109120600_disable_rls_policies.sql
+
+# testing
+coverage/
+.nyc_output/
+test-results/
+playwright-report/
+playwright/.cache/
+*.trace.zip

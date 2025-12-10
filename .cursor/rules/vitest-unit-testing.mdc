@@ -1,9 +1,6 @@
 ---
-description: Unit testing with Vitest and React Testing Library
-globs: 
 alwaysApply: false
 ---
-
 ## TESTING
 
 ### Guidelines for UNIT TESTING

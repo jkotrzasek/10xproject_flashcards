@@ -117,7 +117,7 @@ describe('calculateFlashcardCount', () => {
 **Cel:** Weryfikacja współpracy między modułami - serwisy + baza danych, API + middleware.
 
 **Zakres:**
-- Integracja serwisów z Supabase (lokalna instancja Docker dla testów RLS/DB)
+- Integracja serwisów z Supabase (mockowany client)
 - Flow autentykacji (middleware + API endpoints)
 - Operacje CRUD na encjach (Deck, Flashcard, Generation)
 - Walidacja RLS (Row Level Security) policies
@@ -155,7 +155,6 @@ describe('Generation Flow', () => {
 
 **Zakres:**
 - Wszystkie endpointy REST (`/api/*`)
-- Testy wykonywane na działającej instancji (Playwright Request Context)
 - Scenariusze błędów (400, 401, 403, 404, 409, 500)
 - Walidacja typów DTO (zgodność z `src/types.ts`)
 
@@ -215,7 +214,7 @@ describe('Generation Flow', () => {
 ### 3.5 Testy bezpieczeństwa (Security Tests)
 
 **Zakres:**
-- Weryfikacja RLS policies w Supabase (na lokalnej instancji Docker)
+- Weryfikacja RLS policies w Supabase
 - Testowanie tokenów JWT (expiration, refresh)
 - Próby dostępu do zasobów innych użytkowników
 - Walidacja wejść (XSS, SQL injection w Zod)
@@ -316,7 +315,7 @@ describe('Generation Flow', () => {
 
 | Środowisko | Cel | Baza danych | AI API |
 |------------|-----|-------------|--------|
-| Lokalne (dev) | Testy jednostkowe, integracyjne | Supabase local (Docker) | Mock |
+| Lokalne (dev) | Testy jednostkowe, rozwój | Supabase local | Mock |
 | CI (GitHub Actions) | Testy automatyczne | Supabase test project | Mock |
 | Staging | Testy E2E, manualne | Supabase staging | OpenRouter (niski limit) |
 | Produkcja | Smoke tests po deploy | Supabase prod | OpenRouter (pełny limit) |
@@ -353,9 +352,8 @@ DAILY_GENERATION_LIMIT=3
 | Unit | **Vitest** | Natywne wsparcie Vite/Astro, szybkie wykonanie, kompatybilność z Jest API |
 | Unit (React) | **React Testing Library** | Standard dla testowania komponentów React |
 | Integration | **Vitest** + **MSW** (Mock Service Worker) | Mockowanie API na poziomie sieci |
-| API | **Playwright** | Testowanie endpointów Astro na działającym serwerze (APIRequestContext) |
+| API | **Vitest** | Testowanie endpointów Astro |
 | E2E | **Playwright** | Wsparcie wielu przeglądarek, niezawodność, dobre API |
-| Visual | **Playwright** | Wykrywanie regresji wizualnych (snapshots) |
 | Accessibility | **axe-core** + **Playwright** | Automatyczne skanowanie a11y |
 
 ### 6.2 Konfiguracja package.json
@@ -368,7 +366,6 @@ DAILY_GENERATION_LIMIT=3
     "@testing-library/user-event": "^14.0.0",
     "@playwright/test": "^1.45.0",
     "msw": "^2.0.0",
-    "happy-dom": "^14.0.0",
     "@axe-core/playwright": "^4.0.0"
   },
   "scripts": {
@@ -402,12 +399,12 @@ DAILY_GENERATION_LIMIT=3
 │   │       └── generation/
 │   │           └── AIInputForm.test.tsx
 │   ├── integration/
-│   │   ├── services/
-│   │   │   └── generation-flow.test.ts
-│   ├── api/
-│   │   ├── auth.test.ts
-│   │   ├── decks.test.ts
-│   │   └── generations.test.ts
+│   │   ├── api/
+│   │   │   ├── auth.test.ts
+│   │   │   ├── decks.test.ts
+│   │   │   └── generations.test.ts
+│   │   └── services/
+│   │       └── generation-flow.test.ts
 │   ├── e2e/
 │   │   ├── auth.spec.ts
 │   │   ├── generator.spec.ts
@@ -579,7 +576,7 @@ export default defineConfig({
   plugins: [react()],
   test: {
     globals: true,
-    environment: 'happy-dom',
+    environment: 'jsdom',
     setupFiles: ['./tests/setup.ts'],
     include: ['tests/**/*.test.{ts,tsx}'],
     coverage: {
@@ -680,4 +677,9 @@ jobs:
           path: playwright-report/
 ```
 
+---
+
+**Wersja:** 1.0  
+**Data:** 10.12.2025  
+**Status:** Zaakceptowany
 

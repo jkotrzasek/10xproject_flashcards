@@ -6,6 +6,14 @@ Frontend - Astro z React dla komponentów interaktywnych:
 - Tailwind 4 pozwala na wygodne stylowanie aplikacji
 - Shadcn/ui zapewnia bibliotekę dostępnych komponentów React, na których oprzemy UI
 
+Testowanie:
+
+- Vitest jako framework do testów jednostkowych - natywne wsparcie dla Vite/Astro, szybkie wykonanie, kompatybilność z Jest API
+- React Testing Library do testowania komponentów React zgodnie z best practices
+- MSW (Mock Service Worker) do mockowania API na poziomie sieci w testach integracyjnych
+- Playwright do testów E2E - wsparcie wielu przeglądarek, niezawodność, dobre API, możliwość testowania endpointów API
+- axe-core do automatycznych testów accessibility (WCAG 2.1 AA)
+
 Backend - Supabase jako kompleksowe rozwiązanie backendowe:
 
 - Zapewnia bazę danych PostgreSQL

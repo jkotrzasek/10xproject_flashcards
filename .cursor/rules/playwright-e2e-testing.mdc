@@ -1,9 +1,6 @@
 ---
-description: E2E testing with Playwright
-globs:
 alwaysApply: false
 ---
-
 ## TESTING
 
 ### Guidelines for E2E

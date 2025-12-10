@@ -8,6 +8,7 @@ A web application designed to streamline the process of creating educational fla
 - [Tech Stack](#tech-stack)
 - [Getting Started Locally](#getting-started-locally)
 - [Available Scripts](#available-scripts)
+- [Testing](#testing)
 - [Project Scope](#project-scope)
 - [Project Status](#project-status)
 - [License](#license)
@@ -27,6 +28,8 @@ The project is built with:
 - **Language**: [TypeScript 5](https://www.typescriptlang.org/)
 - **Styling**: [Tailwind CSS 4](https://tailwindcss.com/)
 - **UI Components**: [Shadcn/ui](https://ui.shadcn.com/)
+- **Unit Testing**: [Vitest](https://vitest.dev/) + [React Testing Library](https://testing-library.com/react)
+- **E2E Testing**: [Playwright](https://playwright.dev/)
 
 ## Getting Started Locally
 
@@ -79,11 +82,53 @@ The application should now be running on [http://localhost:4321](http://localhos
 
 The following scripts are available in the `package.json`:
 
+### Development
+
 - `npm run dev`: Runs the application in development mode with hot-reloading.
 - `npm run build`: Builds the application for production.
 - `npm run preview`: Starts a local server to preview the production build.
+
+### Code Quality
+
 - `npm run lint`: Lints the code using ESLint to check for code quality and style issues.
+- `npm run lint:fix`: Automatically fixes linting issues where possible.
 - `npm run format`: Formats all files using Prettier to ensure consistent code style.
+
+### Testing
+
+- `npm test`: Runs unit tests with Vitest.
+- `npm run test:watch`: Runs unit tests in watch mode during development.
+- `npm run test:ui`: Opens Vitest UI for visual test navigation and debugging.
+- `npm run test:coverage`: Runs unit tests with code coverage report.
+- `npm run test:e2e`: Runs end-to-end tests with Playwright (headless).
+- `npm run test:e2e:ui`: Runs E2E tests in Playwright's interactive UI mode.
+- `npm run test:e2e:headed`: Runs E2E tests with visible browser.
+- `npm run test:e2e:debug`: Runs E2E tests in debug mode with step-by-step execution.
+- `npm run test:all`: Runs all tests (unit with coverage + E2E).
+
+## Testing
+
+The project uses a comprehensive testing setup following best practices:
+
+### Unit & Integration Tests (Vitest)
+
+- **Framework**: Vitest with jsdom environment for DOM/React testing
+- **Testing Library**: React Testing Library for component tests
+- **API Mocking**: MSW (Mock Service Worker) for network request mocking
+- **Coverage**: Configured with thresholds (80% lines, functions, statements)
+
+Unit tests are located in the `tests/` directory. Run them with `npm test` or use `npm run test:ui` for visual debugging.
+
+### E2E Tests (Playwright)
+
+- **Browser**: Chromium (Desktop Chrome configuration)
+- **Accessibility**: Automated WCAG checks with @axe-core/playwright
+- **Pattern**: Page Object Model for maintainable test structure
+- **Parallelization**: Enabled for faster test execution
+
+E2E tests are located in the `e2e/` directory. The dev server starts automatically when running E2E tests.
+
+For detailed testing documentation and examples, see `tests/README.md`.
 
 ## Project Scope
 
