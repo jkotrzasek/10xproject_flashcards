@@ -11,24 +11,24 @@ import { DeleteDeckConfirmDialog } from "./dashboard/DeleteDeckConfirmDialog";
 import { Button } from "./ui/button";
 
 // ============================================================================
-// Types
+// Types (exported for testing)
 // ============================================================================
 
-type DeckSortOption = "name_asc" | "name_desc" | "created_asc" | "created_desc" | "updated_asc" | "updated_desc";
+export type DeckSortOption = "name_asc" | "name_desc" | "created_asc" | "created_desc" | "updated_asc" | "updated_desc";
 
-interface DeckCardViewModel extends DeckDto {
+export interface DeckCardViewModel extends DeckDto {
   updatedLabel: string;
   isMutating: boolean;
 }
 
-type DialogType = "create" | "update" | "delete" | null;
+export type DialogType = "create" | "update" | "delete" | null;
 
-interface DialogState {
+export interface DialogState {
   type: DialogType;
   deck?: DeckCardViewModel;
 }
 
-interface DashboardState {
+export interface DashboardState {
   decks: DeckCardViewModel[];
   isLoading: boolean;
   sort: DeckSortOption;
@@ -36,7 +36,7 @@ interface DashboardState {
   dialogState: DialogState;
 }
 
-type DashboardAction =
+export type DashboardAction =
   | { type: "SET_LOADING"; payload: boolean }
   | { type: "SET_DECKS"; payload: DeckCardViewModel[] }
   | { type: "SET_UNASSIGNED_COUNT"; payload: number }
@@ -46,10 +46,10 @@ type DashboardAction =
   | { type: "SET_DECK_MUTATING"; payload: { id: number; isMutating: boolean } };
 
 // ============================================================================
-// Reducer
+// Reducer (exported for testing)
 // ============================================================================
 
-const initialState: DashboardState = {
+export const initialState: DashboardState = {
   decks: [],
   isLoading: true,
   sort: "updated_desc",
@@ -57,7 +57,7 @@ const initialState: DashboardState = {
   dialogState: { type: null },
 };
 
-function dashboardReducer(state: DashboardState, action: DashboardAction): DashboardState {
+export function dashboardReducer(state: DashboardState, action: DashboardAction): DashboardState {
   switch (action.type) {
     case "SET_LOADING":
       return { ...state, isLoading: action.payload };

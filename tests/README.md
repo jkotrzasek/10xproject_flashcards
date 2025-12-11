@@ -9,7 +9,15 @@ tests/                      # Testy jednostkowe i integracyjne
 ├── setup.ts               # Konfiguracja środowiska testowego Vitest
 ├── mocks/
 │   └── handlers.ts        # MSW handlers do mockowania API
-├── components/            # Testy komponentów React
+├── unit/
+│   ├── lib/               # Testy funkcji pomocniczych
+│   │   └── format-date.test.ts  # Testy formatowania dat (63 tests, 100% coverage)
+│   ├── components/        # Testy komponentów React
+│   │   └── dashboardReducer.test.ts  # Testy reducera dashboardu (40 tests)
+│   └── doc/               # Dokumentacja testów
+│       ├── format-date.test.md
+│       ├── format-date-tests-plan.md
+│       └── dashboardReducer.test.md
 └── example.test.ts        # Przykładowy test (do usunięcia)
 
 e2e/                       # Testy E2E
@@ -42,6 +50,33 @@ npm run test:coverage
 - **Environment**: jsdom (dla testów komponentów DOM/React)
 - **Coverage threshold**: 80% lines, functions, statements; 75% branches
 - **Setup file**: `tests/setup.ts` - MSW server i React Testing Library cleanup
+
+### Istniejące testy jednostkowe
+
+#### ✅ `format-date.test.ts` - Formatowanie dat
+- **Lokalizacja:** `tests/unit/lib/format-date.test.ts`
+- **Funkcja:** `formatDate()` z `src/lib/format-date.ts`
+- **Testy:** 63 przypadków testowych
+- **Pokrycie:** 100% (statements, branches, functions, lines)
+- **Dokumentacja:** `tests/unit/doc/format-date.test.md`
+- **Typy testów:** Względne formatowanie czasu, pełne daty, edge cases, time-dependent
+- **Techniki:** Fake timers (`vi.useFakeTimers()`), testy parametryzowane (`describe.each()`)
+
+```bash
+npm run test -- format-date
+npm run test:coverage -- tests/unit/lib/format-date.test.ts
+```
+
+#### ✅ `dashboardReducer.test.ts` - Reducer dashboardu
+- **Lokalizacja:** `tests/unit/components/dashboardReducer.test.ts`
+- **Funkcja:** `dashboardReducer` z `src/components/DashboardPage.tsx`
+- **Testy:** 40 przypadków testowych
+- **Dokumentacja:** `tests/unit/doc/dashboardReducer.test.md`
+- **Typy testów:** Akcje reducera, immutability, state transitions
+
+```bash
+npm run test -- dashboardReducer
+```
 
 ### Przykład testu komponentu
 
