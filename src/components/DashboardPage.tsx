@@ -192,14 +192,18 @@ export default function DashboardPage() {
     <>
       <Toaster position="top-center" richColors />
 
-      <div className="container mx-auto px-4 py-8">
+      <div className="container mx-auto px-4 py-8" data-testid="dashboard-page">
         {/* Header Actions */}
         <div className="flex items-center justify-between mb-8">
           <div>
-            <h1 className="text-3xl font-bold text-foreground">Dashboard</h1>
+            <h1 className="text-3xl font-bold text-foreground" data-testid="dashboard-heading">Dashboard</h1>
             <p className="text-muted-foreground mt-1">Zarządzaj swoimi deckami i fiszkami</p>
           </div>
-          {!hasError && <Button onClick={handleOpenCreateDialog}>Stwórz nowy deck</Button>}
+          {!hasError && (
+            <Button onClick={handleOpenCreateDialog} data-testid="create-deck-button">
+              Stwórz nowy deck
+            </Button>
+          )}
         </div>
 
         {/* Error State - Błąd pobierania danych */}

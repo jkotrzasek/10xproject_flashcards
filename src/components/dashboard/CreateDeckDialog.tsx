@@ -85,7 +85,7 @@ export function CreateDeckDialog({ open, onClose, onSubmit }: CreateDeckDialogPr
 
   return (
     <Dialog open={open} onOpenChange={handleClose}>
-      <DialogContent>
+      <DialogContent data-testid="create-deck-dialog">
         <DialogHeader>
           <DialogTitle>Stwórz nowy deck</DialogTitle>
           <DialogDescription>
@@ -105,16 +105,23 @@ export function CreateDeckDialog({ open, onClose, onSubmit }: CreateDeckDialogPr
                 disabled={isSubmitting}
                 maxLength={30}
                 autoFocus
+                data-testid="deck-name-input"
               />
               {error && <p className="text-sm text-destructive">{error}</p>}
             </div>
           </div>
 
           <DialogFooter>
-            <Button type="button" variant="outline" onClick={handleClose} disabled={isSubmitting}>
+            <Button
+              type="button"
+              variant="outline"
+              onClick={handleClose}
+              disabled={isSubmitting}
+              data-testid="cancel-deck-button"
+            >
               Anuluj
             </Button>
-            <Button type="submit" disabled={isSubmitting}>
+            <Button type="submit" disabled={isSubmitting} data-testid="save-deck-button">
               {isSubmitting ? "Tworzenie..." : "Zapisz"}
             </Button>
           </DialogFooter>

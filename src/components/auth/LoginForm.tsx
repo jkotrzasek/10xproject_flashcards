@@ -187,7 +187,7 @@ export function LoginForm({ showEmailConfirmed = false }: LoginFormProps) {
   };
 
   return (
-    <form className="space-y-6" onSubmit={handleSubmit} noValidate>
+    <form className="space-y-6" onSubmit={handleSubmit} noValidate data-testid="login-form">
       {/* Success banner */}
       {showSuccess && <AuthSuccessBanner message="Potwierdzono adres email" onDismiss={() => setShowSuccess(false)} />}
 
@@ -216,6 +216,7 @@ export function LoginForm({ showEmailConfirmed = false }: LoginFormProps) {
           aria-describedby={showFieldError("email") ? "email-error" : undefined}
           disabled={isLoading}
           autoComplete="email"
+          data-testid="login-email-input"
         />
         {showFieldError("email") && (
           <p id="email-error" className="text-sm text-destructive" role="alert">
@@ -240,6 +241,7 @@ export function LoginForm({ showEmailConfirmed = false }: LoginFormProps) {
           autoComplete="off"
           data-lpignore="true"
           data-form-type="other"
+          data-testid="login-password-input"
         />
         {showFieldError("password") && (
           <p id="password-error" className="text-sm text-destructive" role="alert">
@@ -249,7 +251,7 @@ export function LoginForm({ showEmailConfirmed = false }: LoginFormProps) {
       </div>
 
       {/* Submit button */}
-      <Button type="submit" className="w-full" disabled={isLoading}>
+      <Button type="submit" className="w-full" disabled={isLoading} data-testid="login-submit-button">
         {isLoading ? "Logowanie..." : "Zaloguj się"}
       </Button>
 

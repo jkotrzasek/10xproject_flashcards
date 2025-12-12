@@ -43,10 +43,14 @@ export function DeckCard({ deck, onOpen, onLearn, onEdit, onDelete }: DeckCardPr
   const isLearnDisabled = deck.flashcard_count === 0 || deck.isMutating;
 
   return (
-    <Card className="hover:shadow-md transition-shadow">
+    <Card className="hover:shadow-md transition-shadow" data-testid={`deck-card-${deck.id}`}>
       <CardHeader>
         <div className="flex items-start justify-between gap-2">
-          <h3 className="text-lg font-semibold text-foreground cursor-pointer" onClick={handleOpenClick}>
+          <h3
+            className="text-lg font-semibold text-foreground cursor-pointer"
+            onClick={handleOpenClick}
+            data-testid="deck-card-name"
+          >
             {deck.name}
           </h3>
           <div className="flex gap-1">
@@ -57,6 +61,7 @@ export function DeckCard({ deck, onOpen, onLearn, onEdit, onDelete }: DeckCardPr
               onClick={handleEditClick}
               disabled={deck.isMutating}
               title="Edytuj"
+              data-testid="edit-deck-button"
             >
               <span className="text-sm">✏️</span>
             </Button>
@@ -67,6 +72,7 @@ export function DeckCard({ deck, onOpen, onLearn, onEdit, onDelete }: DeckCardPr
               onClick={handleDeleteClick}
               disabled={deck.isMutating}
               title="Usuń"
+              data-testid="delete-deck-button"
             >
               <span className="text-sm">🗑️</span>
             </Button>
@@ -87,7 +93,13 @@ export function DeckCard({ deck, onOpen, onLearn, onEdit, onDelete }: DeckCardPr
 
       <CardFooter className="flex flex-col gap-3">
         <div className="flex gap-2 w-full">
-          <Button onClick={handleLearnClick} disabled={isLearnDisabled} className="flex-1 h-12" size="sm">
+          <Button
+            onClick={handleLearnClick}
+            disabled={isLearnDisabled}
+            className="flex-1 h-12"
+            size="sm"
+            data-testid="learn-deck-button"
+          >
             Ucz się
           </Button>
         </div>
