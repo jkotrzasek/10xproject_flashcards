@@ -1,0 +1,99 @@
+name: Pull Request CI
+
+on:
+  pull_request:
+    branches: [master]
+
+jobs:
+  lint:
+    name: Lint
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v6
+
+      - name: Setup Node.js
+        uses: ./.github/actions/setup-node-environment
+
+      - name: Run linter
+        run: npm run lint
+
+  unit-test:
+    name: Unit Tests
+    needs: lint
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v6
+
+      - name: Setup Node.js
+        uses: ./.github/actions/setup-node-environment
+
+      - name: Run unit tests
+        run: npm run test:unit
+
+  e2e-test:
+    name: E2E Tests
+    needs: lint
+    runs-on: ubuntu-latest
+    environment: integration
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v6
+
+      - name: Setup Node.js
+        uses: ./.github/actions/setup-node-environment
+
+      - name: Install Playwright browsers
+        run: npx playwright install chromium --with-deps
+
+      - name: Run E2E tests
+        run: npm run test:e2e
+        env:
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_KEY: ${{ secrets.SUPABASE_KEY }}
+          OPENROUTER_API_KEY: ${{ secrets.OPENROUTER_API_KEY }}
+          DAILY_GENERATION_LIMIT: ${{ vars.DAILY_GENERATION_LIMIT }}
+          OPENROUTER_DEFAULT_MODEL: ${{ vars.OPENROUTER_DEFAULT_MODEL }}
+          E2E_USERNAME_ID: ${{ secrets.E2E_USERNAME_ID }}
+          E2E_USERNAME: ${{ secrets.E2E_USERNAME }}
+          E2E_PASSWORD: ${{ secrets.E2E_PASSWORD }}
+
+      - name: Upload E2E test artifacts
+        if: failure()
+        uses: actions/upload-artifact@v6
+        with:
+          name: e2e-artifacts
+          path: |
+            playwright-report/
+            test-results/
+          retention-days: 5
+
+  status-comment:
+    name: PR Status Comment
+    needs: [lint, unit-test, e2e-test]
+    if: always()
+    runs-on: ubuntu-latest
+    permissions:
+      pull-requests: write
+    env:
+      LINT_STATUS: ${{ needs.lint.result == 'success' && '✅ Passed' || '❌ Failed' }}
+      UNIT_STATUS: ${{ needs.unit-test.result == 'success' && '✅ Passed' || '❌ Failed' }}
+      E2E_STATUS: ${{ needs.e2e-test.result == 'success' && '✅ Passed' || '❌ Failed' }}
+      OVERALL_STATUS: ${{ (needs.lint.result == 'success' && needs.unit-test.result == 'success' && needs.e2e-test.result == 'success') && '✅ CI Pipeline Passed' || '❌ CI Pipeline Failed' }}
+    steps:
+      - name: Comment on PR
+        uses: peter-evans/create-or-update-comment@v5
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          issue-number: ${{ github.event.pull_request.number }}
+          body: |
+            ## ${{ env.OVERALL_STATUS }}
+
+            | Check | Status |
+            |-------|--------|
+            | Lint | ${{ env.LINT_STATUS }} |
+            | Unit Tests | ${{ env.UNIT_STATUS }} |
+            | E2E Tests | ${{ env.E2E_STATUS }} |
+
+            **Commit:** ${{ github.sha }}
