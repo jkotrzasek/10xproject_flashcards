@@ -1,6 +1,7 @@
 import { useState, useEffect, useCallback } from "react";
 import type { DeckDto, ApiResponse, ApiErrorResponse } from "../../../types";
 import type { DeckHeaderVM } from "../../DeckDetailsPage";
+import { formatDate } from "../../../lib/format-date";
 
 interface UseDeckDetailsReturn {
   deck: DeckHeaderVM | null;
@@ -12,26 +13,6 @@ interface UseDeckDetailsReturn {
 // ============================================================================
 // Helper Functions
 // ============================================================================
-
-function formatDate(dateString: string): string {
-  const date = new Date(dateString);
-  const now = new Date();
-  const diffMs = now.getTime() - date.getTime();
-  const diffMins = Math.floor(diffMs / 60000);
-  const diffHours = Math.floor(diffMs / 3600000);
-  const diffDays = Math.floor(diffMs / 86400000);
-
-  if (diffMins < 1) return "Przed chwilą";
-  if (diffMins < 60) return `${diffMins} min temu`;
-  if (diffHours < 24) return `${diffHours}h temu`;
-  if (diffDays < 7) return `${diffDays} dni temu`;
-
-  return date.toLocaleDateString("pl-PL", {
-    day: "numeric",
-    month: "short",
-    year: date.getFullYear() !== now.getFullYear() ? "numeric" : undefined,
-  });
-}
 
 function mapToViewModel(deck: DeckDto): DeckHeaderVM {
   return {

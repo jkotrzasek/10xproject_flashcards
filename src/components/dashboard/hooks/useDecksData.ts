@@ -1,5 +1,6 @@
 import { useState, useEffect, useCallback } from "react";
 import type { DeckDto, FlashcardDto, ApiResponse } from "../../../types";
+import { formatDate } from "../../../lib/format-date";
 
 // ============================================================================
 // Types
@@ -25,30 +26,10 @@ interface UseDecksDataResult {
 // Helper Functions
 // ============================================================================
 
-function formatUpdatedLabel(dateString: string): string {
-  const date = new Date(dateString);
-  const now = new Date();
-  const diffMs = now.getTime() - date.getTime();
-  const diffMins = Math.floor(diffMs / 60000);
-  const diffHours = Math.floor(diffMs / 3600000);
-  const diffDays = Math.floor(diffMs / 86400000);
-
-  if (diffMins < 1) return "Przed chwilą";
-  if (diffMins < 60) return `${diffMins} min temu`;
-  if (diffHours < 24) return `${diffHours}h temu`;
-  if (diffDays < 7) return `${diffDays} dni temu`;
-
-  return date.toLocaleDateString("pl-PL", {
-    day: "numeric",
-    month: "short",
-    year: date.getFullYear() !== now.getFullYear() ? "numeric" : undefined,
-  });
-}
-
 function mapToViewModel(deck: DeckDto): DeckCardViewModel {
   return {
     ...deck,
-    updatedLabel: formatUpdatedLabel(deck.updated_at),
+    updatedLabel: formatDate(deck.updated_at),
     isMutating: false,
   };
 }
