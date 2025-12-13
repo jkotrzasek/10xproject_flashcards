@@ -20,17 +20,57 @@ test.describe("Login Page", () => {
     await expect(loginPage.submitButton).toBeVisible();
   });
 
-  test("should successfully log in with valid credentials", async ({ page }) => {
-    // Arrange
+  test("flow: complete login from login page to dashboard", async ({ page }) => {
+    // ARRANGE
     const { email, password } = validUser;
 
-    // Act
-    await loginPage.login(email, password);
+    // ACT & ASSERT
 
-    // Assert
-    await loginPage.waitForDashboard();
-    await expect(page).toHaveURL("/");
-    await expect(page.getByTestId("dashboard-heading")).toBeVisible();
+    // Step 1: Verify login page loaded
+    await test.step("1. Otwórz stronę logowania", async () => {
+      await expect(page).toHaveURL("/auth/login");
+      await expect(page).toHaveTitle(/logowanie/i);
+    });
+
+    // Step 2: Wait for form to be ready
+    await test.step("2. Poczekaj na pojawienie się formularza", async () => {
+      await loginPage.waitForForm();
+      await expect(loginPage.form).toBeVisible();
+      await expect(loginPage.emailInput).toBeVisible();
+      await expect(loginPage.passwordInput).toBeVisible();
+      await expect(loginPage.submitButton).toBeVisible();
+    });
+
+    // Step 3: Fill in credentials
+    await test.step("3. Uzupełnij dane formularza - login i hasło", async () => {
+      await loginPage.fillEmail(email);
+      await expect(loginPage.emailInput).toHaveValue(email);
+
+      await loginPage.fillPassword(password);
+      await expect(loginPage.passwordInput).toHaveValue(password);
+
+      // Verify no validation errors (immediate check is OK here since we're checking for absence)
+      await expect(loginPage.emailError).not.toBeVisible();
+      await expect(loginPage.passwordError).not.toBeVisible();
+    });
+
+    // Step 4: Submit the form
+    await test.step("4. Użyj przycisku Zaloguj", async () => {
+      await expect(loginPage.submitButton).toBeEnabled();
+      await loginPage.submit();
+    });
+
+    // Step 5: Verify dashboard loaded
+    await test.step("5. Poczekaj czy otworzy się strona główna (Dashboard)", async () => {
+      await loginPage.waitForDashboard();
+
+      const dashboardPage = page.getByTestId("dashboard-page");
+      await expect(dashboardPage).toBeVisible();
+
+      const dashboardHeading = page.getByTestId("dashboard-heading");
+      await expect(dashboardHeading).toBeVisible();
+      await expect(dashboardHeading).toHaveText("Dashboard");
+    });
   });
 
   test("should show validation error for empty email", async () => {
@@ -38,13 +78,12 @@ test.describe("Login Page", () => {
     await loginPage.waitForForm();
     const { expectedError } = validationCases.emptyEmail;
 
-    // Act
-    await loginPage.emailInput.focus();
-    await loginPage.emailInput.blur();
+    // Act - trigger validation and wait for React state update
+    await loginPage.triggerEmailValidation();
 
-    // Assert
-    expect(await loginPage.hasEmailError()).toBe(true);
-    expect(await loginPage.getEmailError()).toContain(expectedError);
+    // Assert - use Playwright's built-in waiting assertions
+    await expect(loginPage.emailError).toBeVisible();
+    await expect(loginPage.emailError).toContainText(expectedError);
   });
 
   test("should show validation error for invalid email format", async () => {
@@ -55,10 +94,12 @@ test.describe("Login Page", () => {
     // Act
     await loginPage.fillEmail(email);
     await loginPage.emailInput.blur();
+    // Wait for React state update
+    await loginPage.page.waitForTimeout(100);
 
-    // Assert
-    expect(await loginPage.hasEmailError()).toBe(true);
-    expect(await loginPage.getEmailError()).toContain(expectedError);
+    // Assert - use Playwright's built-in waiting assertions
+    await expect(loginPage.emailError).toBeVisible();
+    await expect(loginPage.emailError).toContainText(expectedError);
   });
 
   test("should show validation error for empty password", async () => {
@@ -66,13 +107,12 @@ test.describe("Login Page", () => {
     await loginPage.waitForForm();
     const { expectedError } = validationCases.emptyPassword;
 
-    // Act
-    await loginPage.passwordInput.focus();
-    await loginPage.passwordInput.blur();
+    // Act - trigger validation and wait for React state update
+    await loginPage.triggerPasswordValidation();
 
-    // Assert
-    expect(await loginPage.hasPasswordError()).toBe(true);
-    expect(await loginPage.getPasswordError()).toContain(expectedError);
+    // Assert - use Playwright's built-in waiting assertions
+    await expect(loginPage.passwordError).toBeVisible();
+    await expect(loginPage.passwordError).toContainText(expectedError);
   });
 
   test("should show error banner for invalid credentials", async () => {
@@ -82,13 +122,14 @@ test.describe("Login Page", () => {
     // Act
     await loginPage.login(email, password);
 
-    // Assert
-    await expect(loginPage.errorBanner).toBeVisible();
+    // Assert - wait for server response and error banner to appear
+    // Increased timeout for potential server latency
+    await expect(loginPage.errorBanner).toBeVisible({ timeout: 10000 });
     const errorMessage = await loginPage.getErrorMessage();
     expect(errorMessage).toBeTruthy();
   });
 
-  test.skip("should show loading state during login", async () => {
+  test("should show loading state during login", async () => {
     // Arrange
     const { email, password } = validUser;
     await loginPage.waitForForm();
@@ -140,12 +181,13 @@ test.describe("Login Page", () => {
     const email = "wrong@example.com";
     const password = "WrongPassword123";
     await loginPage.login(email, password);
-    await expect(loginPage.errorBanner).toBeVisible();
+    // Wait for error banner to appear with increased timeout for server response
+    await expect(loginPage.errorBanner).toBeVisible({ timeout: 10000 });
 
     // Act
     await loginPage.fillEmail("new@example.com");
 
-    // Assert
+    // Assert - wait for React to update and hide the banner
     await expect(loginPage.errorBanner).not.toBeVisible();
   });
 });

@@ -1,4 +1,4 @@
-import { type Page, type Locator } from "@playwright/test";
+import { type Page, type Locator, expect } from "@playwright/test";
 
 /**
  * Page Object Model for Dashboard Page
@@ -35,17 +35,26 @@ export class DashboardPage {
 
   /**
    * Navigate to dashboard page
+   * Waits for network to be idle to ensure React hydration is complete
    */
   async goto() {
-    await this.page.goto("/");
+    await this.page.goto("/", { waitUntil: "networkidle" });
   }
 
   /**
    * Wait for dashboard page to be fully loaded
+   * Checks for dashboard URL (accepts both "/" and "") and heading visibility
+   * Ensures React hydration is complete before proceeding
    */
   async waitForLoad() {
+    await this.page.waitForURL(
+      (url) => url.pathname === "/" || url.pathname === "",
+      { waitUntil: "networkidle" }
+    );
     await this.container.waitFor({ state: "visible" });
     await this.heading.waitFor({ state: "visible" });
+    // Ensure header button is ready for interaction
+    await expect(this.createDeckButton).toBeEnabled();
   }
 
   /**
@@ -56,16 +65,40 @@ export class DashboardPage {
   }
 
   /**
+   * Check if empty state button is visible
+   * Waits for page load and checks if "Create First Deck" button is available
+   * Returns false if button is not visible (e.g., when decks already exist)
+   * 
+   * @param timeout - Optional timeout in milliseconds (default: 5000)
+   * @returns Promise<boolean> - true if button is visible, false otherwise
+   */
+  async isEmptyStateVisible(timeout: number = 5000): Promise<boolean> {
+    try {
+      await this.createFirstDeckButton.waitFor({ 
+        state: "visible", 
+        timeout 
+      });
+      return true;
+    } catch {
+      return false;
+    }
+  }
+
+  /**
    * Open create deck dialog using header button
+   * Waits for button to be ready before clicking
    */
   async openCreateDeckDialog() {
+    await expect(this.createDeckButton).toBeEnabled();
     await this.createDeckButton.click();
   }
 
   /**
    * Open create deck dialog using empty state button
+   * Waits for button to be ready before clicking
    */
   async openCreateDeckDialogFromEmptyState() {
+    await expect(this.createFirstDeckButton).toBeEnabled();
     await this.createFirstDeckButton.click();
   }
 
@@ -95,10 +128,17 @@ export class DashboardPage {
 
   /**
    * Wait for deck card with specific name to appear
-   * @param deckName - The name of the deck to wait for
+   * Uses exact text match to avoid false positives when multiple decks exist
+   * 
+   * @param deckName - The exact name of the deck to wait for
+   * @param timeout - Optional timeout in milliseconds (default: 10000)
    */
-  async waitForDeckCardByName(deckName: string) {
-    await this.page.getByTestId("deck-card-name").filter({ hasText: deckName }).first().waitFor({ state: "visible" });
+  async waitForDeckCardByName(deckName: string, timeout: number = 10000) {
+    // Use getByText for exact match within deck card name elements
+    const deckCard = this.page
+      .getByTestId("deck-card-name")
+      .filter({ hasText: new RegExp(`^${deckName.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}$`) });
+    await deckCard.first().waitFor({ state: "visible", timeout });
   }
 }
 

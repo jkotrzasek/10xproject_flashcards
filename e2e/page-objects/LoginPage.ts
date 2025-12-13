@@ -1,4 +1,4 @@
-import { type Page, type Locator } from "@playwright/test";
+import { type Page, type Locator, expect } from "@playwright/test";
 
 /**
  * Page Object Model for Login Page
@@ -12,6 +12,10 @@ export class LoginPage {
   readonly emailInput: Locator;
   readonly passwordInput: Locator;
   readonly submitButton: Locator;
+
+  // Validation error elements
+  readonly emailError: Locator;
+  readonly passwordError: Locator;
 
   // Banner elements
   readonly errorBanner: Locator;
@@ -29,6 +33,10 @@ export class LoginPage {
     this.passwordInput = page.getByTestId("login-password-input");
     this.submitButton = page.getByTestId("login-submit-button");
 
+    // Validation errors
+    this.emailError = page.locator("#email-error");
+    this.passwordError = page.locator("#password-error");
+
     // Banners
     this.errorBanner = page.getByTestId("auth-error-banner");
     this.successBanner = page.getByTestId("auth-success-banner");
@@ -39,16 +47,22 @@ export class LoginPage {
 
   /**
    * Navigate to login page
+   * Waits for network to be idle to ensure React hydration is complete
    */
   async goto() {
-    await this.page.goto("/auth/login");
+    await this.page.goto("/auth/login", { waitUntil: "networkidle" });
   }
 
   /**
-   * Wait for login form to be visible
+   * Wait for login form to be visible and interactive
+   * Ensures React hydration is complete before interacting with form
    */
   async waitForForm() {
     await this.form.waitFor({ state: "visible" });
+    // Ensure inputs are ready for interaction (React hydrated)
+    await this.emailInput.waitFor({ state: "visible" });
+    await this.passwordInput.waitFor({ state: "visible" });
+    await expect(this.submitButton).toBeEnabled();
   }
 
   /**
@@ -69,8 +83,17 @@ export class LoginPage {
 
   /**
    * Click submit button to log in
+   * Waits for button to be fully interactive to ensure React hydration is complete
    */
   async submit() {
+    // Wait for button to be enabled and visible (ensures React is hydrated)
+    await this.submitButton.waitFor({ state: "visible" });
+    await this.page.waitForLoadState("networkidle");
+    
+    // Ensure button is not disabled before clicking
+    await expect(this.submitButton).toBeEnabled();
+    
+    // Click the button
     await this.submitButton.click();
   }
 
@@ -89,9 +112,13 @@ export class LoginPage {
   /**
    * Wait for successful redirect to dashboard
    * Checks for dashboard page URL and heading
+   * Accepts both "/" and "" (with or without trailing slash)
    */
   async waitForDashboard() {
-    await this.page.waitForURL("/", { waitUntil: "load" });
+    await this.page.waitForURL(
+      (url) => url.pathname === "/" || url.pathname === "",
+      { waitUntil: "networkidle" }
+    );
     await this.page.getByTestId("dashboard-heading").waitFor({ state: "visible" });
   }
 
@@ -175,30 +202,74 @@ export class LoginPage {
   }
 
   /**
-   * Check if email field has validation error
+   * Wait for email validation error to appear
+   * Use this instead of hasEmailError() for reliable assertions
    */
-  async hasEmailError() {
-    return await this.page.locator("#email-error").isVisible();
+  async waitForEmailError() {
+    await this.emailError.waitFor({ state: "visible" });
   }
 
   /**
-   * Check if password field has validation error
+   * Wait for password validation error to appear
+   * Use this instead of hasPasswordError() for reliable assertions
+   */
+  async waitForPasswordError() {
+    await this.passwordError.waitFor({ state: "visible" });
+  }
+
+  /**
+   * Check if email field has validation error (immediate check)
+   * @deprecated Use expectEmailError() or waitForEmailError() for reliable assertions
+   */
+  async hasEmailError() {
+    return await this.emailError.isVisible();
+  }
+
+  /**
+   * Check if password field has validation error (immediate check)
+   * @deprecated Use expectPasswordError() or waitForPasswordError() for reliable assertions
    */
   async hasPasswordError() {
-    return await this.page.locator("#password-error").isVisible();
+    return await this.passwordError.isVisible();
   }
 
   /**
    * Get email field validation error text
+   * Waits for error element to be visible before reading
    */
   async getEmailError() {
-    return await this.page.locator("#email-error").textContent();
+    await this.emailError.waitFor({ state: "visible" });
+    return await this.emailError.textContent();
   }
 
   /**
    * Get password field validation error text
+   * Waits for error element to be visible before reading
    */
   async getPasswordError() {
-    return await this.page.locator("#password-error").textContent();
+    await this.passwordError.waitFor({ state: "visible" });
+    return await this.passwordError.textContent();
+  }
+
+  /**
+   * Trigger validation on email input by focusing and blurring
+   * Waits for React state to update
+   */
+  async triggerEmailValidation() {
+    await this.emailInput.focus();
+    await this.emailInput.blur();
+    // Small delay for React state update
+    await this.page.waitForTimeout(100);
+  }
+
+  /**
+   * Trigger validation on password input by focusing and blurring
+   * Waits for React state to update
+   */
+  async triggerPasswordValidation() {
+    await this.passwordInput.focus();
+    await this.passwordInput.blur();
+    // Small delay for React state update
+    await this.page.waitForTimeout(100);
   }
 }

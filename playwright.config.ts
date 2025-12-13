@@ -38,10 +38,10 @@ export default defineConfig({
   /* Reporter to use. See https://playwright.dev/docs/test-reporters */
   reporter: process.env.CI ? "github" : "html",
   /* Global timeout for each test */
-  timeout: 30 * 1000,
-  /* Expect timeout */
+  timeout: 60 * 1000,
+  /* Expect timeout - increased for server cold starts and React hydration */
   expect: {
-    timeout: 5 * 1000,
+    timeout: 10 * 1000,
   },
   /* Shared settings for all the projects below. See https://playwright.dev/docs/api/class-testoptions. */
   use: {
@@ -53,17 +53,27 @@ export default defineConfig({
     screenshot: "only-on-failure",
     /* Video on failure */
     video: "retain-on-failure",
-    /* Navigation timeout */
-    navigationTimeout: 15 * 1000,
+    /* Navigation timeout - increased for server cold starts */
+    navigationTimeout: 30 * 1000,
     /* Action timeout */
-    actionTimeout: 10 * 1000,
+    actionTimeout: 15 * 1000,
   },
 
   /* Configure projects for major browsers */
   projects: [
     {
-      name: "chromium",
-      use: { ...devices["Desktop Chrome"] },
+      name: 'setup db',
+      testMatch: /global\.setup\.ts/,
+      teardown: 'cleanup db',
+    },
+    {
+      name: 'cleanup db',
+      testMatch: /global\.teardown\.ts/,
+    },
+    {
+      name: 'chromium',
+      use: { ...devices['Desktop Chrome'] },
+      dependencies: ['setup db'],
     },
   ],
 

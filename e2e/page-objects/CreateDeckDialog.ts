@@ -1,4 +1,4 @@
-import { type Page, type Locator } from "@playwright/test";
+import { type Page, type Locator, expect } from "@playwright/test";
 
 /**
  * Page Object Model for Create Deck Dialog
@@ -23,10 +23,14 @@ export class CreateDeckDialog {
   }
 
   /**
-   * Wait for dialog to be visible
+   * Wait for dialog to be visible and interactive
+   * Ensures React hydration is complete
    */
   async waitForDialog() {
     await this.dialog.waitFor({ state: "visible" });
+    await this.nameInput.waitFor({ state: "visible" });
+    await expect(this.saveButton).toBeVisible();
+    await expect(this.cancelButton).toBeVisible();
   }
 
   /**
@@ -38,23 +42,29 @@ export class CreateDeckDialog {
 
   /**
    * Fill deck name input
+   * Waits for input to be ready before filling
    * @param name - The name to enter
    */
   async fillDeckName(name: string) {
+    await this.nameInput.waitFor({ state: "visible" });
     await this.nameInput.fill(name);
   }
 
   /**
    * Click save button to create deck
+   * Waits for button to be enabled before clicking
    */
   async save() {
+    await expect(this.saveButton).toBeEnabled();
     await this.saveButton.click();
   }
 
   /**
    * Click cancel button to close dialog
+   * Waits for button to be enabled before clicking
    */
   async cancel() {
+    await expect(this.cancelButton).toBeEnabled();
     await this.cancelButton.click();
   }
 
