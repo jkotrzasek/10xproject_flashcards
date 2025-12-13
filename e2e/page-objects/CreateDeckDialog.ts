@@ -31,6 +31,8 @@ export class CreateDeckDialog {
     await this.nameInput.waitFor({ state: "visible" });
     await expect(this.saveButton).toBeVisible();
     await expect(this.cancelButton).toBeVisible();
+    // Wait for input to be focused (autoFocus) - signals React hydration is complete
+    await expect(this.nameInput).toBeFocused();
   }
 
   /**
