@@ -55,7 +55,7 @@ function validatePassword(password: string): string | undefined {
     return "Hasło musi zawierać co najmniej jedną dużą literę";
   }
 
-  if (!/[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/.test(password)) {
+  if (!/[!@#$%^&*()_+=[\]{};':"\\|,.<>/?-]/.test(password)) {
     return "Hasło musi zawierać co najmniej jeden znak specjalny";
   }
 
@@ -145,11 +145,7 @@ export function RegisterForm() {
 
         // Clear field error on change
         if (errors[field]) {
-          setErrors((prev) => {
-            const newErrors = { ...prev };
-            delete newErrors[field];
-            return newErrors;
-          });
+          setErrors((prev) => ({ ...prev, [field]: undefined }));
         }
 
         // Clear submit error on any change

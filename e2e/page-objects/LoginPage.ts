@@ -89,10 +89,10 @@ export class LoginPage {
     // Wait for button to be enabled and visible (ensures React is hydrated)
     await this.submitButton.waitFor({ state: "visible" });
     await this.page.waitForLoadState("networkidle");
-    
+
     // Ensure button is not disabled before clicking
     await expect(this.submitButton).toBeEnabled();
-    
+
     // Click the button
     await this.submitButton.click();
   }
@@ -115,10 +115,7 @@ export class LoginPage {
    * Accepts both "/" and "" (with or without trailing slash)
    */
   async waitForDashboard() {
-    await this.page.waitForURL(
-      (url) => url.pathname === "/" || url.pathname === "",
-      { waitUntil: "networkidle" }
-    );
+    await this.page.waitForURL((url) => url.pathname === "/" || url.pathname === "", { waitUntil: "networkidle" });
     await this.page.getByTestId("dashboard-heading").waitFor({ state: "visible" });
   }
 
@@ -184,9 +181,9 @@ export class LoginPage {
    */
   async waitForLoadingState() {
     try {
-      await this.submitButton.getByText(/logowanie\.\.\./i).waitFor({ 
+      await this.submitButton.getByText(/logowanie\.\.\./i).waitFor({
         state: "visible",
-        timeout: 2000 
+        timeout: 2000,
       });
     } catch {
       // Loading state passed too quickly - acceptable on fast connections

@@ -1,18 +1,11 @@
-import type {
-  DeckCardViewModel,
-  DashboardState,
-  DialogState,
-} from "@/components/DashboardPage";
+import type { DeckCardViewModel, DashboardState, DialogState } from "@/components/DashboardPage";
 
 /**
  * Factory function for creating mock deck objects
  * @param id - Deck ID
  * @param overrides - Optional properties to override defaults
  */
-export const createMockDeck = (
-  id: number,
-  overrides?: Partial<DeckCardViewModel>
-): DeckCardViewModel => ({
+export const createMockDeck = (id: number, overrides?: Partial<DeckCardViewModel>): DeckCardViewModel => ({
   id,
   name: `Deck ${id}`,
   flashcard_count: 10,
@@ -101,4 +94,3 @@ export const dashboardStateFixtures = {
     decks: [deckFixtures.small, deckFixtures.mutating],
   } as DashboardState,
 };
-

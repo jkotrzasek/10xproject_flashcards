@@ -124,41 +124,26 @@ export default function DashboardPage() {
 
   // Handlery mutacji
   const handleCreateDeck = async (values: { name: string }) => {
-    try {
-      await createDeck(values);
-      handleCloseDialog();
-      refetch();
-      toast.success("Deck został utworzony");
-    } catch (err) {
-      // Błąd jest obsługiwany w dialugu i wyświetlany jako inline error
-      throw err;
-    }
+    await createDeck(values);
+    handleCloseDialog();
+    refetch();
+    toast.success("Deck został utworzony");
   };
 
   const handleUpdateDeck = async (values: { name: string }) => {
     if (!state.dialogState.deck) return;
-    try {
-      await updateDeck(state.dialogState.deck.id, values);
-      handleCloseDialog();
-      refetch();
-      toast.success("Deck został zaktualizowany");
-    } catch (err) {
-      // Błąd jest obsługiwany w dialugu i wyświetlany jako inline error
-      throw err;
-    }
+    await updateDeck(state.dialogState.deck.id, values);
+    handleCloseDialog();
+    refetch();
+    toast.success("Deck został zaktualizowany");
   };
 
   const handleDeleteDeck = async () => {
     if (!state.dialogState.deck) return;
-    try {
-      await deleteDeck(state.dialogState.deck.id);
-      handleCloseDialog();
-      refetch();
-      toast.success("Deck został usunięty");
-    } catch (err) {
-      // Błąd jest obsługiwany w dialugu i wyświetlany jako inline error
-      throw err;
-    }
+    await deleteDeck(state.dialogState.deck.id);
+    handleCloseDialog();
+    refetch();
+    toast.success("Deck został usunięty");
   };
 
   // Handlery nawigacji
@@ -171,7 +156,7 @@ export default function DashboardPage() {
   };
 
   const handleOpenUnassigned = () => {
-    window.location.href = `/decks/unassigned`;
+    window.location.href = "/decks/unassigned";
   };
 
   // Handlery sortowania
@@ -181,7 +166,7 @@ export default function DashboardPage() {
 
   // Handlery generacji AI
   const handleGenerateFlashcards = () => {
-    window.location.href = "/generator";
+    window.location.href = "/generator/";
   };
 
   // Obliczanie czy są jakieś fiszki ogólnie
@@ -196,7 +181,9 @@ export default function DashboardPage() {
         {/* Header Actions */}
         <div className="flex items-center justify-between mb-8">
           <div>
-            <h1 className="text-3xl font-bold text-foreground" data-testid="dashboard-heading">Dashboard</h1>
+            <h1 className="text-3xl font-bold text-foreground" data-testid="dashboard-heading">
+              Dashboard
+            </h1>
             <p className="text-muted-foreground mt-1">Zarządzaj swoimi deckami i fiszkami</p>
           </div>
           {!hasError && (

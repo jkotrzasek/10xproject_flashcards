@@ -112,11 +112,7 @@ export function LoginForm({ showEmailConfirmed = false }: LoginFormProps) {
 
         // Clear field error on change
         if (errors[field]) {
-          setErrors((prev) => {
-            const newErrors = { ...prev };
-            delete newErrors[field];
-            return newErrors;
-          });
+          setErrors((prev) => ({ ...prev, [field]: undefined }));
         }
 
         // Clear submit error on any change

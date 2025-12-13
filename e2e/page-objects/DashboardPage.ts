@@ -47,10 +47,7 @@ export class DashboardPage {
    * Ensures React hydration is complete before proceeding
    */
   async waitForLoad() {
-    await this.page.waitForURL(
-      (url) => url.pathname === "/" || url.pathname === "",
-      { waitUntil: "networkidle" }
-    );
+    await this.page.waitForURL((url) => url.pathname === "/" || url.pathname === "", { waitUntil: "networkidle" });
     await this.container.waitFor({ state: "visible" });
     await this.heading.waitFor({ state: "visible" });
     // Ensure header button is ready for interaction
@@ -68,15 +65,15 @@ export class DashboardPage {
    * Check if empty state button is visible
    * Waits for page load and checks if "Create First Deck" button is available
    * Returns false if button is not visible (e.g., when decks already exist)
-   * 
+   *
    * @param timeout - Optional timeout in milliseconds (default: 5000)
    * @returns Promise<boolean> - true if button is visible, false otherwise
    */
-  async isEmptyStateVisible(timeout: number = 5000): Promise<boolean> {
+  async isEmptyStateVisible(timeout = 5000): Promise<boolean> {
     try {
-      await this.createFirstDeckButton.waitFor({ 
-        state: "visible", 
-        timeout 
+      await this.createFirstDeckButton.waitFor({
+        state: "visible",
+        timeout,
       });
       return true;
     } catch {
@@ -129,15 +126,15 @@ export class DashboardPage {
   /**
    * Wait for deck card with specific name to appear
    * Uses exact text match to avoid false positives when multiple decks exist
-   * 
+   *
    * @param deckName - The exact name of the deck to wait for
    * @param timeout - Optional timeout in milliseconds (default: 10000)
    */
-  async waitForDeckCardByName(deckName: string, timeout: number = 10000) {
+  async waitForDeckCardByName(deckName: string, timeout = 10000) {
     // Use getByText for exact match within deck card name elements
     const deckCard = this.page
       .getByTestId("deck-card-name")
-      .filter({ hasText: new RegExp(`^${deckName.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}$`) });
+      .filter({ hasText: new RegExp(`^${deckName.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}$`) });
     await deckCard.first().waitFor({ state: "visible", timeout });
   }
 }

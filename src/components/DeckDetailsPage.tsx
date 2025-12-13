@@ -191,7 +191,7 @@ export default function DeckDetailsPage({ deckId }: DeckDetailsPageProps) {
     refetch: refetchFlashcards,
   } = useDeckFlashcards(isValidDeckId ? deckId : 0);
 
-  const { updateFlashcard, deleteFlashcard, isUpdating, isDeleting } = useDeckFlashcardMutations(deckId);
+  const { updateFlashcard, deleteFlashcard, isUpdating, isDeleting } = useDeckFlashcardMutations();
 
   const { resetProgress, isResettingProgress } = useDeckMutations(deckId, {
     onResetSuccess: () => {
@@ -199,6 +199,36 @@ export default function DeckDetailsPage({ deckId }: DeckDetailsPageProps) {
       refetchFlashcards();
     },
   });
+
+  // Synchronizacja danych decku z hooka do reducera
+  useEffect(() => {
+    if (deckError) {
+      dispatch({ type: "SET_DECK_ERROR", payload: deckError.message });
+    } else if (!isDeckLoading && deckData) {
+      // Sync deck data with isResettingProgress from hook
+      dispatch({
+        type: "SET_DECK_SUCCESS",
+        payload: { ...deckData, isResettingProgress },
+      });
+    }
+  }, [deckData, isDeckLoading, deckError, isResettingProgress]);
+
+  // Synchronizacja danych fiszek z hooka do reducera
+  useEffect(() => {
+    if (flashcardsError) {
+      dispatch({ type: "SET_FLASHCARDS_ERROR", payload: flashcardsError.message });
+    } else if (!isFlashcardsLoading) {
+      dispatch({ type: "SET_FLASHCARDS_SUCCESS", payload: flashcardsData });
+    }
+  }, [flashcardsData, isFlashcardsLoading, flashcardsError]);
+
+  useEffect(() => {
+    dispatch({ type: "SET_DECK_LOADING", payload: isDeckLoading });
+  }, [isDeckLoading]);
+
+  useEffect(() => {
+    dispatch({ type: "SET_FLASHCARDS_LOADING", payload: isFlashcardsLoading });
+  }, [isFlashcardsLoading]);
 
   // Jeśli deckId jest nieprawidłowy, pokaż błąd
   if (!isValidDeckId) {
@@ -233,36 +263,6 @@ export default function DeckDetailsPage({ deckId }: DeckDetailsPageProps) {
       </>
     );
   }
-
-  // Synchronizacja danych decku z hooka do reducera
-  useEffect(() => {
-    if (deckError) {
-      dispatch({ type: "SET_DECK_ERROR", payload: deckError.message });
-    } else if (!isDeckLoading && deckData) {
-      // Sync deck data with isResettingProgress from hook
-      dispatch({
-        type: "SET_DECK_SUCCESS",
-        payload: { ...deckData, isResettingProgress },
-      });
-    }
-  }, [deckData, isDeckLoading, deckError, isResettingProgress]);
-
-  // Synchronizacja danych fiszek z hooka do reducera
-  useEffect(() => {
-    if (flashcardsError) {
-      dispatch({ type: "SET_FLASHCARDS_ERROR", payload: flashcardsError.message });
-    } else if (!isFlashcardsLoading) {
-      dispatch({ type: "SET_FLASHCARDS_SUCCESS", payload: flashcardsData });
-    }
-  }, [flashcardsData, isFlashcardsLoading, flashcardsError]);
-
-  useEffect(() => {
-    dispatch({ type: "SET_DECK_LOADING", payload: isDeckLoading });
-  }, [isDeckLoading]);
-
-  useEffect(() => {
-    dispatch({ type: "SET_FLASHCARDS_LOADING", payload: isFlashcardsLoading });
-  }, [isFlashcardsLoading]);
 
   const visibleFlashcards = state.flashcards.slice(0, state.visibleCount);
   const hasMore = state.visibleCount < state.flashcards.length;

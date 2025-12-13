@@ -4,15 +4,15 @@ import path from "path";
 
 /**
  * Load test environment variables from .env.test
- * 
+ *
  * Required E2E variables:
  * - E2E_USERNAME_ID: Test user UUID
  * - E2E_USERNAME: Test user email address
  * - E2E_PASSWORD: Test user password
- * 
+ *
  * Additional application variables (SUPABASE_URL, OPENROUTER_API_KEY, etc.)
  * are also loaded from .env.test for the test environment.
- * 
+ *
  * To setup:
  * 1. Copy .env.test.example to .env.test
  * 2. Fill in your test credentials and application config
@@ -62,18 +62,18 @@ export default defineConfig({
   /* Configure projects for major browsers */
   projects: [
     {
-      name: 'setup db',
+      name: "setup db",
       testMatch: /global\.setup\.ts/,
-      teardown: 'cleanup db',
+      teardown: "cleanup db",
     },
     {
-      name: 'cleanup db',
+      name: "cleanup db",
       testMatch: /global\.teardown\.ts/,
     },
     {
-      name: 'chromium',
-      use: { ...devices['Desktop Chrome'] },
-      dependencies: ['setup db'],
+      name: "chromium",
+      use: { ...devices["Desktop Chrome"] },
+      dependencies: ["setup db"],
     },
   ],
 

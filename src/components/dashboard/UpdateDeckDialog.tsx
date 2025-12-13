@@ -127,7 +127,6 @@ export function UpdateDeckDialog({ open, deck, onClose, onSubmit }: UpdateDeckDi
                 onChange={handleNameChange}
                 disabled={isSubmitting}
                 maxLength={30}
-                autoFocus
               />
               {error && <p className="text-sm text-destructive">{error}</p>}
             </div>

@@ -46,13 +46,14 @@ export function DeckCard({ deck, onOpen, onLearn, onEdit, onDelete }: DeckCardPr
     <Card className="hover:shadow-md transition-shadow" data-testid={`deck-card-${deck.id}`}>
       <CardHeader>
         <div className="flex items-start justify-between gap-2">
-          <h3
-            className="text-lg font-semibold text-foreground cursor-pointer"
+          <button
+            type="button"
+            className="text-lg font-semibold text-foreground cursor-pointer hover:underline text-left"
             onClick={handleOpenClick}
             data-testid="deck-card-name"
           >
             {deck.name}
-          </h3>
+          </button>
           <div className="flex gap-1">
             <Button
               variant="ghost"

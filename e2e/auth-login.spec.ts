@@ -137,17 +137,17 @@ test.describe("Login Page", () => {
     // Act
     await loginPage.fillEmail(email);
     await loginPage.fillPassword(password);
-    
+
     // Submit and immediately check (race condition - may be too fast)
     const submitPromise = loginPage.submit();
-    
+
     // Assert - try to catch loading state (may already be done)
     try {
       await expect(loginPage.submitButton).toBeDisabled({ timeout: 1000 });
     } catch {
       // Loading was too fast, that's ok
     }
-    
+
     await submitPromise;
   });
 

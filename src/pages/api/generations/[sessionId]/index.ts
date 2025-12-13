@@ -52,8 +52,7 @@ export const GET: APIRoute = async ({ params, locals }) => {
     let metadata: GenerationMetadataDto | null;
     try {
       metadata = await getGenerationMetadata(supabase, locals.user.id, sessionId);
-    } catch (error) {
-      console.error("Error fetching generation metadata:", error);
+    } catch {
       return new Response(
         JSON.stringify({
           error: {
@@ -87,10 +86,7 @@ export const GET: APIRoute = async ({ params, locals }) => {
       status: 200,
       headers: { "Content-Type": "application/json" },
     });
-  } catch (error) {
-    // Catch-all for unexpected errors
-    console.error("Unexpected error in GET /api/generations/:sessionId:", error);
-
+  } catch {
     return new Response(
       JSON.stringify({
         error: {

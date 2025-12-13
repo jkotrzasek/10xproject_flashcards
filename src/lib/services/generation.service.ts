@@ -74,7 +74,6 @@ export const getDailyGenerationsCount = async (supabase: SupabaseClient, userId:
     .gte("created_at", todayISO);
 
   if (error) {
-    console.error("Error fetching daily generations count:", error);
     throw new Error("Failed to check daily limit");
   }
 
@@ -128,7 +127,6 @@ export const checkDuplicateGeneration = async (
 
   if (error && error.code !== "PGRST116") {
     // PGRST116 = no rows returned, which is expected
-    console.error("Error checking duplicate generation:", error);
     throw new Error("Failed to check for duplicates");
   }
 
@@ -164,7 +162,6 @@ export const createPendingGeneration = async (
   const { data, error } = await supabase.from("generations").insert(generationData).select("session_id").single();
 
   if (error) {
-    console.error("Error creating pending generation:", error);
     throw new Error("Failed to create generation record");
   }
 
@@ -193,7 +190,6 @@ export const finalizeGenerationSuccess = async (
     .eq("session_id", sessionId);
 
   if (error) {
-    console.error("Error finalizing generation success:", error);
     throw new Error("Failed to update generation status");
   }
 };
@@ -218,7 +214,6 @@ export const finalizeGenerationError = async (
     .eq("session_id", sessionId);
 
   if (updateError) {
-    console.error("Error updating generation to error status:", updateError);
     throw new Error("Failed to update generation status");
   }
 
@@ -230,12 +225,7 @@ export const finalizeGenerationError = async (
     message: errorMessage,
   };
 
-  const { error: insertError } = await supabase.from("generation_error").insert(errorData);
-
-  if (insertError) {
-    console.error("Error creating generation error record:", insertError);
-    // Don't throw here - generation status is already updated
-  }
+  await supabase.from("generation_error").insert(errorData);
 };
 
 /**
@@ -324,16 +314,24 @@ export const generateFlashcards = async (inputText: string): Promise<FlashcardPr
 
     // Handle known error codes
     if (error instanceof Error) {
-      if (Object.values(GenerationErrorCodes).includes(error.message as any)) {
+      if ((Object.values(GenerationErrorCodes) as string[]).includes(error.message)) {
         throw error;
       }
     }
 
     // Unknown errors -> generic generation error
-    console.error("Unexpected error in generateFlashcards:", error);
     throw new Error(GenerationErrorCodes.AI_GENERATION_ERROR);
   }
 };
+
+interface RawFlashcardResponse {
+  flashcards?: unknown[];
+}
+
+interface RawFlashcard {
+  front?: unknown;
+  back?: unknown;
+}
 
 /**
  * Parse flashcard response JSON
@@ -341,24 +339,28 @@ export const generateFlashcards = async (inputText: string): Promise<FlashcardPr
  */
 const parseFlashcardResponse = (content: string): FlashcardProposalDto[] => {
   try {
-    const parsed = JSON.parse(content);
+    const parsed: unknown = JSON.parse(content);
 
     // Validate response structure
     if (!parsed || typeof parsed !== "object") {
       throw new Error("Response is not an object");
     }
 
-    if (!Array.isArray(parsed.flashcards)) {
+    const response = parsed as RawFlashcardResponse;
+
+    if (!Array.isArray(response.flashcards)) {
       throw new Error("Response does not contain flashcards array");
     }
 
     // Map to FlashcardProposalDto[]
-    return parsed.flashcards.map((card: any) => ({
-      front: String(card.front || ""),
-      back: String(card.back || ""),
-    }));
-  } catch (error) {
-    console.error("Failed to parse flashcard response:", error);
+    return response.flashcards.map((card) => {
+      const rawCard = card as RawFlashcard;
+      return {
+        front: String(rawCard.front || ""),
+        back: String(rawCard.back || ""),
+      };
+    });
+  } catch {
     throw new Error(GenerationErrorCodes.AI_RESPONSE_INVALID);
   }
 };
@@ -391,7 +393,6 @@ export const getGenerationMetadata = async (
     if (error.code === "PGRST116") {
       return null;
     }
-    console.error("Error fetching generation metadata:", error);
     throw new Error("Failed to fetch generation metadata");
   }
 
@@ -433,7 +434,6 @@ export const getGenerationHistory = async (
     .limit(100); // Prevent DOS with large result sets
 
   if (error) {
-    console.error("Error fetching generation history:", error);
     throw new Error("Failed to fetch generation history");
   }
 
@@ -468,7 +468,6 @@ export const updateGenerationAcceptedTotal = async (
     if (fetchError.code === "PGRST116") {
       throw new Error("NOT_FOUND");
     }
-    console.error("Error fetching generation for update:", fetchError);
     throw new Error("DATABASE_ERROR");
   }
 
@@ -492,7 +491,6 @@ export const updateGenerationAcceptedTotal = async (
     .eq("user_id", userId);
 
   if (updateError) {
-    console.error("Error updating accepted_total:", updateError);
     throw new Error("DATABASE_ERROR");
   }
 };

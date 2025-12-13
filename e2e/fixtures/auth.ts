@@ -3,7 +3,7 @@ import { validateE2EEnvironment } from "../helpers/env";
 /**
  * Authentication Fixtures
  * Reusable test data and helpers for authentication tests
- * 
+ *
  * Credentials are loaded from .env.test file:
  * - E2E_USERNAME_ID - test user UUID
  * - E2E_USERNAME - test user email
@@ -27,9 +27,9 @@ validateE2EEnvironment();
  * Make sure .env.test is configured with E2E_USERNAME_ID, E2E_USERNAME and E2E_PASSWORD
  */
 export const validUser: TestCredentials = {
-  userId: process.env.E2E_USERNAME_ID!,
-  email: process.env.E2E_USERNAME!,
-  password: process.env.E2E_PASSWORD!,
+  userId: process.env.E2E_USERNAME_ID || "",
+  email: process.env.E2E_USERNAME || "",
+  password: process.env.E2E_PASSWORD || "",
 };
 
 /**

@@ -33,8 +33,7 @@ export const GET: APIRoute = async ({ locals }) => {
     let limitMetadata: GenerationLimitDto;
     try {
       limitMetadata = await getDailyGenerationLimitsMetadata(supabase, locals.user.id);
-    } catch (error) {
-      console.error("Error fetching generation limits:", error);
+    } catch {
       return new Response(
         JSON.stringify({
           error: {
@@ -55,10 +54,7 @@ export const GET: APIRoute = async ({ locals }) => {
       status: 200,
       headers: { "Content-Type": "application/json" },
     });
-  } catch (error) {
-    // Catch-all for unexpected errors
-    console.error("Unexpected error in GET /api/generations/limits:", error);
-
+  } catch {
     return new Response(
       JSON.stringify({
         error: {

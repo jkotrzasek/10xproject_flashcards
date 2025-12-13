@@ -95,8 +95,7 @@ export const POST: APIRoute = async ({ request, locals }) => {
     let sessionId: number;
     try {
       sessionId = await createPendingGeneration(supabase, locals.user.id, input_text);
-    } catch (error) {
-      console.error("Failed to create pending generation:", error);
+    } catch {
       return new Response(
         JSON.stringify({
           error: {
@@ -136,12 +135,6 @@ export const POST: APIRoute = async ({ request, locals }) => {
         }
       }
 
-      // Log error details (without sensitive data)
-      console.error(`Generation failed for session ${sessionId}:`, {
-        errorCode,
-        errorType: error instanceof Error ? error.name : "Unknown",
-      });
-
       // Update generation record with error
       await finalizeGenerationError(supabase, sessionId, locals.user.id, errorCode, errorMessage);
 
@@ -159,8 +152,7 @@ export const POST: APIRoute = async ({ request, locals }) => {
     // Finalize generation with success
     try {
       await finalizeGenerationSuccess(supabase, sessionId, flashcardProposals.length);
-    } catch (error) {
-      console.error("Failed to finalize generation:", error);
+    } catch {
       // TODO: Fix in future versions - generation record will remain in "pending" status
       // This creates orphaned pending records in database but MVP can tolerate this
       // Generation succeeded and flashcards were generated successfully, so we still return success
@@ -180,10 +172,7 @@ export const POST: APIRoute = async ({ request, locals }) => {
       status: 200,
       headers: { "Content-Type": "application/json" },
     });
-  } catch (error) {
-    // Catch-all for unexpected errors
-    console.error("Unexpected error in POST /api/generations:", error);
-
+  } catch {
     return new Response(
       JSON.stringify({
         error: {
@@ -225,8 +214,7 @@ export const GET: APIRoute = async ({ locals }) => {
     let history: GenerationHistoryItemDto[];
     try {
       history = await getGenerationHistory(supabase, locals.user.id);
-    } catch (error) {
-      console.error("Error fetching generation history:", error);
+    } catch {
       return new Response(
         JSON.stringify({
           error: {
@@ -247,10 +235,7 @@ export const GET: APIRoute = async ({ locals }) => {
       status: 200,
       headers: { "Content-Type": "application/json" },
     });
-  } catch (error) {
-    // Catch-all for unexpected errors
-    console.error("Unexpected error in GET /api/generations:", error);
-
+  } catch {
     return new Response(
       JSON.stringify({
         error: {

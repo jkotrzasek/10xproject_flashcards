@@ -13,7 +13,6 @@
     "test": "npm run test:unit && npm run test:e2e",
     "test:unit": "vitest run",
     "test:e2e": "playwright test",
-    "test:e2e:verify": "node e2e/scripts/verify-env.mjs",
     "dev:e2e": "astro dev --mode test",
     "prepare": "husky"
   },

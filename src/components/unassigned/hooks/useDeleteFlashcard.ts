@@ -30,7 +30,6 @@ export function useDeleteFlashcard(): UseDeleteFlashcardReturn {
         if (response.status !== 204) {
           const errorData: ApiErrorResponse = await response.json();
           const errorMessage = errorData.error.message || "Nie udało się usunąć fiszki";
-          const errorCode = errorData.error.code;
 
           // Handle specific errors
           if (response.status === 404) {

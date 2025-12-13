@@ -48,7 +48,6 @@ export async function fetchReviewFlashcards(
       .eq("deck_id", deckId);
 
     if (countError) {
-      console.error("Database error in fetchReviewFlashcards (count):", countError);
       throw new Error(LearnErrorCodes.DATABASE_ERROR);
     }
 
@@ -77,7 +76,6 @@ export async function fetchReviewFlashcards(
       .limit(limit);
 
     if (priorityError) {
-      console.error("Database error in fetchReviewFlashcards (priority fetch):", priorityError);
       throw new Error(LearnErrorCodes.DATABASE_ERROR);
     }
 
@@ -111,7 +109,6 @@ export async function fetchReviewFlashcards(
       .limit(remaining);
 
     if (okError) {
-      console.error("Database error in fetchReviewFlashcards (OK fetch):", okError);
       throw new Error(LearnErrorCodes.DATABASE_ERROR);
     }
 
@@ -133,12 +130,11 @@ export async function fetchReviewFlashcards(
     return response;
   } catch (error) {
     // Re-throw known domain errors
-    if (error instanceof Error && Object.values(LearnErrorCodes).includes(error.message as any)) {
+    if (error instanceof Error && (Object.values(LearnErrorCodes) as string[]).includes(error.message)) {
       throw error;
     }
 
     // Log and wrap unexpected errors
-    console.error("Unexpected error in fetchReviewFlashcards:", error);
     throw new Error(LearnErrorCodes.DATABASE_ERROR);
   }
 }
@@ -172,7 +168,6 @@ export async function applyFlashcardReviews(
       .in("id", flashcardIds);
 
     if (fetchError) {
-      console.error("Database error in applyFlashcardReviews (fetch):", fetchError);
       throw new Error(LearnErrorCodes.DATABASE_ERROR);
     }
 
@@ -194,7 +189,6 @@ export async function applyFlashcardReviews(
         .eq("user_id", userId);
 
       if (error) {
-        console.error(`Database error updating flashcard ${review.flashcard_id}:`, error);
         throw error;
       }
 
@@ -214,12 +208,11 @@ export async function applyFlashcardReviews(
     return successCount;
   } catch (error) {
     // Re-throw known domain errors
-    if (error instanceof Error && Object.values(LearnErrorCodes).includes(error.message as any)) {
+    if (error instanceof Error && (Object.values(LearnErrorCodes) as string[]).includes(error.message)) {
       throw error;
     }
 
     // Log and wrap unexpected errors
-    console.error("Unexpected error in applyFlashcardReviews:", error);
     throw new Error(LearnErrorCodes.DATABASE_ERROR);
   }
 }

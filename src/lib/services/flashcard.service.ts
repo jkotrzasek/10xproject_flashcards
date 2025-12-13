@@ -101,7 +101,6 @@ export async function listFlashcards(
     const { data, error } = await query;
 
     if (error) {
-      console.error("Database error in listFlashcards:", error);
       throw new Error(FlashcardErrorCodes.DATABASE_ERROR);
     }
 
@@ -125,12 +124,11 @@ export async function listFlashcards(
     return flashcards;
   } catch (error) {
     // Re-throw known domain errors
-    if (error instanceof Error && Object.values(FlashcardErrorCodes).includes(error.message as any)) {
+    if (error instanceof Error && (Object.values(FlashcardErrorCodes) as string[]).includes(error.message)) {
       throw error;
     }
 
     // Log and wrap unexpected errors
-    console.error("Unexpected error in listFlashcards:", error);
     throw new Error(FlashcardErrorCodes.DATABASE_ERROR);
   }
 }
@@ -164,7 +162,6 @@ export async function getFlashcardById(
         throw new Error(FlashcardErrorCodes.FLASHCARD_NOT_FOUND);
       }
 
-      console.error("Database error in getFlashcardById:", error);
       throw new Error(FlashcardErrorCodes.DATABASE_ERROR);
     }
 
@@ -188,12 +185,11 @@ export async function getFlashcardById(
     return flashcard;
   } catch (error) {
     // Re-throw known domain errors
-    if (error instanceof Error && Object.values(FlashcardErrorCodes).includes(error.message as any)) {
+    if (error instanceof Error && (Object.values(FlashcardErrorCodes) as string[]).includes(error.message)) {
       throw error;
     }
 
     // Log and wrap unexpected errors
-    console.error("Unexpected error in getFlashcardById:", error);
     throw new Error(FlashcardErrorCodes.DATABASE_ERROR);
   }
 }
@@ -249,7 +245,6 @@ export async function createFlashcards(
         if (generationError.code === "PGRST116") {
           throw new Error(FlashcardErrorCodes.FLASHCARD_GENERATION_NOT_FOUND);
         }
-        console.error("Database error in createFlashcards (generation validation):", generationError);
         throw new Error(FlashcardErrorCodes.DATABASE_ERROR);
       }
 
@@ -273,12 +268,10 @@ export async function createFlashcards(
     const { data, error } = await supabase.from("flashcards").insert(flashcardsToInsert).select("id, front, back");
 
     if (error) {
-      console.error("Database error in createFlashcards (insert):", error);
       throw new Error(FlashcardErrorCodes.DATABASE_ERROR);
     }
 
     if (!data || data.length === 0) {
-      console.error("No data returned from createFlashcards insert");
       throw new Error(FlashcardErrorCodes.DATABASE_ERROR);
     }
 
@@ -292,12 +285,10 @@ export async function createFlashcards(
     return createdFlashcards;
   } catch (error) {
     // Re-throw known domain errors
-    if (error instanceof Error && Object.values(FlashcardErrorCodes).includes(error.message as any)) {
+    if (error instanceof Error && (Object.values(FlashcardErrorCodes) as string[]).includes(error.message)) {
       throw error;
     }
 
-    // Log and wrap unexpected errors
-    console.error("Unexpected error in createFlashcards:", error);
     throw new Error(FlashcardErrorCodes.DATABASE_ERROR);
   }
 }
@@ -336,7 +327,6 @@ export async function updateFlashcard(
       if (fetchError.code === "PGRST116") {
         throw new Error(FlashcardErrorCodes.FLASHCARD_NOT_FOUND);
       }
-      console.error("Database error in updateFlashcard (fetch):", fetchError);
       throw new Error(FlashcardErrorCodes.DATABASE_ERROR);
     }
 
@@ -389,7 +379,6 @@ export async function updateFlashcard(
       if (error.code === "PGRST116") {
         throw new Error(FlashcardErrorCodes.FLASHCARD_NOT_FOUND);
       }
-      console.error("Database error in updateFlashcard (update):", error);
       throw new Error(FlashcardErrorCodes.DATABASE_ERROR);
     }
 
@@ -404,12 +393,11 @@ export async function updateFlashcard(
     };
   } catch (error) {
     // Re-throw known domain errors
-    if (error instanceof Error && Object.values(FlashcardErrorCodes).includes(error.message as any)) {
+    if (error instanceof Error && (Object.values(FlashcardErrorCodes) as string[]).includes(error.message)) {
       throw error;
     }
 
     // Log and wrap unexpected errors
-    console.error("Unexpected error in updateFlashcard:", error);
     throw new Error(FlashcardErrorCodes.DATABASE_ERROR);
   }
 }
@@ -432,7 +420,6 @@ export async function deleteFlashcard(supabase: SupabaseClient, userId: string, 
       .eq("id", flashcardId);
 
     if (error) {
-      console.error("Database error in deleteFlashcard:", error);
       throw new Error(FlashcardErrorCodes.DATABASE_ERROR);
     }
 
@@ -442,12 +429,11 @@ export async function deleteFlashcard(supabase: SupabaseClient, userId: string, 
     }
   } catch (error) {
     // Re-throw known domain errors
-    if (error instanceof Error && Object.values(FlashcardErrorCodes).includes(error.message as any)) {
+    if (error instanceof Error && (Object.values(FlashcardErrorCodes) as string[]).includes(error.message)) {
       throw error;
     }
 
     // Log and wrap unexpected errors
-    console.error("Unexpected error in deleteFlashcard:", error);
     throw new Error(FlashcardErrorCodes.DATABASE_ERROR);
   }
 }

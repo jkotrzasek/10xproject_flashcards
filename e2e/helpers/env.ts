@@ -17,8 +17,7 @@ function getRequiredEnv(key: string): string {
   const value = process.env[key];
   if (!value) {
     throw new Error(
-      `Missing required environment variable: ${key}\n` +
-      `Please make sure .env.test file exists and contains ${key}`
+      `Missing required environment variable: ${key}\n` + `Please make sure .env.test file exists and contains ${key}`
     );
   }
   return value;
@@ -41,17 +40,17 @@ export function loadE2EEnvironment(): E2EEnvironment {
  */
 export function validateE2EEnvironment(): void {
   const required = ["E2E_USERNAME_ID", "E2E_USERNAME", "E2E_PASSWORD"];
-  
-  const missing = required.filter(key => !process.env[key]);
-  
+
+  const missing = required.filter((key) => !process.env[key]);
+
   if (missing.length > 0) {
     throw new Error(
       `Missing required environment variables: ${missing.join(", ")}\n\n` +
-      `Please create .env.test file with:\n` +
-      `E2E_USERNAME_ID=user-uuid-here\n` +
-      `E2E_USERNAME=your-test-email@example.com\n` +
-      `E2E_PASSWORD=your-test-password\n\n` +
-      `You can copy .env.test.example as a starting point.`
+        `Please create .env.test file with:\n` +
+        `E2E_USERNAME_ID=user-uuid-here\n` +
+        `E2E_USERNAME=your-test-email@example.com\n` +
+        `E2E_PASSWORD=your-test-password\n\n` +
+        `You can copy .env.test.example as a starting point.`
     );
   }
 }

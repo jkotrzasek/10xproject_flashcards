@@ -39,10 +39,7 @@ function formatDate(dateString: string): string {
   });
 }
 
-function formatLastRepetitionLabel(
-  lastRepetition: string | null,
-  spaceRepetition: SpaceRepetitionStatus
-): string | null {
+function formatLastRepetitionLabel(lastRepetition: string | null): string | null {
   if (!lastRepetition) return null;
 
   const date = new Date(lastRepetition);
@@ -86,7 +83,7 @@ function mapToViewModel(flashcard: FlashcardDto): DeckFlashcardVM {
     back: flashcard.back,
     source: getSourceLabel(flashcard.source),
     spaceRepetition: getSpaceRepetitionLabel(flashcard.space_repetition),
-    lastRepetitionLabel: formatLastRepetitionLabel(flashcard.last_repetition, flashcard.space_repetition),
+    lastRepetitionLabel: formatLastRepetitionLabel(flashcard.last_repetition),
     createdAtLabel: formatDate(flashcard.created_at),
     updatedAtLabel: formatDate(flashcard.updated_at),
     isDeleting: false,

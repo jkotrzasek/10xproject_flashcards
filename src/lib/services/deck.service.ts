@@ -36,24 +36,21 @@ export async function createDeck(supabase: SupabaseClient, userId: string, name:
         throw new Error(DeckErrorCodes.DECK_NAME_CONFLICT);
       }
 
-      console.error("Database error in createDeck:", error);
       throw new Error(DeckErrorCodes.DATABASE_ERROR);
     }
 
     if (!data) {
-      console.error("No data returned from createDeck insert");
       throw new Error(DeckErrorCodes.DATABASE_ERROR);
     }
 
     return { id: data.id };
   } catch (error) {
     // Re-throw known domain errors
-    if (error instanceof Error && Object.values(DeckErrorCodes).includes(error.message as any)) {
+    if (error instanceof Error && (Object.values(DeckErrorCodes) as string[]).includes(error.message)) {
       throw error;
     }
 
     // Log and wrap unexpected errors
-    console.error("Unexpected error in createDeck:", error);
     throw new Error(DeckErrorCodes.DATABASE_ERROR);
   }
 }
@@ -104,7 +101,6 @@ export async function getDecks(supabase: SupabaseClient, userId: string, sort?: 
     const { data, error } = await query;
 
     if (error) {
-      console.error("Database error in getDecks:", error);
       throw new Error(DeckErrorCodes.DATABASE_ERROR);
     }
 
@@ -124,12 +120,11 @@ export async function getDecks(supabase: SupabaseClient, userId: string, sort?: 
     return decks;
   } catch (error) {
     // Re-throw known domain errors
-    if (error instanceof Error && Object.values(DeckErrorCodes).includes(error.message as any)) {
+    if (error instanceof Error && (Object.values(DeckErrorCodes) as string[]).includes(error.message)) {
       throw error;
     }
 
     // Log and wrap unexpected errors
-    console.error("Unexpected error in getDecks:", error);
     throw new Error(DeckErrorCodes.DATABASE_ERROR);
   }
 }
@@ -159,7 +154,6 @@ export async function getDeckById(supabase: SupabaseClient, userId: string, deck
         throw new Error(DeckErrorCodes.DECK_NOT_FOUND);
       }
 
-      console.error("Database error in getDeckById:", error);
       throw new Error(DeckErrorCodes.DATABASE_ERROR);
     }
 
@@ -179,12 +173,11 @@ export async function getDeckById(supabase: SupabaseClient, userId: string, deck
     return deck;
   } catch (error) {
     // Re-throw known domain errors
-    if (error instanceof Error && Object.values(DeckErrorCodes).includes(error.message as any)) {
+    if (error instanceof Error && (Object.values(DeckErrorCodes) as string[]).includes(error.message)) {
       throw error;
     }
 
     // Log and wrap unexpected errors
-    console.error("Unexpected error in getDeckById:", error);
     throw new Error(DeckErrorCodes.DATABASE_ERROR);
   }
 }
@@ -227,7 +220,6 @@ export async function updateDeckName(
         throw new Error(DeckErrorCodes.DECK_NOT_FOUND);
       }
 
-      console.error("Database error in updateDeckName:", error);
       throw new Error(DeckErrorCodes.DATABASE_ERROR);
     }
 
@@ -241,12 +233,11 @@ export async function updateDeckName(
     };
   } catch (error) {
     // Re-throw known domain errors
-    if (error instanceof Error && Object.values(DeckErrorCodes).includes(error.message as any)) {
+    if (error instanceof Error && (Object.values(DeckErrorCodes) as string[]).includes(error.message)) {
       throw error;
     }
 
     // Log and wrap unexpected errors
-    console.error("Unexpected error in updateDeckName:", error);
     throw new Error(DeckErrorCodes.DATABASE_ERROR);
   }
 }
@@ -269,7 +260,6 @@ export async function deleteDeck(supabase: SupabaseClient, userId: string, deckI
       .eq("id", deckId);
 
     if (error) {
-      console.error("Database error in deleteDeck:", error);
       throw new Error(DeckErrorCodes.DATABASE_ERROR);
     }
 
@@ -279,12 +269,11 @@ export async function deleteDeck(supabase: SupabaseClient, userId: string, deckI
     }
   } catch (error) {
     // Re-throw known domain errors
-    if (error instanceof Error && Object.values(DeckErrorCodes).includes(error.message as any)) {
+    if (error instanceof Error && (Object.values(DeckErrorCodes) as string[]).includes(error.message)) {
       throw error;
     }
 
     // Log and wrap unexpected errors
-    console.error("Unexpected error in deleteDeck:", error);
     throw new Error(DeckErrorCodes.DATABASE_ERROR);
   }
 }
@@ -315,7 +304,6 @@ export async function resetDeckProgress(supabase: SupabaseClient, userId: string
         throw new Error(DeckErrorCodes.DECK_NOT_FOUND);
       }
 
-      console.error("Database error in resetDeckProgress (deck check):", deckError);
       throw new Error(DeckErrorCodes.DATABASE_ERROR);
     }
 
@@ -334,19 +322,17 @@ export async function resetDeckProgress(supabase: SupabaseClient, userId: string
       .eq("deck_id", deckId);
 
     if (updateError) {
-      console.error("Database error in resetDeckProgress (update):", updateError);
       throw new Error(DeckErrorCodes.DATABASE_ERROR);
     }
 
     // Success - no return value needed
   } catch (error) {
     // Re-throw known domain errors
-    if (error instanceof Error && Object.values(DeckErrorCodes).includes(error.message as any)) {
+    if (error instanceof Error && (Object.values(DeckErrorCodes) as string[]).includes(error.message)) {
       throw error;
     }
 
     // Log and wrap unexpected errors
-    console.error("Unexpected error in resetDeckProgress:", error);
     throw new Error(DeckErrorCodes.DATABASE_ERROR);
   }
 }

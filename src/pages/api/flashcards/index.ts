@@ -113,10 +113,7 @@ export const GET: APIRoute = async ({ request, locals }) => {
       status: 200,
       headers: { "Content-Type": "application/json" },
     });
-  } catch (error) {
-    // Catch-all for unexpected errors
-    console.error("Unexpected error in GET /api/flashcards:", error);
-
+  } catch {
     return new Response(
       JSON.stringify({
         error: {
@@ -246,10 +243,7 @@ export const POST: APIRoute = async ({ request, locals }) => {
       status: 201,
       headers: { "Content-Type": "application/json" },
     });
-  } catch (error) {
-    // Catch-all for unexpected errors
-    console.error("Unexpected error in POST /api/flashcards:", error);
-
+  } catch {
     return new Response(
       JSON.stringify({
         error: {

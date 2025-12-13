@@ -5,7 +5,6 @@ import {
   type DashboardState,
   type DashboardAction,
   type DeckSortOption,
-  type DeckCardViewModel,
 } from "@/components/DashboardPage";
 import {
   createMockDeck,
@@ -379,11 +378,7 @@ describe("dashboardReducer", () => {
 
     it("should set isMutating to false for specific deck", () => {
       // Arrange
-      const decks = [
-        createMockDeck(1),
-        createMockDeck(2, { isMutating: true }),
-        createMockDeck(3),
-      ];
+      const decks = [createMockDeck(1), createMockDeck(2, { isMutating: true }), createMockDeck(3)];
       const state: DashboardState = { ...initialState, decks };
       const action: DashboardAction = {
         type: "SET_DECK_MUTATING",
@@ -417,10 +412,7 @@ describe("dashboardReducer", () => {
 
     it("should preserve all other deck properties", () => {
       // Arrange
-      const decks = [
-        createMockDeck(1, { name: "Special Deck", flashcard_count: 25 }),
-        createMockDeck(2),
-      ];
+      const decks = [createMockDeck(1, { name: "Special Deck", flashcard_count: 25 }), createMockDeck(2)];
       const state: DashboardState = { ...initialState, decks };
       const action: DashboardAction = {
         type: "SET_DECK_MUTATING",
@@ -472,10 +464,7 @@ describe("dashboardReducer", () => {
     it("should only update the first matching deck if duplicates exist", () => {
       // Arrange
       // Edge case: testing behavior with duplicate IDs (shouldn't happen in real app)
-      const decks = [
-        createMockDeck(1, { name: "First" }),
-        createMockDeck(1, { name: "Second" }),
-      ];
+      const decks = [createMockDeck(1, { name: "First" }), createMockDeck(1, { name: "Second" })];
       const state: DashboardState = { ...initialState, decks };
       const action: DashboardAction = {
         type: "SET_DECK_MUTATING",
@@ -518,7 +507,7 @@ describe("dashboardReducer", () => {
         unassignedCount: 5,
       };
       // Testing runtime behavior with invalid action type
-      const action = { type: "UNKNOWN_ACTION", payload: "something" } as any;
+      const action = { type: "UNKNOWN_ACTION", payload: "something" } as unknown as DashboardAction;
 
       // Act
       const result = dashboardReducer(state, action);
@@ -632,4 +621,3 @@ describe("dashboardReducer", () => {
     });
   });
 });
-

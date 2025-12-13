@@ -1,5 +1,5 @@
 import type { APIRoute } from "astro";
-import type { ApiResponse, ApiErrorResponse, LearnResponseDto } from "../../../../types";
+import type { ApiErrorResponse, LearnResponseDto } from "../../../../types";
 import { deckIdParamSchema, learnQuerySchema } from "../../../../lib/validation/learn.schema";
 import { fetchReviewFlashcards, LearnErrorCodes } from "../../../../lib/services/learn.service";
 
@@ -112,10 +112,7 @@ export const GET: APIRoute = async ({ params, request, locals }) => {
       status: 200,
       headers: { "Content-Type": "application/json" },
     });
-  } catch (error) {
-    // Catch-all for unexpected errors
-    console.error("Unexpected error in GET /api/learn/:deckId:", error);
-
+  } catch {
     return new Response(
       JSON.stringify({
         error: {

@@ -182,7 +182,6 @@ export function FlashcardEditDialog({
                 disabled={isSaving}
                 className={errors.front && touched.front ? "border-destructive" : ""}
                 rows={3}
-                autoFocus
               />
               <div className="flex justify-between text-xs">
                 <div>{errors.front && touched.front && <span className="text-destructive">{errors.front}</span>}</div>

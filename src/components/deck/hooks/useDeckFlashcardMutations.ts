@@ -1,6 +1,6 @@
 import { useState, useCallback } from "react";
 import { toast } from "sonner";
-import type { ApiResponse, ApiErrorResponse, FlashcardUpdatedDto } from "../../../types";
+import type { ApiErrorResponse } from "../../../types";
 
 // ============================================================================
 // Types
@@ -39,7 +39,7 @@ interface UseDeckFlashcardMutationsReturn {
  * - updateFlashcard: PATCH /api/flashcards/:id
  * - deleteFlashcard: DELETE /api/flashcards/:id
  */
-export function useDeckFlashcardMutations(deckId: number): UseDeckFlashcardMutationsReturn {
+export function useDeckFlashcardMutations(): UseDeckFlashcardMutationsReturn {
   const [isUpdating, setIsUpdating] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
 
@@ -84,8 +84,8 @@ export function useDeckFlashcardMutations(deckId: number): UseDeckFlashcardMutat
         }
 
         // Success - 200
-        const data: ApiResponse<FlashcardUpdatedDto> = await response.json();
-
+        //const data: ApiResponse<FlashcardUpdatedDto> = await response.json();
+        await response.json();
         toast.success("Fiszka zaktualizowana");
         setIsUpdating(false);
 

@@ -127,10 +127,7 @@ export const PATCH: APIRoute = async ({ request, locals }) => {
       status: 200,
       headers: { "Content-Type": "application/json" },
     });
-  } catch (error) {
-    // Catch-all for unexpected errors
-    console.error("Unexpected error in PATCH /api/learn/review:", error);
-
+  } catch {
     return new Response(
       JSON.stringify({
         error: {

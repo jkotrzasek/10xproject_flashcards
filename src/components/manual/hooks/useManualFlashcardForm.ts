@@ -153,9 +153,6 @@ export function useManualFlashcardForm({
       setFormState((prev) => {
         const updatedRows = prev.values.rows.map((row) => (row.id === id ? { ...row, ...changes } : row));
 
-        // Clear errors for this row when user types
-        const { [id]: _, ...remainingErrors } = prev.errors.rows;
-
         return {
           ...prev,
           values: {
@@ -164,7 +161,8 @@ export function useManualFlashcardForm({
           },
           errors: {
             ...prev.errors,
-            rows: remainingErrors,
+            // Clear errors for this row when user types
+            rows: Object.fromEntries(Object.entries(prev.errors.rows).filter(([key]) => key !== id)),
             form: undefined, // Clear global error
           },
         };
@@ -223,7 +221,6 @@ export function useManualFlashcardForm({
       }
 
       const updatedRows = prev.values.rows.filter((row) => row.id !== id);
-      const { [id]: _, ...remainingErrors } = prev.errors.rows;
 
       return {
         ...prev,
@@ -233,7 +230,7 @@ export function useManualFlashcardForm({
         },
         errors: {
           ...prev.errors,
-          rows: remainingErrors,
+          rows: Object.fromEntries(Object.entries(prev.errors.rows).filter(([key]) => key !== id)),
         },
       };
     });

@@ -79,10 +79,7 @@ export const GET: APIRoute = async ({ request, locals }) => {
       status: 200,
       headers: { "Content-Type": "application/json" },
     });
-  } catch (error) {
-    // Catch-all for unexpected errors
-    console.error("Unexpected error in GET /api/decks:", error);
-
+  } catch {
     return new Response(
       JSON.stringify({
         error: {
@@ -199,10 +196,7 @@ export const POST: APIRoute = async ({ request, locals }) => {
       status: 200,
       headers: { "Content-Type": "application/json" },
     });
-  } catch (error) {
-    // Catch-all for unexpected errors
-    console.error("Unexpected error in POST /api/decks:", error);
-
+  } catch {
     return new Response(
       JSON.stringify({
         error: {

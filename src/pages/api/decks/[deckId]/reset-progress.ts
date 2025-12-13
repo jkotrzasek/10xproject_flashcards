@@ -88,10 +88,7 @@ export const POST: APIRoute = async ({ params, locals }) => {
     return new Response(null, {
       status: 204,
     });
-  } catch (error) {
-    // Catch-all for unexpected errors
-    console.error("Unexpected error in POST /api/decks/:deckId/reset-progress:", error);
-
+  } catch {
     return new Response(
       JSON.stringify({
         error: {

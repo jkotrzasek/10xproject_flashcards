@@ -1,5 +1,5 @@
 import { useCallback, useState } from "react";
-import type { LearnResponseDto, ReviewFlashcardItemCommand, ApiResponse, ApiErrorResponse } from "../../../types";
+import type { LearnResponseDto, ReviewFlashcardItemCommand, ApiErrorResponse } from "../../../types";
 
 /**
  * Hook providing API functions for learning session
@@ -75,7 +75,8 @@ export function useLearnApi() {
           return { success: false, error: errorMessage };
         }
 
-        const result: ApiResponse<{ updated: number }> = await response.json();
+        //const result: ApiResponse<{ updated: number }> = await response.json();
+        await response.json();
         setIsLoading(false);
         return { success: true, error: null };
       } catch (err) {

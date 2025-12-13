@@ -268,7 +268,7 @@ export function useLearnSession(deckId: number, limit: number = DEFAULT_LIMIT) {
    * Navigate to deck details
    */
   const goToDeck = useCallback(() => {
-    window.location.href = `/decks/${deckId}`;
+    window.location.assign(`/decks/${deckId}`);
   }, [deckId]);
 
   /**

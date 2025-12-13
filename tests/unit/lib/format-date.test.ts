@@ -100,7 +100,7 @@ describe("formatDate", () => {
       expect(formatDate(date)).toBe("6 dni temu");
     });
 
-    it('powinien zwrócić pełną datę dla daty sprzed 7 dni (boundary test)', () => {
+    it("powinien zwrócić pełną datę dla daty sprzed 7 dni (boundary test)", () => {
       const date = new Date("2025-12-04T10:00:00.000Z").toISOString();
       const result = formatDate(date);
       // Data w bieżącym roku - bez roku w output
@@ -165,18 +165,15 @@ describe("formatDate", () => {
       { month: 11, short: "gru", name: "grudzień" },
     ];
 
-    describe.each(polishMonths)(
-      'formatuje miesiąc $name poprawnie jako "$short"',
-      ({ month, short }) => {
-        it(`powinien zwrócić skrót "${short}" dla miesiąca ${month + 1}`, () => {
-          // Data z poprzedniego roku żeby wymusić pełne formatowanie
-          const date = new Date(Date.UTC(2024, month, 15, 10, 0, 0)).toISOString();
-          const result = formatDate(date);
-          expect(result).toContain(short);
-          expect(result).toContain("2024");
-        });
-      }
-    );
+    describe.each(polishMonths)('formatuje miesiąc $name poprawnie jako "$short"', ({ month, short }) => {
+      it(`powinien zwrócić skrót "${short}" dla miesiąca ${month + 1}`, () => {
+        // Data z poprzedniego roku żeby wymusić pełne formatowanie
+        const date = new Date(Date.UTC(2024, month, 15, 10, 0, 0)).toISOString();
+        const result = formatDate(date);
+        expect(result).toContain(short);
+        expect(result).toContain("2024");
+      });
+    });
   });
 
   describe("Edge cases - granice przedziałów czasowych", () => {
@@ -343,4 +340,3 @@ describe("formatDate", () => {
     });
   });
 });
-

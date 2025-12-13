@@ -1,6 +1,5 @@
 import type { APIRoute } from "astro";
 import { mapSupabaseAuthError } from "../../../lib/errors/authErrors";
-import type { AuthErrorDto } from "../../../types";
 
 export const prerender = false;
 
@@ -47,9 +46,6 @@ export const POST: APIRoute = async ({ locals }) => {
       status: 200,
     });
   } catch (error) {
-    // Log error for debugging (don't expose to user)
-    console.error("Unexpected error in POST /api/auth/logout:", error);
-
     // Map to user-friendly error
     const authError = mapSupabaseAuthError(error);
 

@@ -119,19 +119,12 @@ export function ConfirmDialog({
               onChange={(e) => setConfirmationText(e.target.value)}
               placeholder={requireConfirmation.placeholder || requireConfirmation.text}
               disabled={isLoading}
-              autoFocus
             />
           </div>
         )}
 
         <DialogFooter className="gap-2 sm:gap-0">
-          <Button
-            type="button"
-            variant="outline"
-            onClick={handleCancel}
-            disabled={isLoading}
-            autoFocus={!requireConfirmation}
-          >
+          <Button type="button" variant="outline" onClick={handleCancel} disabled={isLoading}>
             {cancelText}
           </Button>
           <Button type="button" variant={variant} onClick={handleConfirm} disabled={!canConfirm}>

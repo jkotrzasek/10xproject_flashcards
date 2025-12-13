@@ -22,7 +22,7 @@ test.describe("Dashboard - Create Deck", () => {
 
     // Navigate to dashboard (universal approach for all page tests)
     await dashboardPage.goto();
-    
+
     // Wait for dashboard to fully load
     await dashboardPage.waitForLoad();
   });
@@ -30,13 +30,12 @@ test.describe("Dashboard - Create Deck", () => {
   test("should create a new deck using empty state button", async () => {
     // Arrange - Check if empty state is visible
     const isEmptyState = await dashboardPage.isEmptyStateVisible();
-    
+
     // Skip test if button is not visible (decks already exist)
     test.skip(!isEmptyState, "Empty state button not visible - decks already exist");
 
     const deckName = generateUniqueDeckName("MyFirstDeck");
-    console.log('Generated deck name:', deckName);
-    
+
     // Act - Open dialog from empty state
     await dashboardPage.openCreateDeckDialogFromEmptyState();
 
@@ -51,7 +50,7 @@ test.describe("Dashboard - Create Deck", () => {
     await createDeckDialog.waitForDialogToClose();
     await dashboardPage.waitForDeckCardByName(deckName);
   });
-  
+
   test("should create a new deck using header button", async () => {
     // Arrange
     const deckName = generateUniqueDeckName("TestDeck");
@@ -94,7 +93,7 @@ test.describe("Dashboard - Create Deck", () => {
 
     // Assert - Dialog remains visible (validation error should appear)
     await expect(createDeckDialog.dialog).toBeVisible();
-    
+
     // Assert - Error message is displayed
     const errorMessage = createDeckDialog.page.getByText(/Nazwa decku nie może być pusta/i);
     await expect(errorMessage).toBeVisible();

@@ -122,9 +122,6 @@ export const POST: APIRoute = async ({ request, locals }) => {
       headers: { "Content-Type": "application/json" },
     });
   } catch (error) {
-    // Log error for debugging (don't expose to user)
-    console.error("Unexpected error in POST /api/auth/register:", error);
-
     // Map to user-friendly error
     const authError = mapSupabaseAuthError(error);
 

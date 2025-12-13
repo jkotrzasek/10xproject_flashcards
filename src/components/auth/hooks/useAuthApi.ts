@@ -34,7 +34,7 @@ export function useAuthApi() {
 
       const data = await response.json();
       return data;
-    } catch (err) {
+    } catch {
       const networkError: AuthErrorDto = {
         code: "NETWORK_ERROR",
         message: "Nie udało się połączyć z serwerem. Sprawdź połączenie internetowe.",
@@ -71,7 +71,7 @@ export function useAuthApi() {
 
       const responseData = await response.json();
       return responseData;
-    } catch (err) {
+    } catch {
       const networkError: AuthErrorDto = {
         code: "NETWORK_ERROR",
         message: "Nie udało się połączyć z serwerem. Sprawdź połączenie internetowe.",
@@ -103,7 +103,7 @@ export function useAuthApi() {
       }
 
       return true;
-    } catch (err) {
+    } catch {
       const networkError: AuthErrorDto = {
         code: "NETWORK_ERROR",
         message: "Nie udało się połączyć z serwerem.",

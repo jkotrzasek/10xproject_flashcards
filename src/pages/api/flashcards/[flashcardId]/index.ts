@@ -98,10 +98,7 @@ export const GET: APIRoute = async ({ params, locals }) => {
       status: 200,
       headers: { "Content-Type": "application/json" },
     });
-  } catch (error) {
-    // Catch-all for unexpected errors
-    console.error("Unexpected error in GET /api/flashcards/:id:", error);
-
+  } catch {
     return new Response(
       JSON.stringify({
         error: {
@@ -249,10 +246,7 @@ export const PATCH: APIRoute = async ({ params, request, locals }) => {
       status: 200,
       headers: { "Content-Type": "application/json" },
     });
-  } catch (error) {
-    // Catch-all for unexpected errors
-    console.error("Unexpected error in PATCH /api/flashcards/:id:", error);
-
+  } catch {
     return new Response(
       JSON.stringify({
         error: {
@@ -347,10 +341,7 @@ export const DELETE: APIRoute = async ({ params, locals }) => {
     return new Response(null, {
       status: 204,
     });
-  } catch (error) {
-    // Catch-all for unexpected errors
-    console.error("Unexpected error in DELETE /api/flashcards/:id:", error);
-
+  } catch {
     return new Response(
       JSON.stringify({
         error: {

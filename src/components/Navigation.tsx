@@ -32,11 +32,9 @@ export default function Navigation({ currentPath, isAuthenticated = false, userE
         // Redirect to login page after successful logout
         window.location.href = "/auth/login";
       } else {
-        console.error("Logout failed");
         setIsLoggingOut(false);
       }
-    } catch (error) {
-      console.error("Logout error:", error);
+    } catch {
       setIsLoggingOut(false);
     }
   };

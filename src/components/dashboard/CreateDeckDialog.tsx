@@ -104,7 +104,6 @@ export function CreateDeckDialog({ open, onClose, onSubmit }: CreateDeckDialogPr
                 onChange={handleNameChange}
                 disabled={isSubmitting}
                 maxLength={30}
-                autoFocus
                 data-testid="deck-name-input"
               />
               {error && <p className="text-sm text-destructive">{error}</p>}

@@ -42,7 +42,7 @@ export const PATCH: APIRoute = async ({ params, request, locals }) => {
       return new Response(
         JSON.stringify({
           error: {
-            message: `${firstError.message} for sessionId` || "Invalid sessionId parameter",
+            message: `${firstError.message} for sessionId`,
             code: "INVALID_INPUT",
           },
         } satisfies ApiErrorResponse),
@@ -53,10 +53,10 @@ export const PATCH: APIRoute = async ({ params, request, locals }) => {
     const sessionId = sessionIdValidation.data;
 
     // Parse request body
-    let body: any;
+    let body: { accepted_total?: unknown };
     try {
       body = await request.json();
-    } catch (error) {
+    } catch {
       return new Response(
         JSON.stringify({
           error: {
@@ -88,7 +88,7 @@ export const PATCH: APIRoute = async ({ params, request, locals }) => {
       return new Response(
         JSON.stringify({
           error: {
-            message: `${firstError.message} for accepted_total` || "Invalid accepted_total value",
+            message: `${firstError.message} for accepted_total`,
             code: "INVALID_INPUT",
           },
         } satisfies ApiErrorResponse),
@@ -141,8 +141,6 @@ export const PATCH: APIRoute = async ({ params, request, locals }) => {
         }
       }
 
-      // Unexpected error
-      console.error("Unexpected error in PATCH /api/generations/:sessionId/accepted:", error);
       return new Response(
         JSON.stringify({
           error: {
@@ -156,10 +154,7 @@ export const PATCH: APIRoute = async ({ params, request, locals }) => {
 
     // Success - return empty response with 200 status
     return new Response(null, { status: 200 });
-  } catch (error) {
-    // Catch-all for unexpected errors
-    console.error("Unexpected error in PATCH /api/generations/:sessionId/accepted:", error);
-
+  } catch {
     return new Response(
       JSON.stringify({
         error: {

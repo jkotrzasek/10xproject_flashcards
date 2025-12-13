@@ -7,7 +7,6 @@ import type { LearnSessionMetaViewModel, LearnSessionStats } from "./typesLearn"
 // ============================================================================
 
 interface SummaryScreenProps {
-  deckId: number;
   stats: LearnSessionStats;
   meta: LearnSessionMetaViewModel | null;
   onContinue: () => void;
@@ -22,7 +21,7 @@ interface SummaryScreenProps {
  * Summary screen component
  * Displays session statistics and options to continue or return to deck
  */
-export function SummaryScreen({ deckId, stats, meta, onContinue, onGoToDeck }: SummaryScreenProps) {
+export function SummaryScreen({ stats, meta, onContinue, onGoToDeck }: SummaryScreenProps) {
   const totalReviewed = stats.reviewedCount;
   const okCount = stats.okCount;
   const nokCount = stats.nokCount;

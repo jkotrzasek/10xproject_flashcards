@@ -118,7 +118,6 @@ export function DeleteDeckConfirmDialog({ open, deck, onClose, onConfirm }: Dele
                 value={confirmText}
                 onChange={handleConfirmTextChange}
                 disabled={isSubmitting}
-                autoFocus
               />
               {error && <p className="text-sm text-destructive">{error}</p>}
             </div>

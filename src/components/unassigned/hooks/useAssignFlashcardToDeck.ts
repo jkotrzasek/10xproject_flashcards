@@ -1,6 +1,6 @@
 import { useCallback } from "react";
 import { toast } from "sonner";
-import type { UpdateFlashcardCommand, FlashcardUpdatedDto, ApiResponse, ApiErrorResponse } from "../../../types";
+import type { UpdateFlashcardCommand, ApiErrorResponse } from "../../../types";
 
 // ============================================================================
 // Types
@@ -64,7 +64,8 @@ export function useAssignFlashcardToDeck(): UseAssignFlashcardToDeckReturn {
       }
 
       // Success
-      const data: ApiResponse<FlashcardUpdatedDto> = await response.json();
+      //const data: ApiResponse<FlashcardUpdatedDto> = await response.json();
+      await response.json();
       toast.success("Fiszka została przypisana do decku");
 
       return { success: true };

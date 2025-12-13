@@ -1,5 +1,5 @@
 import { useState } from "react";
-import type { CreateFlashcardsCommand, FlashcardCreatedDto, ApiResponse, ApiErrorResponse } from "../../../types";
+import type { CreateFlashcardsCommand, FlashcardCreatedDto, ApiResponse } from "../../../types";
 import type { FlashcardProposalVM, SaveStats } from "../generationTypes";
 
 // ============================================================================
