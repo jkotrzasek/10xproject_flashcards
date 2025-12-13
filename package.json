@@ -14,7 +14,8 @@
     "test:unit": "vitest run",
     "test:e2e": "playwright test",
     "test:e2e:verify": "node e2e/scripts/verify-env.mjs",
-    "dev:e2e": "astro dev --mode test"
+    "dev:e2e": "astro dev --mode test",
+    "prepare": "husky"
   },
   "dependencies": {
     "@astrojs/node": "^9.4.3",
