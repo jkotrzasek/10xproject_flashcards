@@ -1,4 +1,4 @@
-# 10xproject_flashcards
+# 10x Project Flashcards
 
 A web application designed to streamline the process of creating educational flashcards using artificial intelligence. This app automatically generates flashcard sets from user-provided text, significantly reducing the time and effort required to create study materials.
 
