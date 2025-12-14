@@ -3,6 +3,8 @@
  * Handles validation and initialization of OpenRouter service configuration
  */
 
+import { OPENROUTER_API_KEY, OPENROUTER_DEFAULT_MODEL } from "astro:env/server";
+
 /**
  * Configuration for OpenRouter service
  */
@@ -60,17 +62,13 @@ const validateModel = (model: string, allowedModels: string[]): void => {
  * @throws {OpenRouterConfigError} If configuration is invalid or incomplete
  */
 export const buildOpenRouterConfig = (): OpenRouterConfig => {
-  // Required: API Key
-  const apiKey = import.meta.env.OPENROUTER_API_KEY;
-  if (!apiKey || typeof apiKey !== "string" || apiKey.trim().length === 0) {
+  // Required: API Key (validated by astro:env schema)
+  if (!OPENROUTER_API_KEY || OPENROUTER_API_KEY.trim().length === 0) {
     throw new OpenRouterConfigError("OPENROUTER_API_KEY is required and must be a non-empty string");
   }
 
-  // Optional: Default Model (with default)
-  const defaultModel = import.meta.env.OPENROUTER_DEFAULT_MODEL || "openai/gpt-4o-mini";
-  if (typeof defaultModel !== "string" || defaultModel.trim().length === 0) {
-    throw new OpenRouterConfigError("OPENROUTER_DEFAULT_MODEL must be a non-empty string");
-  }
+  // Default Model (with default from astro:env schema)
+  const defaultModel = OPENROUTER_DEFAULT_MODEL;
 
   // Validate default model is in allowed list
   const allowedModels = [...ALLOWED_MODELS];
@@ -78,7 +76,7 @@ export const buildOpenRouterConfig = (): OpenRouterConfig => {
 
   // Use hardcoded defaults for all other parameters
   return {
-    apiKey: apiKey.trim(),
+    apiKey: OPENROUTER_API_KEY.trim(),
     baseUrl: DEFAULTS.BASE_URL,
     defaultModel: defaultModel.trim(),
     timeoutMs: DEFAULTS.TIMEOUT_MS,

@@ -1,5 +1,5 @@
 // @ts-check
-import { defineConfig } from "astro/config";
+import { defineConfig, envField } from "astro/config";
 
 import react from "@astrojs/react";
 import sitemap from "@astrojs/sitemap";
@@ -15,4 +15,22 @@ export default defineConfig({
     plugins: [tailwindcss()],
   },
   adapter: cloudflare(),
+  env: {
+    schema: {
+      SUPABASE_URL: envField.string({ context: "server", access: "secret" }),
+      SUPABASE_KEY: envField.string({ context: "server", access: "secret" }),
+      OPENROUTER_API_KEY: envField.string({ context: "server", access: "secret" }),
+      OPENROUTER_DEFAULT_MODEL: envField.string({
+        context: "server",
+        access: "secret",
+        optional: true,
+        default: "openai/gpt-4o-mini",
+      }),
+      DAILY_GENERATION_LIMIT: envField.number({
+        context: "server",
+        access: "secret",
+        default: 10,
+      }),
+    },
+  },
 });

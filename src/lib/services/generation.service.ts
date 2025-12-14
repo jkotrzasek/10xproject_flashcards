@@ -17,11 +17,7 @@ import {
   buildUserPrompt,
   sanitizeAndTruncateInput,
 } from "./openrouter.schemas";
-
-/**
- * Daily generation limit per user
- */
-const DAILY_GENERATION_LIMIT = import.meta.env.DAILY_GENERATION_LIMIT;
+import { DAILY_GENERATION_LIMIT } from "astro:env/server";
 
 /**
  * Singleton instance of OpenRouterService
