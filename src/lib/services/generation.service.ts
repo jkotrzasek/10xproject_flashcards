@@ -1,4 +1,3 @@
-import { createHash } from "crypto";
 import type { SupabaseClient } from "../../db/supabase.client";
 import type {
   GenerationInsert,
@@ -49,10 +48,15 @@ export const GenerationErrorCodes = {
 } as const;
 
 /**
- * Calculate MD5 hash of input text
+ * Calculate SHA-256 hash of input text using Web Crypto API
+ * Compatible with Cloudflare Workers and other edge runtimes
  */
-export const calculateHash = (text: string): string => {
-  return createHash("md5").update(text, "utf8").digest("hex");
+export const calculateHash = async (text: string): Promise<string> => {
+  const encoder = new TextEncoder();
+  const data = encoder.encode(text);
+  const hashBuffer = await crypto.subtle.digest("SHA-256", data);
+  const hashArray = Array.from(new Uint8Array(hashBuffer));
+  return hashArray.map((byte) => byte.toString(16).padStart(2, "0")).join("");
 };
 
 /**
@@ -138,8 +142,8 @@ export const createPendingGeneration = async (
   userId: string,
   inputText: string
 ): Promise<number> => {
-  const inputHash = calculateHash(inputText);
-  const inputLength = Buffer.byteLength(inputText, "utf8");
+  const inputHash = await calculateHash(inputText);
+  const inputLength = new Blob([inputText]).size;
 
   // Get model name from OpenRouter service
   const openRouterService = getOpenRouterService();
